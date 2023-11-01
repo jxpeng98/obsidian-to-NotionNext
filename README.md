@@ -5,6 +5,11 @@ Thanks to the [original author](https://github.com/EasyChris/obsidian-to-notion)
 
 Thus, based on the [original author's work](https://github.com/EasyChris/obsidian-to-notion), I've added a feature to match the [NotionNext](https://github.com/tangly1024/NotionNext) template. This way, you can edit directly in Obsidian and publish with a single click after organizing.
 ## Update
+### 0.2.0
+- From this version, the interactive logic has been rewritten. When you click the ribbon icon, it will display the sync command for all presetting NotionNext databases. You can choose the database you want to sync to. **However, only NotionNext database is supported for now.**
+
+![](https://minioapi.pjx.ac.cn/img1/2023/11/c963e97f31a30c994e067c58443fed4f.gif)
+
 ### 0.1.10
 - Fix the Chinese support in the settings.
 ### 0.1.8
@@ -70,6 +75,7 @@ If you don't want to use the template, you can also directly create a new file i
 # 现在阶段一定不要修改表头的名字， please do not change the name of the header in YAML front matter
 # !!!!!!!!!!!!
 titleicon: 📎 # emoji icon, default is 📜， 默认是📜
+date: 2023-07-23 # default is today， 默认是今天。 Format is YYYY-MM-DD， 格式是YYYY-MM-DD
 coverurl: https://img.jxpeng.dev/2023/08/843e27a210847f05a0f7cfb121fec100.jpg # default is empty， 默认是空
 type: Post # Post or Page, default is Post， 默认是Post
 slug: test # slug for url, default is empty， 默认是空

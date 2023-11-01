@@ -2,9 +2,8 @@ import {App, Editor, MarkdownView, Notice, Plugin, PluginSettingTab, Setting} fr
 import {addIcons} from 'src/icon';
 import {Upload2Notion} from "src/Upload2Notion";
 import {Upload2NotionNext} from "src/Upload2Notion_NN";
-import {NoticeMConfig} from "src/Message";
-import {I18nConfig} from "src/I18n";
-
+import {i18nConfig} from "src/I18n";
+import ribbonCommands from "src/NotionCommands";
 // Remember to rename these classes and interfaces!
 
 interface PluginSettings {
@@ -15,10 +14,6 @@ interface PluginSettings {
     notionID: string;
     proxy: string;
 }
-
-const langConfig = NoticeMConfig(window.localStorage.getItem('language') || 'en')
-
-const i18nConfig = I18nConfig(window.localStorage.getItem('language') || 'en')
 
 const DEFAULT_SETTINGS: PluginSettings = {
     NNon: undefined,
@@ -31,9 +26,12 @@ const DEFAULT_SETTINGS: PluginSettings = {
 
 export default class ObsidianSyncNotionPlugin extends Plugin {
     settings: PluginSettings;
+    commands: ribbonCommands;
 
     async onload() {
         await this.loadSettings();
+        this.commands = new ribbonCommands(this);
+
         addIcons();
         // This creates an icon in the left ribbon.
         const ribbonIconEl = this.addRibbonIcon(
@@ -41,7 +39,8 @@ export default class ObsidianSyncNotionPlugin extends Plugin {
             i18nConfig.ribbonIcon,
             async (evt: MouseEvent) => {
                 // Called when the user clicks the icon.
-                await this.upload();
+                // await this.upload();
+                this.commands.ribbonDisplay();
             }
         );
 
@@ -67,18 +66,18 @@ export default class ObsidianSyncNotionPlugin extends Plugin {
     }
 
     async upload() {
-        const { notionAPI, databaseID, NNon} = this.settings;
+        const {notionAPI, databaseID, NNon} = this.settings;
 
-		// Check if NNon exists
-		if (NNon === undefined) {
-			const NNonmessage = langConfig.NNonMissing;
-			new Notice(NNonmessage);
-			return;
-		}
+        // Check if NNon exists
+        if (NNon === undefined) {
+            const NNonmessage = i18nConfig.NNonMissing;
+            new Notice(NNonmessage);
+            return;
+        }
 
-		// Check if the user has set up the Notion API and database ID
+        // Check if the user has set up the Notion API and database ID
         if (notionAPI === "" || databaseID === "") {
-			const setAPIMessage = langConfig["set-api-id"];
+            const setAPIMessage = i18nConfig["set-api-id"];
             new Notice(setAPIMessage);
             return;
         }
@@ -87,7 +86,7 @@ export default class ObsidianSyncNotionPlugin extends Plugin {
 
 
         if (markDownData) {
-            const { basename } = nowFile;
+            const {basename} = nowFile;
             let upload;
 
             if (NNon) {
@@ -99,9 +98,9 @@ export default class ObsidianSyncNotionPlugin extends Plugin {
             const res = await upload.syncMarkdownToNotion(basename, emoji, cover, tags, type, slug, stats, category, summary, paword, favicon, datetime, markDownData, nowFile, this.app, this.settings);
 
             if (res.status === 200) {
-                new Notice(`${langConfig["sync-success"]}${basename}`);
+                new Notice(`${i18nConfig["sync-success"]}${basename}`);
             } else {
-                new Notice(`${langConfig["sync-fail"]}${basename}`, 5000);
+                new Notice(`${i18nConfig["sync-fail"]}${basename}`, 5000);
             }
         }
     }
@@ -137,7 +136,7 @@ export default class ObsidianSyncNotionPlugin extends Plugin {
                 datetime = FileCache.frontmatter.date;
             }
         } catch (error) {
-            new Notice(langConfig["set-tags-fail"]);
+            new Notice(i18nConfig["set-tags-fail"]);
         }
         if (nowFile) {
             const markDownData = await nowFile.vault.read(nowFile);
@@ -157,7 +156,7 @@ export default class ObsidianSyncNotionPlugin extends Plugin {
                 datetime,
             };
         } else {
-            new Notice(langConfig["open-file"]);
+            new Notice(i18nConfig["open-file"]);
             return;
         }
     }
@@ -264,8 +263,8 @@ class ObsidianSettingTab extends PluginSettingTab {
         // General Database Settings
         containerEl.createEl('h2', {text: i18nConfig.NotionGeneralSetting});
 
-		new Setting(containerEl)
-			.setName(i18nConfig.NotYetFinish)
+        new Setting(containerEl)
+            .setName(i18nConfig.NotYetFinish)
 
         // new Setting(containerEl)
         // .setName("Convert tags(optional)")

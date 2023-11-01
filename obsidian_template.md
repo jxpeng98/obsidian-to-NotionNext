@@ -8,6 +8,7 @@
 # 现在阶段一定不要修改表头的名字， please do not change the name of the header in YAML front matter
 # !!!!!!!!!!!!
 titleicon: 📎 # default is 📜， 默认是📜
+date: 2023-07-23 # default is today， 默认是今天。 Format is YYYY-MM-DD， 格式是YYYY-MM-DD
 coverurl: https://img.jxpeng.dev/2023/08/843e27a210847f05a0f7cfb121fec100.jpg # default is empty， 默认是空
 type: Post # Post or Page, default is Post， 默认是Post
 slug: test # slug for url, default is empty， 默认是空
