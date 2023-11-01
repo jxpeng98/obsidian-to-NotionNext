@@ -1,28 +1,46 @@
-export const i18n: { [key: string]: any } = {
+export const I18n: { [key: string]: any } = {
 	"en": {
+		ribbonIcon: "Share to NotionNext",
+		CommandName: "share to notionnext",
 		NotionNextVersion: "NotionNext Version Database",
 		NotionNextVersionDesc: "Turn on this option if you are using NotionNext",
 		NotionNextSetting: "NotionNext Database Settings",
 		NotionAPI: "Notion API Token",
 		NotionAPIDesc: "It's a secret",
+		NotionAPIText:"Enter your Notion API Token",
 		NotionID: "Database ID",
+		NotionIDText: "Enter your Database ID",
 		BannerUrl: "Banner url(optional)",
 		BannerUrlDesc: "page banner url(optional), default is empty, if you want to show a banner, please enter the url(like:https://raw.githubusercontent.com/EasyChris/obsidian-to-notion/ae7a9ac6cf427f3ca338a409ce6967ced9506f12/doc/2.png)",
+		BannerUrlText: "Enter your banner url",
 		NotionUser: "Notion ID(username, optional)",
+		NotionUserDesc: "Your notion ID (optional),share link likes:https://username.notion.site/,your notion id is [username]",
+		NotionUserText: "Enter your notion ID (options)",
 		NotionGeneralSetting: "General Notion Database Settings",
 		NotYetFinish: "Not finished. This function will be available in the next version",
 	},
 	"zh": {
+		ribbonIcon: "分享到 NotionNext",
+		CommandName: "分享到 NotionNext",
 		NotionNextVersion: "NotionNext 版本数据库",
 		NotionNextVersionDesc: "如果你使用的是NotionNext，请打开此选项",
 		NotionNextSetting: "NotionNext 数据库参数设置",
 		NotionAPI: "Notion API 令牌",
 		NotionAPIDesc: "显示为密码",
+		NotionAPIText:"输入你的 Notion API 令牌",
 		NotionID: "数据库 ID",
+		NotionIDText: "输入你的数据库 ID",
 		BannerUrl: "封面图片地址（可选）",
 		BannerUrlDesc: "页面封面图片地址（可选），默认为空，如果你想显示封面图片，请输入图片地址（例如：https://raw.githubusercontent.com/EasyChris/obsidian-to-notion/ae7a9ac6cf427f3ca338a409ce6967ced9506f12/doc/2.png）",
+		BannerUrlText: "输入你的封面图片地址",
 		NotionUser: "Notion ID（用户名，可选）",
+		NotionUserDesc: "你的 Notion ID（可选），分享链接类似：https://username.notion.site/，你的 Notion ID 是 [username]",
+		NotionUserText: "输入你的 Notion ID（可选）",
 		NotionGeneralSetting: "普通 Notion 数据库设置",
 		NotYetFinish: "未完成。此功能将在之后版本中提供",
 	},
+}
+
+export const I18nConfig = (lang: any): any => {
+	return I18n[lang]
 }

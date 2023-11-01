@@ -3,7 +3,7 @@ import {addIcons} from 'src/icon';
 import {Upload2Notion} from "src/Upload2Notion";
 import {Upload2NotionNext} from "src/Upload2Notion_NN";
 import {NoticeMConfig} from "src/Message";
-
+import {I18nConfig} from "src/I18n";
 
 // Remember to rename these classes and interfaces!
 
@@ -17,6 +17,8 @@ interface PluginSettings {
 }
 
 const langConfig = NoticeMConfig(window.localStorage.getItem('language') || 'en')
+
+const i18nConfig = I18nConfig(window.localStorage.getItem('language') || 'en')
 
 const DEFAULT_SETTINGS: PluginSettings = {
     NNon: undefined,
@@ -36,7 +38,7 @@ export default class ObsidianSyncNotionPlugin extends Plugin {
         // This creates an icon in the left ribbon.
         const ribbonIconEl = this.addRibbonIcon(
             "notion-logo",
-            "Share to NotionNext",
+            i18nConfig.ribbonIcon,
             async (evt: MouseEvent) => {
                 // Called when the user clicks the icon.
                 await this.upload();
@@ -49,7 +51,7 @@ export default class ObsidianSyncNotionPlugin extends Plugin {
 
         this.addCommand({
             id: "share-to-notionnext",
-            name: "share to notionnext",
+            name: i18nConfig.CommandName,
             editorCallback: async (editor: Editor, view: MarkdownView) => {
                 await this.upload()
             },
@@ -69,14 +71,14 @@ export default class ObsidianSyncNotionPlugin extends Plugin {
 
 		// Check if NNon exists
 		if (NNon === undefined) {
-			const NNonmessage = NoticeMConfig(window.localStorage.getItem('language') || 'en')["NNonMissing"];
+			const NNonmessage = langConfig.NNonMissing;
 			new Notice(NNonmessage);
 			return;
 		}
 
 		// Check if the user has set up the Notion API and database ID
         if (notionAPI === "" || databaseID === "") {
-			const setAPIMessage = NoticeMConfig(window.localStorage.getItem('language') || 'en')["set-api-id"];
+			const setAPIMessage = langConfig["set-api-id"];
             new Notice(setAPIMessage);
             return;
         }
@@ -187,8 +189,8 @@ class ObsidianSettingTab extends PluginSettingTab {
         containerEl.empty();
 
         new Setting(containerEl)
-            .setName("NotionNext version ")
-            .setDesc("Turn on this option if you are using NotionNext")
+            .setName(i18nConfig.NotionNextVersion)
+            .setDesc(i18nConfig.NotionNextVersionDesc)
             .addToggle((toggle) =>
                 toggle
                     .setValue(this.plugin.settings.NNon)
@@ -198,15 +200,15 @@ class ObsidianSettingTab extends PluginSettingTab {
                     })
             );
 
-        containerEl.createEl('h2', {text: 'NotionNext Database Settings'})
+        containerEl.createEl('h2', {text: i18nConfig.NotionNextSetting})
 
         new Setting(containerEl)
-            .setName("Notion API Token")
-            .setDesc("It's a secret")
+            .setName(i18nConfig.NotionAPI)
+            .setDesc(i18nConfig.NotionAPIDesc)
             .addText((text) => {
                 text.inputEl.type = 'password';
                 return text
-                    .setPlaceholder("Enter your Notion API Token")
+                    .setPlaceholder(i18nConfig.NotionAPIText)
                     .setValue(this.plugin.settings.notionAPI)
                     .onChange(async (value) => {
                         this.plugin.settings.notionAPI = value;
@@ -216,12 +218,12 @@ class ObsidianSettingTab extends PluginSettingTab {
 
 
         const notionDatabaseID = new Setting(containerEl)
-            .setName("Database ID")
-            .setDesc("It's a secret")
+            .setName(i18nConfig.NotionID)
+            .setDesc(i18nConfig.NotionAPIDesc)
             .addText((text) => {
                     text.inputEl.type = 'password';
                     return text
-                        .setPlaceholder("Enter your Database ID")
+                        .setPlaceholder(i18nConfig.NotionIDText)
                         .setValue(this.plugin.settings.databaseID)
                         .onChange(async (value) => {
                             this.plugin.settings.databaseID = value;
@@ -233,11 +235,11 @@ class ObsidianSettingTab extends PluginSettingTab {
         // notionDatabaseID.controlEl.querySelector('input').type='password'
 
         new Setting(containerEl)
-            .setName("Banner url(optional)")
-            .setDesc("page banner url(optional), default is empty, if you want to show a banner, please enter the url(like:https://raw.githubusercontent.com/EasyChris/obsidian-to-notion/ae7a9ac6cf427f3ca338a409ce6967ced9506f12/doc/2.png)")
+            .setName(i18nConfig.BannerUrl)
+            .setDesc(i18nConfig.BannerUrlDesc)
             .addText((text) =>
                 text
-                    .setPlaceholder("Enter banner pic url: ")
+                    .setPlaceholder(i18nConfig.BannerUrlText)
                     .setValue(this.plugin.settings.bannerUrl)
                     .onChange(async (value) => {
                         this.plugin.settings.bannerUrl = value;
@@ -247,11 +249,11 @@ class ObsidianSettingTab extends PluginSettingTab {
 
 
         new Setting(containerEl)
-            .setName("Notion ID(username, optional)")
-            .setDesc("Your notion ID(optional),share link likes:https://username.notion.site/,your notion id is [username]")
+            .setName(i18nConfig.NotionUser)
+            .setDesc(i18nConfig.NotionUserDesc)
             .addText((text) =>
                 text
-                    .setPlaceholder("Enter notion ID(options) ")
+                    .setPlaceholder(i18nConfig.NotionUserText)
                     .setValue(this.plugin.settings.notionID)
                     .onChange(async (value) => {
                         this.plugin.settings.notionID = value;
@@ -260,10 +262,10 @@ class ObsidianSettingTab extends PluginSettingTab {
             );
 
         // General Database Settings
-        containerEl.createEl('h2', {text: 'General Notion Database Settings'});
+        containerEl.createEl('h2', {text: i18nConfig.NotionGeneralSetting});
 
 		new Setting(containerEl)
-			.setName("Not finished. This function will be available in the next version")
+			.setName(i18nConfig.NotYetFinish)
 
         // new Setting(containerEl)
         // .setName("Convert tags(optional)")

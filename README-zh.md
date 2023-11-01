@@ -3,6 +3,8 @@
 
 所以我在[原作者](https://github.com/EasyChris/obsidian-to-notion)的基础之上，增加了匹配[NotionNext](https://github.com/tangly1024/NotionNext)模板的功能。这样可以直接在Obsidian编辑，整理好之后一键发布。
 ## 更新说明
+### 0.1.10
+- 修正了设置中的中文显示。 
 ### 0.1.8
 - 重新整理了代码，增加了一个仓库转换按钮为之后的多数据库支持作准备。**但是现在还不支持多数据库，如果你的数据库不是NotionNext，你可以不用更新。**
 ### 0.1.7

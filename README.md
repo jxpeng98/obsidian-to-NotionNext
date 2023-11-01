@@ -5,6 +5,8 @@ Thanks to the [original author](https://github.com/EasyChris/obsidian-to-notion)
 
 Thus, based on the [original author's work](https://github.com/EasyChris/obsidian-to-notion), I've added a feature to match the [NotionNext](https://github.com/tangly1024/NotionNext) template. This way, you can edit directly in Obsidian and publish with a single click after organizing.
 ## Update
+### 0.1.10
+- Fix the Chinese support in the settings.
 ### 0.1.8
 - Rebuild the upload function, and add one button to select the different databases. **However, only NotionNext database is supported for now.**  
 ### 0.1.7
