@@ -19,7 +19,7 @@ interface PluginSettings {
 const langConfig = NoticeMConfig(window.localStorage.getItem('language') || 'en')
 
 const DEFAULT_SETTINGS: PluginSettings = {
-    NNon: true,
+    NNon: undefined,
     notionAPI: "",
     databaseID: "",
     bannerUrl: "",
@@ -65,13 +65,22 @@ export default class ObsidianSyncNotionPlugin extends Plugin {
     }
 
     async upload() {
-        const {NNon, notionAPI, databaseID} = this.settings;
+        const { notionAPI, databaseID, NNon} = this.settings;
+
+		// Check if NNon exists
+		if (NNon === undefined) {
+			const NNonmessage = NoticeMConfig(window.localStorage.getItem('language') || 'en')["NNonMissing"];
+			new Notice(NNonmessage);
+			return;
+		}
+
+		// Check if the user has set up the Notion API and database ID
         if (notionAPI === "" || databaseID === "") {
-            new Notice(
-                "Please set up the notion API and database ID in the settings tab."
-            );
+			const setAPIMessage = NoticeMConfig(window.localStorage.getItem('language') || 'en')["set-api-id"];
+            new Notice(setAPIMessage);
             return;
         }
+
         const {markDownData, nowFile, emoji, cover, tags, type, slug, stats, category, summary, paword, favicon, datetime} = await this.getNowFileMarkdownContent(this.app);
 
 
@@ -178,7 +187,7 @@ class ObsidianSettingTab extends PluginSettingTab {
         containerEl.empty();
 
         new Setting(containerEl)
-            .setName("NotionNext version")
+            .setName("NotionNext version ")
             .setDesc("Turn on this option if you are using NotionNext")
             .addToggle((toggle) =>
                 toggle
@@ -254,9 +263,7 @@ class ObsidianSettingTab extends PluginSettingTab {
         containerEl.createEl('h2', {text: 'General Notion Database Settings'});
 
 		new Setting(containerEl)
-			.setName("Not finished")
-			.setDesc("This functio will be available in the next version");
-
+			.setName("Not finished. This function will be available in the next version")
 
         // new Setting(containerEl)
         // .setName("Convert tags(optional)")
