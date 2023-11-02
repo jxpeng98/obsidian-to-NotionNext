@@ -155,7 +155,7 @@ export class Upload2NotionNext extends UploadBase {
         }
     }
 
-    async syncMarkdownToNotion(title: string, emoji: string, cover: string, tags: string[], type: string, slug: string, stats: string, category: string, summary: string, paword: string, favicon: string, datetime: string, markdown: string, nowFile: TFile, app: App, settings: any): Promise<any> {
+    async syncMarkdownToNotionNext(title: string, emoji: string, cover: string, tags: string[], type: string, slug: string, stats: string, category: string, summary: string, paword: string, favicon: string, datetime: string, markdown: string, nowFile: TFile, app: App, settings: any): Promise<any> {
         let res: any
         const yamlContent: any = yamlFrontMatter.loadFront(markdown);
         const __content = yamlContent.__content

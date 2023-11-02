@@ -1,4 +1,4 @@
-import {i18nConfig} from "src/I18n";
+import {i18nConfig} from "src/lang/I18n";
 import MyPlugin from "src/main";
 import {Editor, MarkdownView} from "obsidian";
 import {FuzzySuggester, DatabaseList} from "./FuzzySuggester";
