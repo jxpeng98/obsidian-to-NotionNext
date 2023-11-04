@@ -10,8 +10,8 @@ export const I18n: { [key: string]: any } = {
         NotionAPI: "Notion API Token",
         NotionAPIDesc: "It's a secret",
         NotionAPIText: "Enter your Notion API Token",
-        NotionID: "Database ID",
-        NotionIDText: "Enter your Database ID",
+        DatabaseID: "Database ID",
+        DatabaseIDText: "Enter your Database ID",
         BannerUrl: "Banner url(optional)",
         BannerUrlDesc:
             "page banner url(optional), default is empty, if you want to show a banner, please enter the url(like:https://raw.githubusercontent.com/EasyChris/obsidian-to-notion/ae7a9ac6cf427f3ca338a409ce6967ced9506f12/doc/2.png)",
@@ -49,8 +49,8 @@ export const I18n: { [key: string]: any } = {
         NotionAPI: "Notion API 令牌",
         NotionAPIDesc: "显示为密码",
         NotionAPIText: "输入你的 Notion API 令牌",
-        NotionID: "数据库 ID",
-        NotionIDText: "输入你的数据库 ID",
+        DatabaseID: "数据库 ID",
+        DatabaseIDText: "输入你的数据库 ID",
         BannerUrl: "封面图片地址（可选）",
         BannerUrlDesc:
             "页面封面图片地址（可选），默认为空，如果你想显示封面图片，请输入图片地址（例如：https://raw.githubusercontent.com/EasyChris/obsidian-to-notion/ae7a9ac6cf427f3ca338a409ce6967ced9506f12/doc/2.png）",

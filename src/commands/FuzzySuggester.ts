@@ -1,6 +1,6 @@
 import { FuzzySuggestModal, FuzzyMatch } from 'obsidian';
-import MyPlugin from "./main";
-import {i18nConfig} from "./lang/I18n";
+import MyPlugin from "../main";
+import {i18nConfig} from "../lang/I18n";
 
 /**
  * Simple interface for what should be displayed and stored for suggester
@@ -10,9 +10,7 @@ export interface DatabaseList {
     match: any               //
 }
 
-/**
- * Generic suggester for quick reuse
- */
+
 export class FuzzySuggester extends FuzzySuggestModal<DatabaseList>{
     private plugin: MyPlugin;
     private data: DatabaseList[];

@@ -1,17 +1,21 @@
 import {i18nConfig} from "src/lang/I18n";
-import MyPlugin from "src/main";
 import {Editor, MarkdownView} from "obsidian";
 import {FuzzySuggester, DatabaseList} from "./FuzzySuggester";
+import {uploadCommand} from "../upload/uploadCommand";
+import ObsidianSyncNotionPlugin from "src/main";
+
 // create the commands list
 export default class RibbonCommands {
-    plugin: MyPlugin;
+    plugin: ObsidianSyncNotionPlugin;
+
     // Total commands that will be used
     Ncommand = [
         {
             id: "share-to-notionnext",
             name: i18nConfig.ribbonIcon, // Use the translated text from i18nConfig
             editorCallback: async (editor: Editor, view: MarkdownView) => {
-                await this.plugin.upload();
+                // await this.plugin.uploadCommand()
+                await uploadCommand(this.plugin, this.plugin.settings, this.plugin.app)
             }
         },
         // {
@@ -39,7 +43,7 @@ export default class RibbonCommands {
         await fusg.display(async (results) => {await results.match()})
     };
 
-    constructor(plugin: MyPlugin) {
+    constructor(plugin: ObsidianSyncNotionPlugin) {
         this.plugin = plugin;
 
         // Register all the commands
