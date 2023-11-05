@@ -40,17 +40,17 @@ export class ObsidianSettingTab extends PluginSettingTab {
 
         containerEl.createEl('h2', {text: i18nConfig.GeneralSetting})
 
-        new Setting(containerEl)
-            .setName(i18nConfig.NotionNextVersion)
-            .setDesc(i18nConfig.NotionNextVersionDesc)
-            .addToggle((toggle) =>
-                toggle
-                    .setValue(this.plugin.settings.NNon)
-                    .onChange(async (value) => {
-                        this.plugin.settings.NNon = value;
-                        await this.plugin.saveSettings();
-                    })
-            );
+        // new Setting(containerEl)
+        //     .setName(i18nConfig.NotionNextVersion)
+        //     .setDesc(i18nConfig.NotionNextVersionDesc)
+        //     .addToggle((toggle) =>
+        //         toggle
+        //             .setValue(this.plugin.settings.NNon)
+        //             .onChange(async (value) => {
+        //                 this.plugin.settings.NNon = value;
+        //                 await this.plugin.saveSettings();
+        //             })
+        //     );
 
         new Setting(containerEl)
             .setName(i18nConfig.BannerUrl)
@@ -117,8 +117,8 @@ export class ObsidianSettingTab extends PluginSettingTab {
         // General Database Settings
         containerEl.createEl('h2', {text: i18nConfig.NotionGeneralSettingHeader});
 
-        new Setting(containerEl)
-            .setName(i18nConfig.NotYetFinish)
+        // new Setting(containerEl)
+        //     .setName(i18nConfig.NotYetFinish)
 
         // new Setting(containerEl)
         // .setName("Convert tags(optional)")

@@ -17,7 +17,7 @@ export const I18n: { [key: string]: any } = {
         DatabaseIDText: "Enter your Database ID",
         BannerUrl: "Banner url(optional)",
         BannerUrlDesc:
-            "page banner url(optional), default is empty, if you want to show a banner, please enter the url(like:https://raw.githubusercontent.com/EasyChris/obsidian-to-notion/ae7a9ac6cf427f3ca338a409ce6967ced9506f12/doc/2.png)",
+            "page banner url(optional), default is empty, if you want to show a banner, please enter the url(like: https://minioapi.pjx.ac.cn/img1/2023/11/b7b40a0724e93b7d7ab494bb3b8a2da8.png)",
         BannerUrlText: "Enter your banner url",
         NotionUser: "Notion ID(username, optional)",
         NotionUserDesc:
@@ -59,7 +59,7 @@ export const I18n: { [key: string]: any } = {
         DatabaseIDText: "输入你的数据库 ID",
         BannerUrl: "封面图片地址（可选）",
         BannerUrlDesc:
-            "页面封面图片地址（可选），默认为空，如果你想显示封面图片，请输入图片地址（例如：https://raw.githubusercontent.com/EasyChris/obsidian-to-notion/ae7a9ac6cf427f3ca338a409ce6967ced9506f12/doc/2.png）",
+            "页面封面图片地址（可选），默认为空，如果你想显示封面图片，请输入图片地址（例如：https://minioapi.pjx.ac.cn/img1/2023/11/b7b40a0724e93b7d7ab494bb3b8a2da8.png）",
         BannerUrlText: "输入你的封面图片地址",
         NotionUser: "Notion ID（用户名，可选）",
         NotionUserDesc:
