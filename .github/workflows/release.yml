@@ -43,8 +43,8 @@ jobs:
           prerelease: false
 
       - name: Upload zip file
-        id: uploadCommand-zip
-        uses: actions/uploadCommand-release-asset@v1
+        id: upload-zip
+        uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
         with:
@@ -54,8 +54,8 @@ jobs:
           asset_content_type: application/zip
 
       - name: Upload main.js
-        id: uploadCommand-main
-        uses: actions/uploadCommand-release-asset@v1
+        id: upload-main
+        uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
         with:
@@ -65,8 +65,8 @@ jobs:
           asset_content_type: text/javascript
 
       - name: Upload manifest.json
-        id: uploadCommand-manifest
-        uses: actions/uploadCommand-release-asset@v1
+        id: upload-manifest
+        uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
         with:
@@ -76,8 +76,8 @@ jobs:
           asset_content_type: application/json
 
       - name: Upload markdown template
-        id: uploadCommand-md
-        uses: actions/uploadCommand-release-asset@v1
+        id: upload-md
+        uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
         with:
@@ -87,8 +87,8 @@ jobs:
           asset_content_type: text/markdown
 
       # - name: Upload styles.css
-      #   id: uploadCommand-css
-      #   uses: actions/uploadCommand-release-asset@v1
+      #   id: upload-css
+      #   uses: actions/upload-release-asset@v1
       #   env:
       #     GITHUB_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
       #   with:
