@@ -5,15 +5,24 @@ Thanks to the [original author](https://github.com/EasyChris/obsidian-to-notion)
 
 Thus, based on the [original author's work](https://github.com/EasyChris/obsidian-to-notion), I've added a feature to match the [NotionNext](https://github.com/tangly1024/NotionNext) template. This way, you can edit directly in Obsidian and publish with a single click after organizing.
 ## Update
+### 0.2.2
+- Support both NotionNext and General Notion database. 
+- You can have one NotionNext and one General Notion database. 
+- General Notion database can only have `title` and `tags` columns, and `tags` columns should be the multi-selected property. **the name of the columns is case sensitive. You should use small letter.**
+
+![](https://minioapi.pjx.ac.cn/img1/2023/11/712a12081d855aa60f82a7b46913ab7e.gif)
+
+![](https://minioapi.pjx.ac.cn/img1/2023/11/9de76cecceef74c78884ddfc1c221659.gif)
+
+### 0.2.1 
+- Restructure the code
 ### 0.2.0
 - From this version, the interactive logic has been rewritten. When you click the ribbon icon, it will display the sync command for all presetting NotionNext databases. You can choose the database you want to sync to. **However, only NotionNext database is supported for now.**
-
-![](https://minioapi.pjx.ac.cn/img1/2023/11/c963e97f31a30c994e067c58443fed4f.gif)
 
 ### 0.1.10
 - Fix the Chinese support in the settings.
 ### 0.1.8
-- Rebuild the upload function, and add one button to select the different databases. **However, only NotionNext database is supported for now.**  
+- Rebuild the uploadCommand function, and add one button to select the different databases. **However, only NotionNext database is supported for now.**  
 ### 0.1.7
 - [x] Removed the `convert tag` option. Now, you can directly add tags in the YAML front matter. If you don't want to add tags, you can delete the tags in the YAML front matter or leave the tags blank.
 
@@ -189,9 +198,9 @@ Fill the configuration with the `NOTION_API_KEY` and `DATABASE_ID` you got
 ![](./doc/2.png)
 
 ## Upload file content to notion
-Click the upload notion button
+Click the uploadCommand notion button
 ![](./doc/4.png)
-A share link will be automatically generated after successful upload
+A share link will be automatically generated after successful uploadCommand
 ![](./doc/5.png)
 
 

@@ -3,8 +3,20 @@
 
 所以我在[原作者](https://github.com/EasyChris/obsidian-to-notion)的基础之上，增加了匹配[NotionNext](https://github.com/tangly1024/NotionNext)模板的功能。这样可以直接在Obsidian编辑，整理好之后一键发布。
 ## 更新说明
+### 0.2.2
+- 支持NotionNext 和 普通Notion 数据库的同步。
+- 你可以有一个NotionNext和一个普通Notion数据库。
+- 普通Notion数据库的同步方式和原作者的一样，只同步`title`和`tags`。**如果使用普通数据库功能，你需要保证你的数据库中有`title`和`tags`这两个表头。必须使用小写。**
+
+![](https://minioapi.pjx.ac.cn/img1/2023/11/712a12081d855aa60f82a7b46913ab7e.gif)
+
+![](https://minioapi.pjx.ac.cn/img1/2023/11/9de76cecceef74c78884ddfc1c221659.gif)
+### 0.2.1
+- 重构代码。
 ### 0.2.0
-- 从这个版本开始采用了类似于BRAT的交互方式。当你点击左侧同步按钮的时候，首先会弹出
+- 从这个版本开始，重构了交互逻辑。现在当你点击左侧的按钮，会弹出可同步的数据库选项。你可以选择你想要同步的数据库，然后点击同步按钮。**但是，现在仅支持同步单个数据库，如果你的数据库不是NotionNext，你可以不用更新。**
+
+
 ### 0.1.10
 - 修正了设置中的中文显示。 
 ### 0.1.8
