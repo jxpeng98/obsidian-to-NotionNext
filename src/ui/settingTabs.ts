@@ -4,20 +4,24 @@ import ObsidianSyncNotionPlugin from "../main";
 
 export interface PluginSettings {
     NNon: boolean;
-    notionAPI: string;
-    databaseID: string;
+    notionAPINext: string;
+    databaseIDNext: string;
     bannerUrl: string;
     notionUser: string;
     proxy: string;
+    notionAPIGeneral: string;
+    databaseIDGeneral: string;
 }
 
 export const DEFAULT_SETTINGS: PluginSettings = {
     NNon: undefined,
-    notionAPI: "",
-    databaseID: "",
+    notionAPINext: "",
+    databaseIDNext: "",
     bannerUrl: "",
     notionUser: "",
     proxy: "",
+    notionAPIGeneral: "",
+    databaseIDGeneral: "",
 };
 
 
@@ -34,6 +38,8 @@ export class ObsidianSettingTab extends PluginSettingTab {
 
         containerEl.empty();
 
+        containerEl.createEl('h2', {text: i18nConfig.GeneralSetting})
+
         new Setting(containerEl)
             .setName(i18nConfig.NotionNextVersion)
             .setDesc(i18nConfig.NotionNextVersionDesc)
@@ -45,40 +51,6 @@ export class ObsidianSettingTab extends PluginSettingTab {
                         await this.plugin.saveSettings();
                     })
             );
-
-        containerEl.createEl('h2', {text: i18nConfig.NotionNextSetting})
-
-        new Setting(containerEl)
-            .setName(i18nConfig.NotionAPI)
-            .setDesc(i18nConfig.NotionAPIDesc)
-            .addText((text) => {
-                text.inputEl.type = 'password';
-                return text
-                    .setPlaceholder(i18nConfig.NotionAPIText)
-                    .setValue(this.plugin.settings.notionAPI)
-                    .onChange(async (value) => {
-                        this.plugin.settings.notionAPI = value;
-                        await this.plugin.saveSettings();
-                    })
-            });
-
-
-        const notionDatabaseID = new Setting(containerEl)
-            .setName(i18nConfig.DatabaseID)
-            .setDesc(i18nConfig.NotionAPIDesc)
-            .addText((text) => {
-                    text.inputEl.type = 'password';
-                    return text
-                        .setPlaceholder(i18nConfig.DatabaseIDText)
-                        .setValue(this.plugin.settings.databaseID)
-                        .onChange(async (value) => {
-                            this.plugin.settings.databaseID = value;
-                            await this.plugin.saveSettings();
-                        })
-                }
-            );
-
-        // notionDatabaseID.controlEl.querySelector('input').type='password'
 
         new Setting(containerEl)
             .setName(i18nConfig.BannerUrl)
@@ -107,8 +79,43 @@ export class ObsidianSettingTab extends PluginSettingTab {
                     })
             );
 
+        containerEl.createEl('h2', {text: i18nConfig.NotionNextSettingHeader})
+
+        new Setting(containerEl)
+            .setName(i18nConfig.NotionAPI)
+            .setDesc(i18nConfig.NotionAPIDesc)
+            .addText((text) => {
+                text.inputEl.type = 'password';
+                return text
+                    .setPlaceholder(i18nConfig.NotionAPIText)
+                    .setValue(this.plugin.settings.notionAPINext)
+                    .onChange(async (value) => {
+                        this.plugin.settings.notionAPINext = value;
+                        await this.plugin.saveSettings();
+                    })
+            });
+
+
+        const notionDatabaseID = new Setting(containerEl)
+            .setName(i18nConfig.DatabaseID)
+            .setDesc(i18nConfig.NotionAPIDesc)
+            .addText((text) => {
+                    text.inputEl.type = 'password';
+                    return text
+                        .setPlaceholder(i18nConfig.DatabaseIDText)
+                        .setValue(this.plugin.settings.databaseIDNext)
+                        .onChange(async (value) => {
+                            this.plugin.settings.databaseIDNext = value;
+                            await this.plugin.saveSettings();
+                        })
+                }
+            );
+
+        // notionDatabaseID.controlEl.querySelector('input').type='password'
+
+
         // General Database Settings
-        containerEl.createEl('h2', {text: i18nConfig.NotionGeneralSetting});
+        containerEl.createEl('h2', {text: i18nConfig.NotionGeneralSettingHeader});
 
         new Setting(containerEl)
             .setName(i18nConfig.NotYetFinish)
@@ -124,5 +131,35 @@ export class ObsidianSettingTab extends PluginSettingTab {
         // 			await this.plugin.saveSettings();
         // 		})
         // );
+        new Setting(containerEl)
+            .setName(i18nConfig.NotionAPI)
+            .setDesc(i18nConfig.NotionAPIDesc)
+            .addText((text) => {
+                text.inputEl.type = 'password';
+                return text
+                    .setPlaceholder(i18nConfig.NotionAPIText)
+                    .setValue(this.plugin.settings.notionAPIGeneral)
+                    .onChange(async (value) => {
+                        this.plugin.settings.notionAPIGeneral = value;
+                        await this.plugin.saveSettings();
+                    })
+            });
+
+
+        new Setting(containerEl)
+            .setName(i18nConfig.DatabaseID)
+            .setDesc(i18nConfig.NotionAPIDesc)
+            .addText((text) => {
+                    text.inputEl.type = 'password';
+                    return text
+                        .setPlaceholder(i18nConfig.NotionIDText)
+                        .setValue(this.plugin.settings.databaseIDGeneral)
+                        .onChange(async (value) => {
+                            this.plugin.settings.databaseIDGeneral = value;
+                            await this.plugin.saveSettings();
+                        })
+                }
+            );
+
     }
 }

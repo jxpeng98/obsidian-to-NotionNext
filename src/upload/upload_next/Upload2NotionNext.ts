@@ -1,24 +1,41 @@
-import {UploadBase} from "./BaseUpload2Notion";
+import { UploadBaseNext } from "./BaseUpload2NotionNext";
 import { App, Notice, requestUrl, TFile } from "obsidian";
 import { Client } from '@notionhq/client';
 import { markdownToBlocks, } from "@tryfabric/martian";
 import * as yamlFrontMatter from "yaml-front-matter";
 // import * as yaml from "yaml"
 import MyPlugin from "src/main";
-import {PluginSettings} from "../ui/settingTabs";
+import {PluginSettings} from "../../ui/settingTabs";
+import {updateYamlInfo} from "../updateYaml";
 
-export class Upload2NotionNext extends UploadBase {
+export class Upload2NotionNext extends UploadBaseNext {
     settings: PluginSettings;
+
     constructor(plugin: MyPlugin) {
         super(plugin);
     }
 
     // 因为需要解析notion的block进行对比，非常的麻烦，
     // 暂时就直接删除，新建一个page
-    async updatePage(notionID: string, title: string, emoji: string, cover: string, tags: string[], type: string, slug: string, stats: string, category: string, summary: string, paword: string, favicon: string, datetime: string, childArr: any) {
+    async updatePage(
+        notionID: string,
+        title: string,
+        emoji: string,
+        cover: string,
+        tags: string[],
+        type: string,
+        slug: string,
+        stats: string,
+        category: string,
+        summary: string,
+        paword: string,
+        favicon: string,
+        datetime: string,
+        childArr: any
+    ) {
         await this.deletePage(notionID)
 
-        const databasecover = await this.getDataBase(this.plugin.settings.databaseID)
+        const databasecover = await this.getDataBase(this.plugin.settings.databaseIDNext)
 
         if (cover == null) {
             cover = databasecover
@@ -40,10 +57,24 @@ export class Upload2NotionNext extends UploadBase {
             childArr)
     }
 
-    async createPage(title: string, emoji: string, cover: string, tags: string[], type: string, slug: string, stats: string, category: string, summary: string, pawrod: string, favicon: string, datetime: string, childArr: any) {
+    async createPage(
+        title: string,
+        emoji: string,
+        cover: string,
+        tags: string[],
+        type: string,
+        slug: string,
+        stats: string,
+        category: string,
+        summary: string,
+        pawrod: string,
+        favicon: string,
+        datetime: string,
+        childArr: any
+    ) {
         const bodyString: any = {
             parent: {
-                database_id: this.plugin.settings.databaseID
+                database_id: this.plugin.settings.databaseIDNext
             },
             icon: {
                 emoji: emoji || '📜'
@@ -147,7 +178,7 @@ export class Upload2NotionNext extends UploadBase {
                 headers: {
                     'Content-Type': 'application/json',
                     // 'User-Agent': 'obsidian.md',
-                    'Authorization': 'Bearer ' + this.plugin.settings.notionAPI,
+                    'Authorization': 'Bearer ' + this.plugin.settings.notionAPINext,
                     'Notion-Version': '2022-06-28',
                 },
                 body: JSON.stringify(bodyString),
@@ -157,7 +188,23 @@ export class Upload2NotionNext extends UploadBase {
         }
     }
 
-    async syncMarkdownToNotionNext(title: string, emoji: string, cover: string, tags: string[], type: string, slug: string, stats: string, category: string, summary: string, paword: string, favicon: string, datetime: string, markdown: string, nowFile: TFile, app: App, settings: PluginSettings): Promise<any> {
+    async syncMarkdownToNotionNext(
+        title: string,
+        emoji: string,
+        cover: string,
+        tags: string[],
+        type: string,
+        slug: string,
+        stats: string,
+        category: string,
+        summary: string,
+        paword: string,
+        favicon: string,
+        datetime: string,
+        markdown: string,
+        nowFile: TFile,
+        app: App,
+    ): Promise<any> {
         let res: any
         const yamlContent: any = yamlFrontMatter.loadFront(markdown);
         const __content = yamlContent.__content
@@ -166,12 +213,41 @@ export class Upload2NotionNext extends UploadBase {
         const notionID = frontmasster ? frontmasster.notionID : null
 
         if (notionID) {
-            res = await this.updatePage(notionID, title, emoji, cover, tags, type, slug, stats, category, summary, paword, favicon, datetime, file2Block);
+            res = await this.updatePage(
+                notionID,
+                title,
+                emoji,
+                cover,
+                tags,
+                type,
+                slug,
+                stats,
+                category,
+                summary,
+                paword,
+                favicon,
+                datetime,
+                file2Block
+            );
         } else {
-            res = await this.createPage(title, emoji, cover, tags, type, slug, stats, category, summary, paword, favicon, datetime, file2Block);
+            res = await this.createPage(
+                title,
+                emoji,
+                cover,
+                tags,
+                type,
+                slug,
+                stats,
+                category,
+                summary,
+                paword,
+                favicon,
+                datetime,
+                file2Block
+            );
         }
         if (res.status === 200) {
-            await this.updateYamlInfo(markdown, nowFile, res, app, settings)
+            await updateYamlInfo(markdown, nowFile, res, app, this.plugin)
         } else {
             new Notice(`${res.text}`)
         }

@@ -1,13 +1,12 @@
 import {App, Notice} from "obsidian";
-import {i18nConfig} from "../lang/I18n";
-import {PluginSettings} from "../ui/settingTabs";
+import {i18nConfig} from "../../lang/I18n";
+import {PluginSettings} from "../../ui/settingTabs";
 
-export async function getNowFileMarkdownContent(
+export async function getNowFileMarkdownContentNext(
     app: App,
     settings: PluginSettings,
 ) {
     const nowFile = app.workspace.getActiveFile();
-    const {NNon} = settings; // Change this line
     let emoji = '';
     let cover = '';
     let tags = [];
@@ -22,7 +21,6 @@ export async function getNowFileMarkdownContent(
 
     const FileCache = app.metadataCache.getFileCache(nowFile);
     try {
-        if (NNon) {
             emoji = FileCache.frontmatter.titleicon;
             cover = FileCache.frontmatter.coverurl;
             tags = FileCache.frontmatter.tags;
@@ -34,7 +32,6 @@ export async function getNowFileMarkdownContent(
             paword = FileCache.frontmatter.password;
             favicon = FileCache.frontmatter.icon;
             datetime = FileCache.frontmatter.date;
-        }
     } catch (error) {
         new Notice(i18nConfig["set-tags-fail"]);
     }
