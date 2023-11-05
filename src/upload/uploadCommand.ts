@@ -68,7 +68,7 @@ export async function uploadCommandGeneral(
         const {basename} = nowFile;
 
         const upload = new Upload2NotionGeneral(plugin);
-        const res = await upload.syncMarkdownToNotionGeneral(basename, cover, tags, markDownData, nowFile, this.app, this.settings);
+        const res = await upload.syncMarkdownToNotionGeneral(basename, cover, tags, markDownData, nowFile, this.app);
 
         if (res.status === 200) {
             new Notice(`${i18nConfig["sync-success"]}${basename}`);

@@ -26,7 +26,7 @@ export default class ObsidianSyncNotionPlugin extends Plugin {
             async (evt: MouseEvent) => {
                 // Called when the user clicks the icon.
                 // await this.uploadCommand();
-                this.commands.ribbonDisplay();
+                await this.commands.ribbonDisplay();
             }
         );
 
