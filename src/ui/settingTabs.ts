@@ -3,25 +3,33 @@ import {i18nConfig} from "../lang/I18n";
 import ObsidianSyncNotionPlugin from "../main";
 
 export interface PluginSettings {
-    NNon: boolean;
+    NextButton: boolean;
     notionAPINext: string;
     databaseIDNext: string;
     bannerUrl: string;
     notionUser: string;
     proxy: string;
+	GeneralButton: boolean;
     notionAPIGeneral: string;
     databaseIDGeneral: string;
+	CustomButton: boolean;
+	notionAPICustom: string;
+	databaseIDCustom: string;
 }
 
 export const DEFAULT_SETTINGS: PluginSettings = {
-    NNon: undefined,
+    NextButton: true,
     notionAPINext: "",
     databaseIDNext: "",
     bannerUrl: "",
     notionUser: "",
     proxy: "",
+	GeneralButton: true,
     notionAPIGeneral: "",
     databaseIDGeneral: "",
+	CustomButton: false,
+	notionAPICustom: "",
+	databaseIDCustom: "",
 };
 
 
@@ -40,17 +48,17 @@ export class ObsidianSettingTab extends PluginSettingTab {
 
         containerEl.createEl('h2', {text: i18nConfig.GeneralSetting})
 
-        // new Setting(containerEl)
-        //     .setName(i18nConfig.NotionNextVersion)
-        //     .setDesc(i18nConfig.NotionNextVersionDesc)
-        //     .addToggle((toggle) =>
-        //         toggle
-        //             .setValue(this.plugin.settings.NNon)
-        //             .onChange(async (value) => {
-        //                 this.plugin.settings.NNon = value;
-        //                 await this.plugin.saveSettings();
-        //             })
-        //     );
+        new Setting(containerEl)
+            .setName(i18nConfig.NotionNextButton)
+            .setDesc(i18nConfig.NotionNextButtonDesc)
+            .addToggle((toggle) =>
+                toggle
+                    .setValue(this.plugin.settings.NextButton)
+                    .onChange(async (value) => {
+                        this.plugin.settings.NextButton = value;
+                        await this.plugin.saveSettings();
+                    })
+            );
 
         new Setting(containerEl)
             .setName(i18nConfig.BannerUrl)
@@ -119,6 +127,17 @@ export class ObsidianSettingTab extends PluginSettingTab {
 
         // new Setting(containerEl)
         //     .setName(i18nConfig.NotYetFinish)
+		new Setting(containerEl)
+			.setName(i18nConfig.NotionGeneralButton)
+			.setDesc(i18nConfig.NotionGeneralButtonDesc)
+			.addToggle((toggle) =>
+				toggle
+					.setValue(this.plugin.settings.GeneralButton)
+					.onChange(async (value) => {
+						this.plugin.settings.GeneralButton = value;
+						await this.plugin.saveSettings();
+					})
+			);
 
         // new Setting(containerEl)
         // .setName("Convert tags(optional)")
@@ -161,5 +180,20 @@ export class ObsidianSettingTab extends PluginSettingTab {
                 }
             );
 
+		// Custom Database Settings
+
+		containerEl.createEl('h2', {text: i18nConfig.NotionCustomSettingHeader});
+
+		new Setting(containerEl)
+			.setName(i18nConfig.NotionCustomButton)
+			.setDesc(i18nConfig.NotionCustomButtonDesc)
+			.addToggle((toggle) =>
+				toggle
+					.setValue(this.plugin.settings.CustomButton)
+					.onChange(async (value) => {
+						this.plugin.settings.CustomButton = value;
+						await this.plugin.saveSettings();
+					})
+			);
     }
 }

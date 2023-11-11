@@ -6,9 +6,8 @@ export const I18n: { [key: string]: any } = {
         CommandName: "Share to NotionNext Database",
         CommandIDGeneral: "share-to-notion",
         CommandNameGeneral: "Share to Notion General Database",
-        NotionNextVersion: "NotionNext Version Database",
-        NotionNextVersionDesc:
-            "Turn on this option if you are using NotionNext",
+        NotionNextButton: "NotionNext command switch",
+        NotionNextButtonDesc: "Open this option, Sync to NotionNext command will be displayed in the command palette",
         NotionNextSettingHeader: "NotionNext Database Settings",
         NotionAPI: "Notion API Token",
         NotionAPIDesc: "It's a secret",
@@ -24,7 +23,9 @@ export const I18n: { [key: string]: any } = {
             "Your notion ID (optional),share link likes:https://username.notion.site/,your notion id is [username]",
         NotionUserText: "Enter your notion ID (options)",
         NotionGeneralSettingHeader: "General Notion Database Settings",
-        NotYetFinish:
+        NotionGeneralButton: "Notion General command switch",
+		NotionGeneralButtonDesc: "Open this option, Sync to Notion General Database command will be displayed in the command palette",
+		NotYetFinish:
             "Not finished. This function will be available in the next version",
         PlaceHolder: "Enter database Name",
         "notion-logo": "Share to NotionNext",
@@ -41,6 +42,9 @@ export const I18n: { [key: string]: any } = {
             "The 'NNon' property is missing in the settings. Please set it up.",
         "set-api-id":
             "Please set up the notion API and database ID in the settings tab.",
+		NotionCustomSettingHeader: "Notion Custom Database Settings",
+		NotionCustomButton: "Notion Customised command switch",
+		NotionCustomButtonDesc: "Open this option, Sync to Notion Customised Database command will be displayed in the command palette",
     },
     zh: {
         ribbonIcon: "分享到 NotionNext",
@@ -49,8 +53,8 @@ export const I18n: { [key: string]: any } = {
         CommandName: "分享到 NotionNext",
         CommandIDGeneral: "share-to-notion",
         CommandNameGeneral: "分享到 Notion 普通数据库",
-        NotionNextVersion: "NotionNext 版本数据库",
-        NotionNextVersionDesc: "如果你使用的是NotionNext，请打开此选项",
+		NotionNextButton: "NotionNext 同步命令开关",
+		NotionNextButtonDesc: "打开此选项，NotionNext 同步将显示在命令面板中",
         NotionNextSettingHeader: "NotionNext 数据库参数设置",
         NotionAPI: "Notion API 令牌",
         NotionAPIDesc: "显示为密码",
@@ -66,6 +70,8 @@ export const I18n: { [key: string]: any } = {
             "你的 Notion ID（可选），分享链接类似：https://username.notion.site/，你的 Notion ID 是 [username]",
         NotionUserText: "输入你的 Notion ID（可选）",
         NotionGeneralSettingHeader: "普通 Notion 数据库设置",
+		NotionGeneralButton: "普通数据库同步命令开关",
+		NotionGeneralButtonDesc: "打开此选项，同步到普通数据库命令将显示在命令面板中",
         NotYetFinish: "未完成。此功能将在之后版本中提供",
         PlaceHolder: "输入数据库名称",
         "notion-logo": "分享到NotionNext",
@@ -78,6 +84,9 @@ export const I18n: { [key: string]: any } = {
             "设置标签失败,请检查文件的frontmatter,或者在插件设置中关闭设置tags开关",
         NNonMissing: "未设置'NNon'属性，请在插件设置中选择NotionNext数据库。",
         "set-api-id": "请在插件设置中设置notion API和database ID",
+		NotionCustomSettingHeader: "Notion 自定义数据库设置",
+		NotionCustomButton: "Notion 自定义数据库同步命令开关",
+		NotionCustomButtonDesc: "打开此选项，同步到自定义数据库命令将显示在命令面板中",
     },
 };
 
