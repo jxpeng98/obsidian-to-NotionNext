@@ -3,6 +3,14 @@
 
 所以我在[原作者](https://github.com/EasyChris/obsidian-to-notion)的基础之上，增加了匹配[NotionNext](https://github.com/tangly1024/NotionNext)模板的功能。这样可以直接在Obsidian编辑，整理好之后一键发布。
 ## 更新说明
+### 0.2.6
+- 增加一个按钮用来控制是否在名列列表中显示如下数据库。 
+
+![](https://minioapi.pjx.ac.cn/img1/2023/11/147c6a4eaa34da41a6f102558ed77106.png)
+如果你关闭普通数据库的按钮，你在上传命令列表中就不会出现普通数据库的选项。如果你关闭NotionNext数据库的按钮，你在上传命令列表中就不会出现NotionNext数据库的选项。
+
+![](https://minioapi.pjx.ac.cn/img1/2023/11/70b8e4fc2148688ccbd6cfc53ce339a2.png)
+
 ### 0.2.3
 - 修复了一个bug，现在可以正常更新了。 
 ### 0.2.2
