@@ -5,6 +5,16 @@ Thanks to the [original author](https://github.com/EasyChris/obsidian-to-notion)
 
 Thus, based on the [original author's work](https://github.com/EasyChris/obsidian-to-notion), I've added a feature to match the [NotionNext](https://github.com/tangly1024/NotionNext) template. This way, you can edit directly in Obsidian and publish with a single click after organizing.
 ## Update
+### 0.2.6
+- Add a switch button to control whether to show the upload command in the command palette.
+
+![](https://minioapi.pjx.ac.cn/img1/2023/11/147c6a4eaa34da41a6f102558ed77106.png)
+If you turn off the button for the General database, you won't see the option for the General database in the upload command list. 
+
+If you turn off the button for the NotionNext database, you won't see the option for the NotionNext database in the upload command list.
+
+![](https://minioapi.pjx.ac.cn/img1/2023/11/70b8e4fc2148688ccbd6cfc53ce339a2.png)
+
 ### 0.2.3
 - Fix the bug, now you can update normally.
 ### 0.2.2

@@ -16,12 +16,12 @@ export const I18n: { [key: string]: any } = {
         DatabaseIDText: "Enter your Database ID",
         BannerUrl: "Banner url(optional)",
         BannerUrlDesc:
-            "page banner url(optional), default is empty, if you want to show a banner, please enter the url(like: https://minioapi.pjx.ac.cn/img1/2023/11/b7b40a0724e93b7d7ab494bb3b8a2da8.png)",
+            "Default is empty, if you want to show a banner, please enter the url(like: https://minioapi.pjx.ac.cn/img1/2023/11/b7b40a0724e93b7d7ab494bb3b8a2da8.png)",
         BannerUrlText: "Enter your banner url",
         NotionUser: "Notion ID(username, optional)",
         NotionUserDesc:
             "Your notion ID (optional),share link likes:https://username.notion.site/,your notion id is [username]",
-        NotionUserText: "Enter your notion ID (options)",
+        NotionUserText: "Enter your notion ID",
         NotionGeneralSettingHeader: "General Notion Database Settings",
         NotionGeneralButton: "Notion General command switch",
 		NotionGeneralButtonDesc: "Open this option, Sync to Notion General Database command will be displayed in the command palette",
@@ -63,12 +63,12 @@ export const I18n: { [key: string]: any } = {
         DatabaseIDText: "输入你的数据库 ID",
         BannerUrl: "封面图片地址（可选）",
         BannerUrlDesc:
-            "页面封面图片地址（可选），默认为空，如果你想显示封面图片，请输入图片地址（例如：https://minioapi.pjx.ac.cn/img1/2023/11/b7b40a0724e93b7d7ab494bb3b8a2da8.png）",
+            "默认为空，如果你想显示封面图片，请输入图片地址（例如：https://minioapi.pjx.ac.cn/img1/2023/11/b7b40a0724e93b7d7ab494bb3b8a2da8.png）",
         BannerUrlText: "输入你的封面图片地址",
         NotionUser: "Notion ID（用户名，可选）",
         NotionUserDesc:
             "你的 Notion ID（可选），分享链接类似：https://username.notion.site/，你的 Notion ID 是 [username]",
-        NotionUserText: "输入你的 Notion ID（可选）",
+        NotionUserText: "输入你的 Notion ID",
         NotionGeneralSettingHeader: "普通 Notion 数据库设置",
 		NotionGeneralButton: "普通数据库同步命令开关",
 		NotionGeneralButtonDesc: "打开此选项，同步到普通数据库命令将显示在命令面板中",

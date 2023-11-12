@@ -49,18 +49,6 @@ export class ObsidianSettingTab extends PluginSettingTab {
         containerEl.createEl('h2', {text: i18nConfig.GeneralSetting})
 
         new Setting(containerEl)
-            .setName(i18nConfig.NotionNextButton)
-            .setDesc(i18nConfig.NotionNextButtonDesc)
-            .addToggle((toggle) =>
-                toggle
-                    .setValue(this.plugin.settings.NextButton)
-                    .onChange(async (value) => {
-                        this.plugin.settings.NextButton = value;
-                        await this.plugin.saveSettings();
-                    })
-            );
-
-        new Setting(containerEl)
             .setName(i18nConfig.BannerUrl)
             .setDesc(i18nConfig.BannerUrlDesc)
             .addText((text) =>
@@ -88,6 +76,19 @@ export class ObsidianSettingTab extends PluginSettingTab {
             );
 
         containerEl.createEl('h2', {text: i18nConfig.NotionNextSettingHeader})
+
+		new Setting(containerEl)
+			.setName(i18nConfig.NotionNextButton)
+			.setDesc(i18nConfig.NotionNextButtonDesc)
+			.addToggle((toggle) =>
+				toggle
+					.setValue(this.plugin.settings.NextButton)
+					.onChange(async (value) => {
+						this.plugin.settings.NextButton = value;
+						await this.plugin.saveSettings();
+						await this.plugin.commands.updateCommand();
+					})
+			);
 
         new Setting(containerEl)
             .setName(i18nConfig.NotionAPI)
@@ -136,6 +137,7 @@ export class ObsidianSettingTab extends PluginSettingTab {
 					.onChange(async (value) => {
 						this.plugin.settings.GeneralButton = value;
 						await this.plugin.saveSettings();
+						await this.plugin.commands.updateCommand();
 					})
 			);
 
@@ -182,18 +184,18 @@ export class ObsidianSettingTab extends PluginSettingTab {
 
 		// Custom Database Settings
 
-		containerEl.createEl('h2', {text: i18nConfig.NotionCustomSettingHeader});
-
-		new Setting(containerEl)
-			.setName(i18nConfig.NotionCustomButton)
-			.setDesc(i18nConfig.NotionCustomButtonDesc)
-			.addToggle((toggle) =>
-				toggle
-					.setValue(this.plugin.settings.CustomButton)
-					.onChange(async (value) => {
-						this.plugin.settings.CustomButton = value;
-						await this.plugin.saveSettings();
-					})
-			);
+		// containerEl.createEl('h2', {text: i18nConfig.NotionCustomSettingHeader});
+		//
+		// new Setting(containerEl)
+		// 	.setName(i18nConfig.NotionCustomButton)
+		// 	.setDesc(i18nConfig.NotionCustomButtonDesc)
+		// 	.addToggle((toggle) =>
+		// 		toggle
+		// 			.setValue(this.plugin.settings.CustomButton)
+		// 			.onChange(async (value) => {
+		// 				this.plugin.settings.CustomButton = value;
+		// 				await this.plugin.saveSettings();
+		// 			})
+		// 	);
     }
 }
