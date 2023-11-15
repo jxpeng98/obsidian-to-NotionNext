@@ -50,7 +50,7 @@ export class ObsidianSettingTab extends PluginSettingTab {
 
         containerEl.empty();
 
-		// General Settings
+        // General Settings
         containerEl.createEl('h2', { text: i18nConfig.GeneralSetting });
 
         new Setting(containerEl)
@@ -93,68 +93,58 @@ export class ObsidianSettingTab extends PluginSettingTab {
                         await this.plugin.saveSettings();
                         await this.plugin.commands.updateCommand();
 
-						// Clear existing components
-						notionAPINextEl.empty();
-						databaseIDNextEl.empty();
+                        // Clear existing components
+                        notionAPINextEl.empty();
+                        databaseIDNextEl.empty();
 
-						if (value) {
-							new Setting(notionAPINextEl)
-								.setName(i18nConfig.NotionAPI)
-								.setDesc(i18nConfig.NotionAPIDesc)
-								.addText((text) => {
-									text.inputEl.type = 'password';
-									return text
-										.setPlaceholder(i18nConfig.NotionAPIText)
-										.setValue(this.plugin.settings.notionAPINext)
-										.onChange(async (value) => {
-											this.plugin.settings.notionAPINext = value;
-											await this.plugin.saveSettings();
-										})
-								});
+                        if (value) {
+                            new Setting(notionAPINextEl)
+                                .setName(i18nConfig.NotionAPI)
+                                .setDesc(i18nConfig.NotionAPIDesc)
+                                .addText((text) => {
+                                    text.inputEl.type = 'password';
+                                    return text
+                                        .setPlaceholder(i18nConfig.NotionAPIText)
+                                        .setValue(this.plugin.settings.notionAPINext)
+                                        .onChange(async (value) => {
+                                            this.plugin.settings.notionAPINext = value;
+                                            await this.plugin.saveSettings();
+                                        })
+                                });
 
-							notionAPINextEl.style.borderTop = value ? "1px solid var(--background-modifier-border)" : "none";
-							notionAPINextEl.style.paddingTop = value ? "0.75em" : "0";
+                            notionAPINextEl.style.borderTop = value ? "1px solid var(--background-modifier-border)" : "none";
+                            notionAPINextEl.style.paddingTop = value ? "0.75em" : "0";
 
-							new Setting(databaseIDNextEl)
-								.setName(i18nConfig.DatabaseID)
-								.setDesc(i18nConfig.NotionAPIDesc)
-								.addText((text) => {
-										text.inputEl.type = 'password';
-										return text
-											.setPlaceholder(i18nConfig.DatabaseIDText)
-											.setValue(this.plugin.settings.databaseIDNext)
-											.onChange(async (value) => {
-												this.plugin.settings.databaseIDNext = value;
-												await this.plugin.saveSettings();
-											})
-									}
-								);
+                            new Setting(databaseIDNextEl)
+                                .setName(i18nConfig.DatabaseID)
+                                .setDesc(i18nConfig.NotionAPIDesc)
+                                .addText((text) => {
+                                    text.inputEl.type = 'password';
+                                    return text
+                                        .setPlaceholder(i18nConfig.DatabaseIDText)
+                                        .setValue(this.plugin.settings.databaseIDNext)
+                                        .onChange(async (value) => {
+                                            this.plugin.settings.databaseIDNext = value;
+                                            await this.plugin.saveSettings();
+                                        })
+                                }
+                                );
 
-							databaseIDNextEl.style.borderTop = value ? "1px solid var(--background-modifier-border)" : "none";
-							databaseIDNextEl.style.paddingTop = value ? "0.75em" : "0";
+                            databaseIDNextEl.style.borderTop = value ? "1px solid var(--background-modifier-border)" : "none";
+                            databaseIDNextEl.style.paddingTop = value ? "0.75em" : "0";
 
-						} else {
-							notionAPINextEl.style.borderTop = "none";
-							notionAPINextEl.style.paddingTop = "0";
-							databaseIDNextEl.style.borderTop = "none";
-							databaseIDNextEl.style.paddingTop = "0";
-						}
+                        } else {
+                            notionAPINextEl.style.borderTop = "none";
+                            notionAPINextEl.style.paddingTop = "0";
+                            databaseIDNextEl.style.borderTop = "none";
+                            databaseIDNextEl.style.paddingTop = "0";
+                        }
                     })
             );
 
-		const notionAPINextEl = containerEl.createDiv('api-next', (div) => {
-			div.style.alignItems = "center";
-			div.style.borderTop = "none";
-			div.style.paddingBottom = "0";
-		}
-		);
+        const notionAPINextEl = this.createStyleDiv('api-next')
 
-		const databaseIDNextEl = containerEl.createDiv('databaseID-next', (div) => {
-			div.style.alignItems = "center";
-			div.style.borderTop = "none";
-			div.style.paddingBottom = "0";
-		}
-		);
+        const databaseIDNextEl = this.createStyleDiv('databaseID-next')
 
 
 
@@ -177,115 +167,106 @@ export class ObsidianSettingTab extends PluginSettingTab {
                         await this.plugin.saveSettings();
                         await this.plugin.commands.updateCommand();
 
-						// Clear existing components
-						CustomTitleEl.empty();
-						notionAPIGeneralEl.empty();
-						databaseIDGeneralEl.empty();
+                        // Clear existing components
+                        CustomTitleEl.empty();
+                        notionAPIGeneralEl.empty();
+                        databaseIDGeneralEl.empty();
 
-						if (value) {
-							new Setting(CustomTitleEl)
-								.setName(i18nConfig.NotionCustomTitle)
-								.setDesc(i18nConfig.NotionCustomTitleDesc)
-								.addToggle((toggle) =>
-									toggle
-										.setValue(this.plugin.settings.CustomTitleButton)
-										.onChange(async (value) => {
-											this.plugin.settings.CustomTitleButton = value;
-											await this.plugin.saveSettings();
-											await this.plugin.commands.updateCommand();
+                        if (value) {
+                            new Setting(CustomTitleEl)
+                                .setName(i18nConfig.NotionCustomTitle)
+                                .setDesc(i18nConfig.NotionCustomTitleDesc)
+                                .addToggle((toggle) =>
+                                    toggle
+                                        .setValue(this.plugin.settings.CustomTitleButton)
+                                        .onChange(async (value) => {
+                                            this.plugin.settings.CustomTitleButton = value;
+                                            await this.plugin.saveSettings();
+                                            await this.plugin.commands.updateCommand();
 
-											// Clear existing components
-											dynamicSettingContainer.empty();
+                                            // Clear existing components
+                                            dynamicSettingContainer.empty();
 
-											// Add new components based on the toggle value
-											if (this.plugin.settings.CustomTitleButton) {
-												new Setting(dynamicSettingContainer)
-													.setName(i18nConfig.NotionCustomTitleName)
-													.setDesc(i18nConfig.NotionCustomTitleNameDesc)
-													.addText((text) =>
-														text
-															.setPlaceholder(i18nConfig.NotionCustomTitleText)
-															.setValue(this.plugin.settings.CustomTitleName)
-															.onChange(async (value) => {
-																this.plugin.settings.CustomTitleName = value;
-																await this.plugin.saveSettings();
-																await this.plugin.commands.updateCommand();
+                                            // Add new components based on the toggle value
+                                            if (this.plugin.settings.CustomTitleButton) {
+                                                new Setting(dynamicSettingContainer)
+                                                    .setName(i18nConfig.NotionCustomTitleName)
+                                                    .setDesc(i18nConfig.NotionCustomTitleNameDesc)
+                                                    .addText((text) =>
+                                                        text
+                                                            .setPlaceholder(i18nConfig.NotionCustomTitleText)
+                                                            .setValue(this.plugin.settings.CustomTitleName)
+                                                            .onChange(async (value) => {
+                                                                this.plugin.settings.CustomTitleName = value;
+                                                                await this.plugin.saveSettings();
+                                                                await this.plugin.commands.updateCommand();
 
-																// Clear existing components
-																CustomTitleEl.empty();
-															})
-													);
-												dynamicSettingContainer.style.borderTop = value ? "1px solid var(--background-modifier-border)" : "none";
-												dynamicSettingContainer.style.paddingTop = value ? "0.75em" : "0";
-											} else {
-												dynamicSettingContainer.style.borderTop = "none";
-												dynamicSettingContainer.style.paddingTop = "0";
-											}
-										})
-								);
+                                                                // Clear existing components
+                                                                CustomTitleEl.empty();
+                                                            })
+                                                    );
+                                                dynamicSettingContainer.style.borderTop = value ? "1px solid var(--background-modifier-border)" : "none";
+                                                dynamicSettingContainer.style.paddingTop = value ? "0.75em" : "0";
+                                            } else {
+                                                dynamicSettingContainer.style.borderTop = "none";
+                                                dynamicSettingContainer.style.paddingTop = "0";
+                                            }
+                                        })
+                                );
 
-							CustomTitleEl.style.borderTop = value ? "1px solid var(--background-modifier-border)" : "none";
-							CustomTitleEl.style.paddingTop = value ? "0.75em" : "0";
+                            CustomTitleEl.style.borderTop = value ? "1px solid var(--background-modifier-border)" : "none";
+                            CustomTitleEl.style.paddingTop = value ? "0.75em" : "0";
 
-							new Setting(notionAPIGeneralEl)
-								.setName(i18nConfig.NotionAPI)
-								.setDesc(i18nConfig.NotionAPIDesc)
-								.addText((text) => {
-									text.inputEl.type = 'password';
-									return text
-										.setPlaceholder(i18nConfig.NotionAPIText)
-										.setValue(this.plugin.settings.notionAPIGeneral)
-										.onChange(async (value) => {
-											this.plugin.settings.notionAPIGeneral = value;
-											await this.plugin.saveSettings();
-										})
-								});
+                            new Setting(notionAPIGeneralEl)
+                                .setName(i18nConfig.NotionAPI)
+                                .setDesc(i18nConfig.NotionAPIDesc)
+                                .addText((text) => {
+                                    text.inputEl.type = 'password';
+                                    return text
+                                        .setPlaceholder(i18nConfig.NotionAPIText)
+                                        .setValue(this.plugin.settings.notionAPIGeneral)
+                                        .onChange(async (value) => {
+                                            this.plugin.settings.notionAPIGeneral = value;
+                                            await this.plugin.saveSettings();
+                                        })
+                                });
 
-							notionAPIGeneralEl.style.borderTop = value ? "1px solid var(--background-modifier-border)" : "none";
-							notionAPIGeneralEl.style.paddingTop = value ? "0.75em" : "0";
+                            notionAPIGeneralEl.style.borderTop = value ? "1px solid var(--background-modifier-border)" : "none";
+                            notionAPIGeneralEl.style.paddingTop = value ? "0.75em" : "0";
 
 
-							new Setting(databaseIDGeneralEl)
-								.setName(i18nConfig.DatabaseID)
-								.setDesc(i18nConfig.NotionAPIDesc)
-								.addText((text) => {
-										text.inputEl.type = 'password';
-										return text
-											.setPlaceholder(i18nConfig.NotionIDText)
-											.setValue(this.plugin.settings.databaseIDGeneral)
-											.onChange(async (value) => {
-												this.plugin.settings.databaseIDGeneral = value;
-												await this.plugin.saveSettings();
-											})
-									}
-								);
+                            new Setting(databaseIDGeneralEl)
+                                .setName(i18nConfig.DatabaseID)
+                                .setDesc(i18nConfig.NotionAPIDesc)
+                                .addText((text) => {
+                                    text.inputEl.type = 'password';
+                                    return text
+                                        .setPlaceholder(i18nConfig.NotionIDText)
+                                        .setValue(this.plugin.settings.databaseIDGeneral)
+                                        .onChange(async (value) => {
+                                            this.plugin.settings.databaseIDGeneral = value;
+                                            await this.plugin.saveSettings();
+                                        })
+                                }
+                                );
 
-							databaseIDGeneralEl.style.borderTop = value ? "1px solid var(--background-modifier-border)" : "none";
-							databaseIDGeneralEl.style.paddingTop = value ? "0.75em" : "0";
+                            databaseIDGeneralEl.style.borderTop = value ? "1px solid var(--background-modifier-border)" : "none";
+                            databaseIDGeneralEl.style.paddingTop = value ? "0.75em" : "0";
 
-						} else {
-							CustomTitleEl.style.borderTop = "none";
-							CustomTitleEl.style.paddingTop = "0";
-							notionAPIGeneralEl.style.borderTop = "none";
-							notionAPIGeneralEl.style.paddingTop = "0";
-							databaseIDGeneralEl.style.borderTop = "none";
-							databaseIDGeneralEl.style.paddingTop = "0";
-						}
+                        } else {
+                            CustomTitleEl.style.borderTop = "none";
+                            CustomTitleEl.style.paddingTop = "0";
+                            notionAPIGeneralEl.style.borderTop = "none";
+                            notionAPIGeneralEl.style.paddingTop = "0";
+                            databaseIDGeneralEl.style.borderTop = "none";
+                            databaseIDGeneralEl.style.paddingTop = "0";
+                        }
                     })
             );
 
-		const CustomTitleEl = containerEl.createDiv('api-general', (div) => {
-				div.style.alignItems = "center";
-				div.style.borderTop = "none";
-				div.style.paddingBottom = "0";
-			}
-		);
+		const CustomTitleEl = this.createStyleDiv('custom-title');
 
-		const dynamicSettingContainer = containerEl.createDiv('setting-popover', (div) => {
-			div.style.alignItems = "center";
-			div.style.borderTop = "none";
-			div.style.paddingBottom = "0";
-		});
+        const dynamicSettingContainer = this.createStyleDiv('dynamic-setting');
 
         // new Setting(containerEl)
         // .setName("Convert tags(optional)")
@@ -299,21 +280,9 @@ export class ObsidianSettingTab extends PluginSettingTab {
         // 		})
         // );
 
+		const notionAPIGeneralEl = this.createStyleDiv('api-general');
 
-		const notionAPIGeneralEl = containerEl.createDiv('api-general', (div) => {
-				div.style.alignItems = "center";
-				div.style.borderTop = "none";
-				div.style.paddingBottom = "0";
-		}
-		);
-
-		const databaseIDGeneralEl = containerEl.createDiv('databaseID-general', (div) => {
-				div.style.alignItems = "center";
-				div.style.borderTop = "none";
-				div.style.paddingBottom = "0";
-		}
-		);
-
+		const databaseIDGeneralEl = this.createStyleDiv('databaseID-general');
 
         // Custom Database Settings
 
@@ -330,5 +299,24 @@ export class ObsidianSettingTab extends PluginSettingTab {
         // 				await this.plugin.saveSettings();
         // 			})
         // 	);
+    }
+
+	// create a function to create a div with a style for pop over elements
+	private createStyleDiv(className: string | DomElementInfo) {
+        return this.containerEl.createDiv(className, (div) => {
+			div.style.alignItems = "center";
+			div.style.borderTop = "none";
+			div.style.paddingBottom = "0";
+		});
+    }
+
+	// function to add one setting element in the setting tab.
+	private createSettingEl() {
+
+	}
+
+	// update the setting display style in the setting tab
+	private updateSettingEl() {
+
     }
 }
