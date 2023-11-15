@@ -50,7 +50,37 @@ export class ObsidianSettingTab extends PluginSettingTab {
 
         containerEl.empty();
 
-        containerEl.createEl('h2', { text: i18nConfig.GeneralSetting })
+		// create a collapsible container
+		const collapsible = containerEl.createEl('button', {
+			cls: 'collapsible',
+			text: i18nConfig.GeneralSetting,
+			}, (button) => {
+				button.style.color = "white";
+				button.style.cursor = "pointer";
+				button.style.padding = "18px";
+				button.style.width = "100%";
+				button.style.border = "none";
+				button.style.textAlign = "left";
+				button.style.outline = "none";
+				button.style.fontSize = "15px";
+			}
+		);
+
+		
+
+		const content = containerEl.createDiv('content', (div) => {
+				div.style.padding = "0 18px";
+				div.style.display = "none";
+				div.style.overflow = "hidden";
+				div.style.backgroundColor = "var(--background-primary-alt)";
+		}
+		);
+
+
+		collapsible.appendChild(content);
+
+
+        containerEl.createEl('h2', { text: i18nConfig.GeneralSetting });
 
         new Setting(containerEl)
             .setName(i18nConfig.BannerUrl)
