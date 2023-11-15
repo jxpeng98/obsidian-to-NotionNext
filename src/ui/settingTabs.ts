@@ -112,8 +112,7 @@ export class ObsidianSettingTab extends PluginSettingTab {
                                         })
                                 });
 
-                            notionAPINextEl.style.borderTop = value ? "1px solid var(--background-modifier-border)" : "none";
-                            notionAPINextEl.style.paddingTop = value ? "0.75em" : "0";
+							this.updateSettingEl(notionAPINextEl, value);
 
                             new Setting(databaseIDNextEl)
                                 .setName(i18nConfig.DatabaseID)
@@ -130,14 +129,11 @@ export class ObsidianSettingTab extends PluginSettingTab {
                                 }
                                 );
 
-                            databaseIDNextEl.style.borderTop = value ? "1px solid var(--background-modifier-border)" : "none";
-                            databaseIDNextEl.style.paddingTop = value ? "0.75em" : "0";
+							this.updateSettingEl(databaseIDNextEl, value)
 
                         } else {
-                            notionAPINextEl.style.borderTop = "none";
-                            notionAPINextEl.style.paddingTop = "0";
-                            databaseIDNextEl.style.borderTop = "none";
-                            databaseIDNextEl.style.paddingTop = "0";
+							this.updateSettingEl(notionAPINextEl, false)
+							this.updateSettingEl(databaseIDNextEl, false);
                         }
                     })
             );
@@ -185,11 +181,11 @@ export class ObsidianSettingTab extends PluginSettingTab {
                                             await this.plugin.commands.updateCommand();
 
                                             // Clear existing components
-                                            dynamicSettingContainer.empty();
+                                            CustomNameEl.empty();
 
                                             // Add new components based on the toggle value
                                             if (this.plugin.settings.CustomTitleButton) {
-                                                new Setting(dynamicSettingContainer)
+                                                new Setting(CustomNameEl)
                                                     .setName(i18nConfig.NotionCustomTitleName)
                                                     .setDesc(i18nConfig.NotionCustomTitleNameDesc)
                                                     .addText((text) =>
@@ -205,17 +201,14 @@ export class ObsidianSettingTab extends PluginSettingTab {
                                                                 CustomTitleEl.empty();
                                                             })
                                                     );
-                                                dynamicSettingContainer.style.borderTop = value ? "1px solid var(--background-modifier-border)" : "none";
-                                                dynamicSettingContainer.style.paddingTop = value ? "0.75em" : "0";
+												this.updateSettingEl(CustomNameEl, value)
                                             } else {
-                                                dynamicSettingContainer.style.borderTop = "none";
-                                                dynamicSettingContainer.style.paddingTop = "0";
-                                            }
+                                            this.updateSettingEl(CustomNameEl, false);
+											}
                                         })
                                 );
 
-                            CustomTitleEl.style.borderTop = value ? "1px solid var(--background-modifier-border)" : "none";
-                            CustomTitleEl.style.paddingTop = value ? "0.75em" : "0";
+							this.updateSettingEl(CustomTitleEl, value);
 
                             new Setting(notionAPIGeneralEl)
                                 .setName(i18nConfig.NotionAPI)
@@ -231,8 +224,7 @@ export class ObsidianSettingTab extends PluginSettingTab {
                                         })
                                 });
 
-                            notionAPIGeneralEl.style.borderTop = value ? "1px solid var(--background-modifier-border)" : "none";
-                            notionAPIGeneralEl.style.paddingTop = value ? "0.75em" : "0";
+							this.updateSettingEl(notionAPIGeneralEl, value);
 
 
                             new Setting(databaseIDGeneralEl)
@@ -250,23 +242,19 @@ export class ObsidianSettingTab extends PluginSettingTab {
                                 }
                                 );
 
-                            databaseIDGeneralEl.style.borderTop = value ? "1px solid var(--background-modifier-border)" : "none";
-                            databaseIDGeneralEl.style.paddingTop = value ? "0.75em" : "0";
+							this.updateSettingEl(databaseIDGeneralEl, value);
 
                         } else {
-                            CustomTitleEl.style.borderTop = "none";
-                            CustomTitleEl.style.paddingTop = "0";
-                            notionAPIGeneralEl.style.borderTop = "none";
-                            notionAPIGeneralEl.style.paddingTop = "0";
-                            databaseIDGeneralEl.style.borderTop = "none";
-                            databaseIDGeneralEl.style.paddingTop = "0";
+							this.updateSettingEl(CustomTitleEl, false);
+							this.updateSettingEl(notionAPIGeneralEl, false);
+							this.updateSettingEl(databaseIDGeneralEl, false);
                         }
                     })
             );
 
 		const CustomTitleEl = this.createStyleDiv('custom-title');
 
-        const dynamicSettingContainer = this.createStyleDiv('dynamic-setting');
+		const CustomNameEl = this.createStyleDiv('custom-name');
 
         // new Setting(containerEl)
         // .setName("Convert tags(optional)")
@@ -311,12 +299,55 @@ export class ObsidianSettingTab extends PluginSettingTab {
     }
 
 	// function to add one setting element in the setting tab.
-	private createSettingEl() {
-
+	private createSettingEl(containerEl: HTMLElement, name: string, desc: string, type:string, placeholder: string, setvalue: any) {
+		if (type === 'password') {
+			return new Setting(containerEl)
+				.setName(name)
+				.setDesc(desc)
+				.addText((text) => {
+					text.inputEl.type = type;
+					return text
+						.setPlaceholder(placeholder)
+						.setValue(setvalue)
+						.onChange(async (value) => {
+							setvalue = value;
+							await this.plugin.saveSettings();
+                        })
+                }
+				)
+        } else if (type === 'toggle') {
+			return new Setting(containerEl)
+				.setName(name)
+				.setDesc(desc)
+				.addToggle((toggle) =>
+					toggle
+						.setValue(setvalue)
+						.onChange(async (value) => {
+							setvalue = value;
+							await this.plugin.saveSettings();
+							await this.plugin.commands.updateCommand();
+						})
+				)
+		} else if (type === 'text') {
+			new Setting(containerEl)
+				.setName(name)
+				.setDesc(desc)
+				.addText((text) =>
+					text
+						.setPlaceholder(placeholder)
+						.setValue(setvalue)
+						.onChange(async (value) => {
+							setvalue = value;
+							await this.plugin.saveSettings();
+							await this.plugin.commands.updateCommand();
+                        })
+				)
+        }
 	}
 
 	// update the setting display style in the setting tab
-	private updateSettingEl() {
-
+	private updateSettingEl(element: HTMLElement, value: boolean) {
+		element.style.borderTop = value ? "1px solid var(--background-modifier-border)" : "none";
+		element.style.paddingTop = value ? "0.75em" : "0";
     }
 }
