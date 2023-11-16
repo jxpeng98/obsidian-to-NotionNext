@@ -3,6 +3,16 @@
 
 所以我在[原作者](https://github.com/EasyChris/obsidian-to-notion)的基础之上，增加了匹配[NotionNext](https://github.com/tangly1024/NotionNext)模板的功能。这样可以直接在Obsidian编辑，整理好之后一键发布。
 ## 更新说明
+### 0.3.0 (大更新)
+- 这个版本开始，你可以**任意修改第一列表头的名字 (标题列，默认：'title')**。 （**注意：你必须保证你的Notion数据库中有'tags‘这一列的存在，并且在markdown文件中把`tags:`添加到你的YAML表头中。否则会返回`400 错误`。但是你可以`tags:`设置为空。**）
+
+  ![](https://minioapi.pjx.ac.cn/img1/2023/11/4a298b9be3990e9d2201bf2f50ca5a0a.png)
+例如这样：
+  ![](https://minioapi.pjx.ac.cn/img1/2023/11/4cd8d79cd9dd9dde299e39c666cb3473.gif)
+- 增加了一个控制按钮来控制是否开启当前数据库同步命令的功能。如果你关闭了这个按钮，你在上传命令列表中就不会出现当前数据库的选项。
+
+![](https://minioapi.pjx.ac.cn/img1/2023/11/becb60fc44783842da4b3cf4c322f363.gif)
+
 ### 0.2.6
 - 增加一个按钮用来控制是否在名列列表中显示如下数据库。 
 
