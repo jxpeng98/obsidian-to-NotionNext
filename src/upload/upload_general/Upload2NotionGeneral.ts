@@ -1,6 +1,6 @@
 import { App, Notice, requestUrl, TFile } from "obsidian";
-import { Client } from '@notionhq/client';
-import { markdownToBlocks, } from "@tryfabric/martian";
+import { Client } from "@notionhq/client";
+import { markdownToBlocks } from "@tryfabric/martian";
 import * as yamlFrontMatter from "yaml-front-matter";
 // import * as yaml from "yaml"
 import MyPlugin from "src/main";
@@ -24,19 +24,17 @@ export class Upload2NotionGeneral extends UploadBaseGeneral {
 		tags: string[],
 		childArr: any,
 	) {
-		await this.deletePage(notionID)
+		await this.deletePage(notionID);
 
-		const databasecover = await this.getDataBase(this.plugin.settings.databaseIDGeneral)
+		const databasecover = await this.getDataBase(
+			this.plugin.settings.databaseIDGeneral,
+		);
 
 		if (cover == null) {
-			cover = databasecover
+			cover = databasecover;
 		}
 
-		return await this.createPage(
-			title,
-			cover,
-			tags,
-			childArr)
+		return await this.createPage(title, cover, tags, childArr);
 	}
 
 	async createPage(
@@ -50,56 +48,62 @@ export class Upload2NotionGeneral extends UploadBaseGeneral {
 				database_id: this.plugin.settings.databaseIDGeneral,
 			},
 			properties: {
-				[this.plugin.settings.CustomTitleButton ? this.plugin.settings.CustomTitleName : 'title']: {
+				[this.plugin.settings.CustomTitleButton
+					? this.plugin.settings.CustomTitleName
+					: "title"]: {
 					title: [
 						{
 							text: {
-								content: title
+								content: title,
 							},
 						},
 					],
 				},
 				tags: {
-					multi_select: tags && true ? tags.map(tag => {
-						return { "name": tag }
-					}) : [],
+					multi_select:
+						tags && true
+							? tags.map((tag) => {
+								return { name: tag };
+							})
+							: [],
 				},
 			},
 			children: childArr,
-		}
+		};
 
 		if (cover) {
 			bodyString.cover = {
 				type: "external",
 				external: {
-					url: cover
-				}
-			}
+					url: cover,
+				},
+			};
 		}
 
 		if (!bodyString.cover && this.plugin.settings.bannerUrl) {
 			bodyString.cover = {
 				type: "external",
 				external: {
-					url: this.plugin.settings.bannerUrl
-				}
-			}
+					url: this.plugin.settings.bannerUrl,
+				},
+			};
 		}
 
 		try {
 			return await requestUrl({
 				url: `https://api.notion.com/v1/pages`,
-				method: 'POST',
+				method: "POST",
 				headers: {
-					'Content-Type': 'application/json',
+					"Content-Type": "application/json",
 					// 'User-Agent': 'obsidian.md',
-					'Authorization': 'Bearer ' + this.plugin.settings.notionAPIGeneral,
-					'Notion-Version': '2022-06-28',
+					Authorization:
+						"Bearer " + this.plugin.settings.notionAPIGeneral,
+					"Notion-Version": "2022-06-28",
 				},
 				body: JSON.stringify(bodyString),
-			})
+			});
 		} catch (error) {
-			new Notice(`network error ${error}`)
+			new Notice(`network error ${error}`);
 		}
 	}
 
@@ -111,12 +115,18 @@ export class Upload2NotionGeneral extends UploadBaseGeneral {
 		nowFile: TFile,
 		app: App,
 	): Promise<any> {
-		let res: any
+		const options = {
+			notionLimits: {
+				truncate: false,
+			}
+		}
+		let res: any;
 		const yamlContent: any = yamlFrontMatter.loadFront(markdown);
-		const __content = yamlContent.__content
-		const file2Block = markdownToBlocks(__content);
-		const frontmasster = app.metadataCache.getFileCache(nowFile)?.frontmatter
-		const notionID = frontmasster ? frontmasster.notionID : null
+		const __content = yamlContent.__content;
+		const file2Block = markdownToBlocks(__content, options);
+		const frontmasster =
+			app.metadataCache.getFileCache(nowFile)?.frontmatter;
+		const notionID = frontmasster ? frontmasster.notionID : null;
 
 		if (notionID) {
 			res = await this.updatePage(
@@ -124,21 +134,16 @@ export class Upload2NotionGeneral extends UploadBaseGeneral {
 				title,
 				cover,
 				tags,
-				file2Block
+				file2Block,
 			);
 		} else {
-			res = await this.createPage(
-				title,
-				cover,
-				tags,
-				file2Block
-			);
+			res = await this.createPage(title, cover, tags, file2Block);
 		}
 		if (res.status === 200) {
-			await updateYamlInfo(markdown, nowFile, res, app, this.plugin)
+			await updateYamlInfo(markdown, nowFile, res, app, this.plugin);
 		} else {
-			new Notice(`${res.text}`)
+			new Notice(`${res.text}`);
 		}
-		return res
+		return res;
 	}
 }

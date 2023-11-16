@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>readme</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="README_files/libs/clipboard/clipboard.min.js"></script>
+<script src="README_files/libs/quarto-html/quarto.js"></script>
+<script src="README_files/libs/quarto-html/popper.min.js"></script>
+<script src="README_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="README_files/libs/quarto-html/anchor.min.js"></script>
+<link href="README_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="README_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="README_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="README_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="README_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+
+
+<section id="obsidian-to-notionnext" class="level1">
+<h1>Obsidian to NotionNext</h1>
+<p><a href="https://github.com/jxpeng98/obsidian-to-NotionNext/actions/workflows/test.yml"><img src="https://github.com/jxpeng98/obsidian-to-NotionNext/actions/workflows/test.yml/badge.svg" class="img-fluid" alt="test.yml"></a> <a href="https://github.com/jxpeng98/obsidian-to-NotionNext/actions/workflows/release.yml"><img src="https://github.com/jxpeng98/obsidian-to-NotionNext/actions/workflows/release.yml/badge.svg" class="img-fluid" alt="Release Obsidian plugin"></a> <a href="https://GitHub.com/jxpeng98/obsidian-to-NotionNext/releases/"><img src="https://img.shields.io/github/downloads/jxpeng98/obsidian-to-NotionNext/total.svg" class="img-fluid" alt="Github all releases"></a> <a href="https://github.com/jxpeng98/obsidian-to-NotionNext/releases"><img src="https://badgen.net/github/release/jxpeng98/obsidian-to-NotionNext.png" class="img-fluid" alt="GitLab latest release"></a></p>
+<p><a href="README-zh.md">中文文档</a></p>
+<p>Thanks to the <a href="https://github.com/EasyChris/obsidian-to-notion">original author</a> for developing such a useful plugin that can synchronize Obsidian to Notion. However, the original repository can only sync Name and Tags information. For those like me who use <a href="https://github.com/tangly1024/NotionNext">NotionNext</a> to set up their website, this presents some limitations. Every time I import, I need to make a lot of modifications.</p>
+<p>Thus, based on the <a href="https://github.com/EasyChris/obsidian-to-notion">original author’s work</a>, I’ve added a feature to match the <a href="https://github.com/tangly1024/NotionNext">NotionNext</a> template. This way, you can edit directly in Obsidian and publish with a single click after organizing.</p>
+<p><strong>Now, support both NotionNext and General databases.</strong></p>
+<section id="update" class="level2">
+<h2 class="anchored" data-anchor-id="update">Update</h2>
+<section id="section" class="level3">
+<h3 class="anchored" data-anchor-id="section">1.0.1</h3>
+<ul>
+<li>Fix the custom name element display bug in the settings.</li>
+</ul>
+</section>
+<section id="big-update" class="level3">
+<h3 class="anchored" data-anchor-id="big-update">1.0.0 (Big Update)</h3>
+<ul>
+<li>From this version, you can <strong>modify the first column name (title column, default: ‘title’)</strong> as you want. (<strong>Note: You need to have the ‘tags’ column in your Notion General database, and add <code>tags:</code> in your markdown frontmatter. If not, you will receive <code>network error 400</code>. But you can leave the <code>tags:</code> blank.</strong>)</li>
+</ul>
+<p><img src="https://minioapi.pjx.ac.cn/img1/2023/11/4a298b9be3990e9d2201bf2f50ca5a0a.png" class="img-fluid"> Like this: <img src="https://minioapi.pjx.ac.cn/img1/2023/11/4cd8d79cd9dd9dde299e39c666cb3473.gif" class="img-fluid"></p>
+<ul>
+<li>Add a switch button to control whether display the setting tabs in the plugin settings for both NotionNext and Notion General databases.</li>
+</ul>
+<p><img src="https://minioapi.pjx.ac.cn/img1/2023/11/becb60fc44783842da4b3cf4c322f363.gif" class="img-fluid"></p>
+</section>
+<section id="section-1" class="level3">
+<h3 class="anchored" data-anchor-id="section-1">0.2.6</h3>
+<ul>
+<li>Add a switch button to control whether to show the upload command in the command palette.</li>
+</ul>
+<p><img src="https://minioapi.pjx.ac.cn/img1/2023/11/147c6a4eaa34da41a6f102558ed77106.png" class="img-fluid"> If you turn off the button for the General database, you won’t see the option for the General database in the upload command list.</p>
+<p>If you turn off the button for the NotionNext database, you won’t see the option for the NotionNext database in the upload command list.</p>
+<p><img src="https://minioapi.pjx.ac.cn/img1/2023/11/70b8e4fc2148688ccbd6cfc53ce339a2.png" class="img-fluid"></p>
+</section>
+<section id="section-2" class="level3">
+<h3 class="anchored" data-anchor-id="section-2">0.2.3</h3>
+<ul>
+<li>Fix the bug, now you can update normally.</li>
+</ul>
+</section>
+<section id="section-3" class="level3">
+<h3 class="anchored" data-anchor-id="section-3">0.2.2</h3>
+<ul>
+<li>Support both NotionNext and General Notion database.</li>
+<li>You can have one NotionNext and one General Notion database.</li>
+<li>General Notion database can only have <code>title</code> and <code>tags</code> columns, and <code>tags</code> columns should be the multi-selected property. <strong>the name of the columns is case sensitive. You should use small letter.</strong></li>
+</ul>
+<p><img src="https://minioapi.pjx.ac.cn/img1/2023/11/712a12081d855aa60f82a7b46913ab7e.gif" class="img-fluid"></p>
+<p><img src="https://minioapi.pjx.ac.cn/img1/2023/11/9de76cecceef74c78884ddfc1c221659.gif" class="img-fluid"></p>
+</section>
+<section id="section-4" class="level3">
+<h3 class="anchored" data-anchor-id="section-4">0.2.1</h3>
+<ul>
+<li>Restructure the code</li>
+</ul>
+</section>
+<section id="section-5" class="level3">
+<h3 class="anchored" data-anchor-id="section-5">0.2.0</h3>
+<ul>
+<li>From this version, the interactive logic has been rewritten. When you click the ribbon icon, it will display the sync command for all presetting NotionNext databases. You can choose the database you want to sync to. <strong>However, only NotionNext database is supported for now.</strong></li>
+</ul>
+</section>
+<section id="section-6" class="level3">
+<h3 class="anchored" data-anchor-id="section-6">0.1.10</h3>
+<ul>
+<li>Fix the Chinese support in the settings.</li>
+</ul>
+</section>
+<section id="section-7" class="level3">
+<h3 class="anchored" data-anchor-id="section-7">0.1.8</h3>
+<ul>
+<li>Rebuild the uploadCommand function, and add one button to select the different databases. <strong>However, only NotionNext database is supported for now.</strong></li>
+</ul>
+</section>
+<section id="section-8" class="level3">
+<h3 class="anchored" data-anchor-id="section-8">0.1.7</h3>
+<ul class="task-list">
+<li><input type="checkbox" checked="">Removed the <code>convert tag</code> option. Now, you can directly add tags in the YAML front matter. If you don’t want to add tags, you can delete the tags in the YAML front matter or leave the tags blank.</li>
+</ul>
+</section>
+</section>
+<section id="how-to-use" class="level2">
+<h2 class="anchored" data-anchor-id="how-to-use">How to Use</h2>
+<section id="precautions" class="level3">
+<h3 class="anchored" data-anchor-id="precautions">Precautions</h3>
+<p>For now, this plugin is exclusively for <a href="https://github.com/tangly1024/NotionNext">NotionNext</a>. If you’re not using this template, you’ll keep receiving <code>error 400</code>.</p>
+<p>For those without a NotionNext requirement, please use the original <a href="https://github.com/EasyChris/obsidian-to-notion">Obsidian-to-notion</a>.</p>
+</section>
+<section id="pre-installation-steps" class="level3">
+<h3 class="anchored" data-anchor-id="pre-installation-steps">Pre-Installation Steps</h3>
+<p>Before installing the plugin, you must have set up the following:</p>
+<ol type="1">
+<li>Your NotionNext database.</li>
+<li>According to the original author’s readme.md, set up the Notion API, and it should already be associated with your NotionNext repository.</li>
+<li>NotionNext Database ID</li>
+<li>Your NotionNext database should have the following contents:
+<ul>
+<li>type</li>
+<li>title</li>
+<li>slug</li>
+<li>category</li>
+<li>tags</li>
+<li>date</li>
+<li>status</li>
+<li>summary</li>
+<li>password</li>
+<li>icon</li>
+</ul></li>
+</ol>
+<p>From version 0.0.6, I also add the following contents: - titleicon: the unique icon for each post, it can only support emoji currently. - cover url: the cover image for each post, it should be end with a type of image, such as .jpg, .png, .gif, etc.</p>
+<p><strong>If you’ve directly copied the NotionNext template, these contents should already exist. I’ve made changes to this plugin based on the original author’s work. All you need to ensure is that your database has the above content, and every letter is in lowercase!!!</strong></p>
+<p><strong>⚠️⚠️⚠️: All headers are in lowercase!!! The order doesn’t matter!</strong></p>
+</section>
+<section id="plugin-installation" class="level3">
+<h3 class="anchored" data-anchor-id="plugin-installation">Plugin Installation</h3>
+<section id="install-via-community-plugins" class="level4">
+<h4 class="anchored" data-anchor-id="install-via-community-plugins">Install via Community Plugins</h4>
+<p>Open <code>Obsidian settings -&gt; Community Plugins -&gt; Browse -&gt; NotionNext -&gt; Share to NotionNext</code></p>
+</section>
+<section id="mannually-install" class="level4">
+<h4 class="anchored" data-anchor-id="mannually-install">Mannually Install</h4>
+<ol type="1">
+<li>Close Obsidian.</li>
+<li>Download the plugin file from Release and unzip it into your Obsidian plugin directory.</li>
+<li>Re-open Obsidian, go to settings, and enable the plugin.</li>
+<li>In the settings, find Obsidian to NotionNext, and enter your NotionNext Database ID and API token.</li>
+</ol>
+</section>
+</section>
+<section id="how-to-use-1" class="level3">
+<h3 class="anchored" data-anchor-id="how-to-use-1">How to Use</h3>
+</section>
+<section id="using-the-plugin" class="level3">
+<h3 class="anchored" data-anchor-id="using-the-plugin">Using the Plugin</h3>
+<p>In the repository, I have uploaded a template which you can directly copy into your template folder. After that, use Obsidian’s template feature to create a new note with one click.</p>
+<p>If you don’t want to use the template, you can also directly create a new file in Obsidian and then copy the content below. Then save it.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># default value has been set.</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># for any unwanted value, you can delete it or set it to empty.</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># for example, if you donot want to set password, you can delete password: "1234" or set it to password: ""</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># 我已经在插件中设置了默认值，如果有不需要的选项，可以直接删除。</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># 例如你不需要密码选项，你可以将password: "1234"删除，或者将它设置为空。</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># !!!!!!!!!!!!</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co"># 现在阶段一定不要修改表头的名字， please do not change the name of the header in YAML front matter</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co"># !!!!!!!!!!!!</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="an">titleicon:</span><span class="co"> 📎 # emoji icon, default is 📜， 默认是📜</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="an">date:</span><span class="co"> 2023-07-23 # default is today， 默认是今天。 Format is YYYY-MM-DD， 格式是YYYY-MM-DD</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="an">coverurl:</span><span class="co"> https://img.jxpeng.dev/2023/08/843e27a210847f05a0f7cfb121fec100.jpg # default is empty， 默认是空</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="an">type:</span><span class="co"> Post # Post or Page, default is Post， 默认是Post</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="an">slug:</span><span class="co"> test # slug for url, default is empty， 默认是空</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="an">stats:</span><span class="co"> Draft # Draft, Invisible, Published, default is Draft， 默认是Draft</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="an">category:</span><span class="co"> test # default is 'Obsidian'， 默认是'Obsidian'</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="an">summary:</span><span class="co"> this is a summary for test post # default is empty， 默认是空</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="an">icon:</span><span class="co"> fa-solid fa-camera # you can ignore this, default is empty， 默认是空，可直接删除</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="an">password:</span><span class="co"> "1234" # if you donot want to set password, you can delete this line, default is empty， 默认是空，可直接删除</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="co"># 现在必须开启tags选项，否则会报错</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="an">tags:</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="co">  - test  # tags for post</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="co">  - web # add more tags if you want</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>Contents Below</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Usage of the template is as follows: <img src="https://minioapi.pjx.ac.cn/img1/2023/09/354b950e5777b48832c2475e4a31f2cc.gif" class="img-fluid"></p>
+<p><strong>Plugin preview is shown below</strong> <img src="https://minioapi.pjx.ac.cn/img1/2023/09/d6199619b68fab218fca8ae0cebece78.gif" class="img-fluid"></p>
+<hr>
+<p><strong>Original README.md</strong></p>
+<p>Many Thanks for the original author’s work. I’ve only made some changes to the original author’s work. If you find this plugin useful, please give the <a href="https://github.com/EasyChris/obsidian-to-notion">original author</a> a star.</p>
+</section>
+</section>
+</section>
+<section id="obsidian-to-notion" class="level1">
+<h1>Obsidian to Notion</h1>
+<p><a href="https://github.com/Easychris/obsidian-to-notion/actions/workflows/CI.yml"><img src="https://github.com/Easychris/obsidian-to-notion/actions/workflows/CI.yml/badge.svg" class="img-fluid"></a> <a href="https://github.com/Easychris/obsidian-to-notion/actions/workflows/release.yml"><img src="https://github.com/Easychris/obsidian-to-notion/actions/workflows/release.yml/badge.svg" class="img-fluid" alt="Release Obsidian plugin"></a> <a href="https://raw.githubusercontent.com/EasyChris/obsidian-to-notion/master/LICENSE"><img src="https://img.shields.io/github/license/EasyChris/obsidian-to-notion.png" class="img-fluid" alt="GitHub license"></a> <a href="https://GitHub.com/Easychris/obsidian-to-notion/releases/"><img src="https://img.shields.io/github/downloads/Easychris/obsidian-to-notion/total.svg" class="img-fluid" alt="Github all releases"></a> <a href="https://github.com/Easychris/obsidian-to-notion/releases"><img src="https://badgen.net/github/release/Easychris/obsidian-to-notion/.png" class="img-fluid" alt="GitLab latest release"></a></p>
+<p>Share of obsidian to Notion <a href="README-zh.md">中文文档</a></p>
+<p>Sharing files from Obsidian to Notion with a single click, and Obsidian will automatically add the Notion share link</p>
+<p>You are welcome to offer it a star if it can benefit you.</p>
+<p><img src="./doc/1.gif" class="img-fluid"></p>
+</section>
+<section id="todo" class="level1">
+<h1>TODO</h1>
+<section id="todo-board" class="level3">
+<h3 class="anchored" data-anchor-id="todo-board"><a href="https://github.com/users/EasyChris/projects/3/views/1">TODO Board</a></h3>
+<ul class="task-list">
+<li><input type="checkbox" checked="">support for custom page banner</li>
+<li><input type="checkbox" checked="">update the exsit page</li>
+<li><input type="checkbox" checked="">support for mult language</li>
+<li><input type="checkbox" checked="">support for auto copy the share link to clipboard</li>
+<li><input type="checkbox" checked="">support for mobile</li>
+<li><input type="checkbox" checked="">support tags thank for <a href="https://github.com/jannikbuscha"><span class="citation" data-cites="jannikbuscha">@jannikbuscha</span></a></li>
+<li><input type="checkbox">transfer the bi-link format like [[]] into the format that Notion supports.</li>
+</ul>
+</section>
+</section>
+<section id="how-to-use-2" class="level1">
+<h1>How to use</h1>
+<section id="install-the-plugin" class="level2">
+<h2 class="anchored" data-anchor-id="install-the-plugin">Install the plugin</h2>
+<section id="marketplace-download" class="level3">
+<h3 class="anchored" data-anchor-id="marketplace-download">Marketplace download</h3>
+<p>Open obsidian setting -&gt; Add plugin -&gt; Search -&gt; notion</p>
+<p><img src="https://afox-1256168983.cos.ap-shanghai.myqcloud.com/20220628214145.png" class="img-fluid"></p>
+</section>
+<section id="brat" class="level3">
+<h3 class="anchored" data-anchor-id="brat">BRAT</h3>
+<p>Enter <code>BRAT</code> into the plugin market center to find it. Add <code>EasyChris/obsidian-to-notion</code> to the list of BRAT plugins that have been installed. Return to the plugin center and turn it on.</p>
+</section>
+<section id="manual-installation" class="level3">
+<h3 class="anchored" data-anchor-id="manual-installation">Manual installation</h3>
+<pre><code>cd YOUR_OBSIDIAN_FOLDER/.obsidian/plugins/
+git clone https://github.com/EasyChris/obsidian-to-notion.git</code></pre>
+</section>
+</section>
+<section id="apply-notion-api" class="level2">
+<h2 class="anchored" data-anchor-id="apply-notion-api">Apply Notion API</h2>
+<p>Official reference documentation: <a href="https://developers.notion.com/docs">https://developers.notion.com/docs</a></p>
+<section id="step-1-create-integration" class="level3">
+<h3 class="anchored" data-anchor-id="step-1-create-integration">Step 1: Create integration</h3>
+<p>Go to <a href="https://www.notion.com/my-integrations">https://www.notion.com/my-integrations</a> Once created, copy <code>secrets toekn</code> <img src="https://files.readme.io/2ec137d-093ad49-create-integration.gif" class="img-fluid"></p>
+<section id="note" class="level4">
+<h4 class="anchored" data-anchor-id="note">Note</h4>
+<p>database first custom name must be “Name”, otherwise sync to notion will be failed</p>
+<p><img src="https://afox-1256168983.cos.ap-shanghai.myqcloud.com/20220618102029.png" class="img-fluid"></p>
+</section>
+</section>
+<section id="step-2-share-a-database-with-your-integration" class="level3">
+<h3 class="anchored" data-anchor-id="step-2-share-a-database-with-your-integration">Step 2: Share a database with your integration</h3>
+<p>Create a new page (with public permissions) Create a new database in the page -&gt; you need <code>full page database</code> <img src="./doc/3.gif" class="img-fluid"></p>
+<p>Add <code>integration</code> to your new database</p>
+<p><img src="./doc/6.gif" class="img-fluid"></p>
+</section>
+<section id="step-3-copy-the-database-id" class="level3">
+<h3 class="anchored" data-anchor-id="step-3-copy-the-database-id">Step 3: Copy the database ID</h3>
+<pre><code>https://www.notion.so/myworkspace/a8aec43384f447ed84390e8e42c2e089?v=...
+                                  | --------- Database ID --------|
+</code></pre>
+</section>
+</section>
+<section id="open-the-plugin-configuration" class="level2">
+<h2 class="anchored" data-anchor-id="open-the-plugin-configuration">Open the plugin configuration</h2>
+<p>Fill the configuration with the <code>NOTION_API_KEY</code> and <code>DATABASE_ID</code> you got <img src="./doc/2.png" class="img-fluid"></p>
+</section>
+<section id="upload-file-content-to-notion" class="level2">
+<h2 class="anchored" data-anchor-id="upload-file-content-to-notion">Upload file content to notion</h2>
+<p>Click the uploadCommand notion button <img src="./doc/4.png" class="img-fluid"> A share link will be automatically generated after successful uploadCommand <img src="./doc/5.png" class="img-fluid"></p>
+</section>
+<section id="banner-url-option" class="level2">
+<h2 class="anchored" data-anchor-id="banner-url-option">Banner URL [option]</h2>
+<p>Banner url must be a image url like: <a href="https://i.imgur.com/xxx.jpg" class="uri">https://i.imgur.com/xxx.jpg</a> If you don’t want to use banner, leave it blank</p>
+</section>
+<section id="convert-tags-option" class="level2">
+<h2 class="anchored" data-anchor-id="convert-tags-option">Convert Tags [option]</h2>
+<p>Transfer the Obsidian tags to the Notion table. It requires the column with the name ‘Tags’. <img src="./doc/7.png" class="img-fluid"></p>
+<p>Add tags to your notion page</p>
+<p><img src="./doc/10.png" class="img-fluid"></p>
+<ul>
+<li>open plugin convert tags</li>
+</ul>
+<p><img src="./doc/8.png" class="img-fluid"></p>
+<ul>
+<li>add tags in the head</li>
+</ul>
+<div class="sourceCode" id="cb4"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="an">tags:</span><span class="co"> [tag1,tag2]</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>this is test tags</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="an">tags:</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co">  - tag4</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>this is test tags</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><img src="./doc/9.png" class="img-fluid"></p>
+<p>Thanks for <a href="https://github.com/jannikbuscha"><span class="citation" data-cites="jannikbuscha">@jannikbuscha</span></a> contribution</p>
+</section>
+<section id="notion-id-option" class="level2">
+<h2 class="anchored" data-anchor-id="notion-id-option">Notion ID [option]</h2>
+<p>Notion ID is the your notion site ID that you want to share the file to. if you don’t write it, notion will share to the default link like: <a href="https://www.notion.so/myworkspace/a8aec43384f447ed84390" class="uri">https://www.notion.so/myworkspace/a8aec43384f447ed84390</a> that visit this page need to redirect to your site url if you write the Notion ID, it will share to the page link like: <a href="https://your_user_name.notion.site/myworkspace/a8aec43384f447ed84390" class="uri">https://your_user_name.notion.site/myworkspace/a8aec43384f447ed84390</a>. The visiter don’t need to redirect url.</p>
+</section>
+<section id="sync-image-to-notion" class="level2">
+<h2 class="anchored" data-anchor-id="sync-image-to-notion">Sync image to Notion</h2>
+<p>To sync images to your oss or cos bucket, use the <a href="https://github.com/renmu123/obsidian-image-auto-upload-plugin">Obsidian Image Auto Upload Plugin</a>.</p>
+</section>
+</section>
+<section id="development" class="level1">
+<h1>Development</h1>
+<pre><code>git clone https://github.com/EasyChris/obsidian-to-notion.git
+yarn install
+yarn dev</code></pre>
+<section id="release" class="level2">
+<h2 class="anchored" data-anchor-id="release">Release</h2>
+<pre><code>node update-version.js
+./release.sh</code></pre>
+<p>```</p>
+</section>
+</section>
+<section id="thanks" class="level1">
+<h1>Thanks</h1>
+<p><a href="https://luhaifeng666.github.io/obsidian-plugin-docs-zh/zh/getting-started/development-workflow.html">Development Process | Obsidian Plugin Development Documentation</a></p>
+<p><a href="https://github.com/devbean/obsidian-wordpress">GitHub - devbean/obsidian-wordpress: An obsidian plugin for publishing docs to WordPress.</a></p>
+<p><a href="https://github.com/obsidianmd/obsidian-api">GitHub - obsidianmd/obsidian-api</a></p>
+<p><a href="https://github.dev/zhaohongxuan/obsidian-weread-plugin">GitHub - Easychris/obsidian-to-notion: Obsidian Weread Plugin is an plugin to sync Weread(微信读书) hightlights and annotations into your Obsidian Vault.</a></p>
+<p><a href="https://github.com/Quorafind/Obsidian-Memos">GitHub - Quorafind/Obsidian-Memos: A quick capture plugin for Obsidian, all data from your notes.</a></p>
+<p><a href="https://github.com/jannikbuscha">https://github.com/jannikbuscha/obsidian-to-notion</a></p>
+</section>
+<section id="license" class="level1">
+<h1>License</h1>
+<p>GNU GPLv3</p>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
