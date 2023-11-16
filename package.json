@@ -1,6 +1,6 @@
 {
   "name": "share-to-notionnext",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "type": "module",
   "description": "Shares obsidian md file to notion with notion api for NotionNext web deploy, originally created by EasyChris/obsidian-to-notion.",
   "main": "main.js",
