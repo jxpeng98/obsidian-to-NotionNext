@@ -43,7 +43,7 @@ export class Upload2NotionGeneral extends UploadBaseGeneral {
 		title: string,
 		cover: string,
 		tags: string[],
-		childArr: any
+		childArr: any,
 	) {
 		const bodyString: any = {
 			parent: {
