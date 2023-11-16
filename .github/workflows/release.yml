@@ -19,12 +19,6 @@ jobs:
         with:
           node-version: "16.x"
 
-      - name: Update npm
-        run: npm install -g npm@latest
-
-      - name: Clear npm cache
-        run: npm cache clean -f
-
       - name: Build
         id: build
         run: |
