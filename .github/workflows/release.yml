@@ -14,22 +14,22 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-      - name: Use Node.js and Yarn
+      - name: Use Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: "18.x"
-          registry-url: "https://registry.yarnpkg.com/"
+          node-version: "16.x"
 
-      - name: Update Yarn
-        run: yarn policies set-version latest
+      - name: Update npm
+        run: npm install -g npm@latest
 
-      - name: Install Dependencies
-        run: yarn install
+      - name: Clear npm cache
+        run: npm cache clean -f
 
       - name: Build
         id: build
         run: |
-          yarn build
+          npm install
+          npm run build
           mkdir ${{ env.PLUGIN_NAME }}
           cp main.js manifest.json ${{ env.PLUGIN_NAME }}
           zip -r ${{ env.PLUGIN_NAME }}.zip ${{ env.PLUGIN_NAME }}
