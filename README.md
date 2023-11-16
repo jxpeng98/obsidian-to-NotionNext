@@ -4,7 +4,22 @@
 Thanks to the [original author](https://github.com/EasyChris/obsidian-to-notion) for developing such a useful plugin that can synchronize Obsidian to Notion. However, the original repository can only sync Name and Tags information. For those like me who use [NotionNext](https://github.com/tangly1024/NotionNext) to set up their website, this presents some limitations. Every time I import, I need to make a lot of modifications.
 
 Thus, based on the [original author's work](https://github.com/EasyChris/obsidian-to-notion), I've added a feature to match the [NotionNext](https://github.com/tangly1024/NotionNext) template. This way, you can edit directly in Obsidian and publish with a single click after organizing.
+
+**Now, support both NotionNext and General databases.**
+
 ## Update
+### 0.3.0 (Big Update)
+- From this version, you can **modify the first column name (title column, default: 'title')** as you want. (**Note: You need to have the 'tags' column in your Notion General database, and add `tags:` in your markdown frontmatter. If not, you will receive `network error 400`. But you can leave the `tags:` blank.**)
+
+![](https://minioapi.pjx.ac.cn/img1/2023/11/4a298b9be3990e9d2201bf2f50ca5a0a.png)
+Like this:
+![](https://minioapi.pjx.ac.cn/img1/2023/11/4cd8d79cd9dd9dde299e39c666cb3473.gif)
+- Add a switch button to control whether display the setting tabs in the plugin settings for both NotionNext and Notion General databases. 
+
+![](https://minioapi.pjx.ac.cn/img1/2023/11/becb60fc44783842da4b3cf4c322f363.gif)
+
+
+
 ### 0.2.6
 - Add a switch button to control whether to show the upload command in the command palette.
 
