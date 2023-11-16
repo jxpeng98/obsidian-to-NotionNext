@@ -8,6 +8,8 @@ Thus, based on the [original author's work](https://github.com/EasyChris/obsidia
 **Now, support both NotionNext and General databases.**
 
 ## Update
+### 1.0.1
+- Fix the custom name element display bug in the settings.
 ### 1.0.0 (Big Update)
 - From this version, you can **modify the first column name (title column, default: 'title')** as you want. (**Note: You need to have the 'tags' column in your Notion General database, and add `tags:` in your markdown frontmatter. If not, you will receive `network error 400`. But you can leave the `tags:` blank.**)
 

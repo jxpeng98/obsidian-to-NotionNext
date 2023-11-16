@@ -102,6 +102,13 @@ export class ObsidianSettingTab extends PluginSettingTab {
                         this.plugin.settings.GeneralButton = value;
 
                         this.updateSettingEl(CustomTitleEl, value)
+                        // name should follow the result of the title button
+                        if (value) {
+                            this.updateSettingEl(CustomNameEl, this.plugin.settings.CustomTitleButton)
+                        } else {
+                            this.updateSettingEl(CustomNameEl, value)
+                        }
+
                         this.updateSettingEl(notionAPIGeneralEl, value)
                         this.updateSettingEl(databaseIDGeneralEl, value)
 

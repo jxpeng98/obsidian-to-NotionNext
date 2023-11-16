@@ -3,6 +3,8 @@
 
 所以我在[原作者](https://github.com/EasyChris/obsidian-to-notion)的基础之上，增加了匹配[NotionNext](https://github.com/tangly1024/NotionNext)模板的功能。这样可以直接在Obsidian编辑，整理好之后一键发布。
 ## 更新说明
+### 1.0.1
+- 修复了自定义标题在设置菜单中显示错误的问题。
 ### 1.0.0 (大更新)
 - 这个版本开始，你可以**任意修改第一列表头的名字 (标题列，默认：'title')**。 （**注意：你必须保证你的Notion数据库中有'tags‘这一列的存在，并且在markdown文件中把`tags:`添加到你的YAML表头中。否则会返回`400 错误`。但是你可以`tags:`设置为空。**）
 
