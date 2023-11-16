@@ -8,7 +8,7 @@ Thus, based on the [original author's work](https://github.com/EasyChris/obsidia
 **Now, support both NotionNext and General databases.**
 
 ## Update
-### 0.3.0 (Big Update)
+### 1.0.0 (Big Update)
 - From this version, you can **modify the first column name (title column, default: 'title')** as you want. (**Note: You need to have the 'tags' column in your Notion General database, and add `tags:` in your markdown frontmatter. If not, you will receive `network error 400`. But you can leave the `tags:` blank.**)
 
 ![](https://minioapi.pjx.ac.cn/img1/2023/11/4a298b9be3990e9d2201bf2f50ca5a0a.png)
