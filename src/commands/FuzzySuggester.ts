@@ -1,6 +1,6 @@
 import { FuzzySuggestModal, FuzzyMatch } from 'obsidian';
 import MyPlugin from "../main";
-import {i18nConfig} from "../lang/I18n";
+import { i18nConfig } from "../lang/I18n";
 
 /**
  * Simple interface for what should be displayed and stored for suggester
@@ -38,7 +38,7 @@ export class FuzzySuggester extends FuzzySuggestModal<DatabaseList>{
         return item.name
     }
 
-    onChooseItem(item: DatabaseList, evt:MouseEvent | KeyboardEvent): void { }
+    onChooseItem(item: DatabaseList, evt: MouseEvent | KeyboardEvent): void { }
 
     onChooseSuggestion(item: FuzzyMatch<DatabaseList>, evt: MouseEvent | KeyboardEvent): void {
         this.callback(item.item, evt)

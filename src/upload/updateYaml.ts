@@ -1,6 +1,6 @@
-import {App, Notice, TFile} from "obsidian";
+import { App, Notice, TFile } from "obsidian";
 import ObsidianSyncNotionPlugin from "../main";
-import {PluginSettings} from "../ui/settingTabs";
+import { PluginSettings } from "../ui/settingTabs";
 
 export async function updateYamlInfo(
     yamlContent: string,
@@ -9,7 +9,7 @@ export async function updateYamlInfo(
     app: App,
     plugin: ObsidianSyncNotionPlugin,
 ) {
-    let {url, id} = res.json
+    let { url, id } = res.json
     // replace www to notionID
     const { notionUser } = plugin.settings;
 

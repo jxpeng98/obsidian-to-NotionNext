@@ -4,15 +4,15 @@ import { markdownToBlocks, } from "@tryfabric/martian";
 import * as yamlFrontMatter from "yaml-front-matter";
 // import * as yaml from "yaml"
 import MyPlugin from "src/main";
-import {PluginSettings} from "../../ui/settingTabs";
-import {UploadBaseGeneral} from "./BaseUpload2NotionGeneral";
-import {updateYamlInfo} from "../updateYaml";
+import { PluginSettings } from "../../ui/settingTabs";
+import { UploadBaseGeneral } from "./BaseUpload2NotionGeneral";
+import { updateYamlInfo } from "../updateYaml";
 
 export class Upload2NotionGeneral extends UploadBaseGeneral {
 	settings: PluginSettings;
 
 	constructor(plugin: MyPlugin) {
-        super(plugin);
+		super(plugin);
 	}
 
 	// 因为需要解析notion的block进行对比，非常的麻烦，
@@ -22,7 +22,7 @@ export class Upload2NotionGeneral extends UploadBaseGeneral {
 		title: string,
 		cover: string,
 		tags: string[],
-		childArr: any
+		childArr: any,
 	) {
 		await this.deletePage(notionID)
 
@@ -50,7 +50,7 @@ export class Upload2NotionGeneral extends UploadBaseGeneral {
 				database_id: this.plugin.settings.databaseIDGeneral,
 			},
 			properties: {
-				title: {
+				[this.plugin.settings.CustomTitleButton ? this.plugin.settings.CustomTitleName : 'title']: {
 					title: [
 						{
 							text: {

@@ -17,6 +17,7 @@ export interface PluginSettings {
     CustomButton: boolean;
     notionAPICustom: string;
     databaseIDCustom: string;
+    [key: string]: any;
 }
 
 export const DEFAULT_SETTINGS: PluginSettings = {
@@ -53,9 +54,9 @@ export class ObsidianSettingTab extends PluginSettingTab {
         // General Settings
         containerEl.createEl('h2', { text: i18nConfig.GeneralSetting });
 
-        this.createSettingEl(containerEl, i18nConfig.BannerUrl, i18nConfig.BannerUrlDesc, 'text', i18nConfig.BannerUrlText, this.plugin.settings.bannerUrl)
+        this.createSettingEl(containerEl, i18nConfig.BannerUrl, i18nConfig.BannerUrlDesc, 'text', i18nConfig.BannerUrlText, this.plugin.settings.bannerUrl, 'bannerUrl')
 
-        this.createSettingEl(containerEl, i18nConfig.NotionUser, i18nConfig.NotionUserDesc, 'text', i18nConfig.NotionUserText, this.plugin.settings.notionUser)
+        this.createSettingEl(containerEl, i18nConfig.NotionUser, i18nConfig.NotionUserDesc, 'text', i18nConfig.NotionUserText, this.plugin.settings.notionUser, 'notionUser')
 
         containerEl.createEl('h2', { text: i18nConfig.NotionNextSettingHeader })
 
@@ -80,10 +81,10 @@ export class ObsidianSettingTab extends PluginSettingTab {
 
 
         const notionAPINextEl = this.createStyleDiv('api-next', this.plugin.settings.NextButton)
-        this.createSettingEl(notionAPINextEl, i18nConfig.NotionAPI, i18nConfig.NotionAPIDesc, 'password', i18nConfig.NotionAPIText, this.plugin.settings.notionAPINext)
+        this.createSettingEl(notionAPINextEl, i18nConfig.NotionAPI, i18nConfig.NotionAPIDesc, 'password', i18nConfig.NotionAPIText, this.plugin.settings.notionAPINext, 'notionAPINext')
 
         const databaseIDNextEl = this.createStyleDiv('databaseID-next', this.plugin.settings.NextButton)
-        this.createSettingEl(databaseIDNextEl, i18nConfig.DatabaseID, i18nConfig.NotionAPIDesc, 'password', i18nConfig.DatabaseIDText, this.plugin.settings.databaseIDNext)
+        this.createSettingEl(databaseIDNextEl, i18nConfig.DatabaseID, i18nConfig.NotionAPIDesc, 'password', i18nConfig.DatabaseIDText, this.plugin.settings.databaseIDNext, 'databaseIDNext')
 
 
         // General Database Settings
@@ -129,7 +130,7 @@ export class ObsidianSettingTab extends PluginSettingTab {
             );
 
         const CustomNameEl = this.createStyleDiv('custom-name', this.plugin.settings.CustomTitleButton);
-        this.createSettingEl(CustomNameEl, i18nConfig.NotionCustomTitleName, i18nConfig.NotionCustomTitleNameDesc, 'text', i18nConfig.NotionCustomTitleText, this.plugin.settings.CustomTitleName)
+        this.createSettingEl(CustomNameEl, i18nConfig.NotionCustomTitleName, i18nConfig.NotionCustomTitleNameDesc, 'text', i18nConfig.NotionCustomTitleText, this.plugin.settings.CustomTitleName, 'CustomTitleName')
 
         // new Setting(containerEl)
         // .setName("Convert tags(optional)")
@@ -144,11 +145,11 @@ export class ObsidianSettingTab extends PluginSettingTab {
         // );
 
         const notionAPIGeneralEl = this.createStyleDiv('api-general', this.plugin.settings.GeneralButton);
-        this.createSettingEl(notionAPIGeneralEl, i18nConfig.NotionAPI, i18nConfig.NotionAPIDesc, 'password', i18nConfig.NotionAPIText, this.plugin.settings.notionAPIGeneral)
+        this.createSettingEl(notionAPIGeneralEl, i18nConfig.NotionAPI, i18nConfig.NotionAPIDesc, 'password', i18nConfig.NotionAPIText, this.plugin.settings.notionAPIGeneral, 'notionAPIGeneral')
 
 
         const databaseIDGeneralEl = this.createStyleDiv('databaseID-general', this.plugin.settings.GeneralButton);
-        this.createSettingEl(databaseIDGeneralEl, i18nConfig.DatabaseID, i18nConfig.NotionAPIDesc, 'password', i18nConfig.DatabaseIDText, this.plugin.settings.databaseIDGeneral)
+        this.createSettingEl(databaseIDGeneralEl, i18nConfig.DatabaseID, i18nConfig.NotionAPIDesc, 'password', i18nConfig.DatabaseIDText, this.plugin.settings.databaseIDGeneral, 'databaseIDGeneral')
 
         // Custom Database Settings
 
@@ -177,12 +178,12 @@ export class ObsidianSettingTab extends PluginSettingTab {
     private updateSettingEl(element: HTMLElement, commandValue: boolean) {
         element.style.borderTop = commandValue ? "1px solid var(--background-modifier-border)" : "none";
         element.style.paddingTop = commandValue ? "0.75em" : "0";
-        element.style.display = commandValue? "block" : "none";
+        element.style.display = commandValue ? "block" : "none";
         element.style.alignItems = "center";
     }
 
     // function to add one setting element in the setting tab.
-    private createSettingEl(containerEl: HTMLElement, name: string, desc: string, type: string, placeholder: string, holderValue: any) {
+    private createSettingEl(containerEl: HTMLElement, name: string, desc: string, type: string, placeholder: string, holderValue: any, settingsKey: string) {
         if (type === 'password') {
             return new Setting(containerEl)
                 .setName(name)
@@ -193,11 +194,10 @@ export class ObsidianSettingTab extends PluginSettingTab {
                         .setPlaceholder(placeholder)
                         .setValue(holderValue)
                         .onChange(async (value) => {
-                            holderValue = value;
+                            this.plugin.settings[settingsKey] = value; // Update the plugin settings directly
                             await this.plugin.saveSettings();
                         })
-                }
-                )
+                });
         } else if (type === 'toggle') {
             return new Setting(containerEl)
                 .setName(name)
@@ -206,13 +206,13 @@ export class ObsidianSettingTab extends PluginSettingTab {
                     toggle
                         .setValue(holderValue)
                         .onChange(async (value) => {
-                            holderValue = value;
+                            this.plugin.settings[settingsKey] = value; // Update the plugin settings directly
                             await this.plugin.saveSettings();
                             await this.plugin.commands.updateCommand();
                         })
-                )
+                );
         } else if (type === 'text') {
-            new Setting(containerEl)
+            return new Setting(containerEl)
                 .setName(name)
                 .setDesc(desc)
                 .addText((text) =>
@@ -220,11 +220,11 @@ export class ObsidianSettingTab extends PluginSettingTab {
                         .setPlaceholder(placeholder)
                         .setValue(holderValue)
                         .onChange(async (value) => {
-                            holderValue = value;
+                            this.plugin.settings[settingsKey] = value; // Update the plugin settings directly
                             await this.plugin.saveSettings();
                             await this.plugin.commands.updateCommand();
                         })
-                )
+                );
         }
     }
 

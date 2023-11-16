@@ -1,7 +1,7 @@
-import {i18nConfig} from "src/lang/I18n";
-import {Editor, MarkdownView} from "obsidian";
-import {FuzzySuggester, DatabaseList} from "./FuzzySuggester";
-import {uploadCommandGeneral, uploadCommandNext} from "../upload/uploadCommand";
+import { i18nConfig } from "src/lang/I18n";
+import { Editor, MarkdownView } from "obsidian";
+import { FuzzySuggester, DatabaseList } from "./FuzzySuggester";
+import { uploadCommandGeneral, uploadCommandNext } from "../upload/uploadCommand";
 import ObsidianSyncNotionPlugin from "src/main";
 
 
@@ -14,7 +14,7 @@ interface Command {
 
 // create the commands list
 export default class RibbonCommands {
-    plugin: ObsidianSyncNotionPlugin;
+	plugin: ObsidianSyncNotionPlugin;
 
 	Ncommand: Command[] = [];
 
@@ -55,22 +55,22 @@ export default class RibbonCommands {
 		});
 	}
 
-    async ribbonDisplay() {
-        const NcommandList: DatabaseList[] = [];
+	async ribbonDisplay() {
+		const NcommandList: DatabaseList[] = [];
 
-        this.Ncommand.map(command => NcommandList.push(
-            {
-                name:command.name,
-                match: command.editorCallback
-            }
-            )
-        );
+		this.Ncommand.map(command => NcommandList.push(
+			{
+				name: command.name,
+				match: command.editorCallback
+			}
+		)
+		);
 
-        const fusg = new FuzzySuggester(this.plugin);
+		const fusg = new FuzzySuggester(this.plugin);
 
-        fusg.setSuggesterData(NcommandList);
-        await fusg.display(async (results) => {await results.match()})
-    };
+		fusg.setSuggesterData(NcommandList);
+		await fusg.display(async (results) => { await results.match() })
+	};
 
 	// if the setting has been changed, try to rebuild the command list
 	async updateCommand() {
