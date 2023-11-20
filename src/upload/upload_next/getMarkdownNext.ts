@@ -1,6 +1,6 @@
-import {App, Notice} from "obsidian";
-import {i18nConfig} from "../../lang/I18n";
-import {PluginSettings} from "../../ui/settingTabs";
+import { App, Notice } from "obsidian";
+import { i18nConfig } from "../../lang/I18n";
+import { PluginSettings } from "../../ui/settingTabs";
 
 export async function getNowFileMarkdownContentNext(
     app: App,
@@ -21,17 +21,17 @@ export async function getNowFileMarkdownContentNext(
 
     const FileCache = app.metadataCache.getFileCache(nowFile);
     try {
-            emoji = FileCache.frontmatter.titleicon;
-            cover = FileCache.frontmatter.coverurl;
-            tags = FileCache.frontmatter.tags;
-            type = FileCache.frontmatter.type;
-            slug = FileCache.frontmatter.slug;
-            stats = FileCache.frontmatter.stats;
-            category = FileCache.frontmatter.category;
-            summary = FileCache.frontmatter.summary;
-            paword = FileCache.frontmatter.password;
-            favicon = FileCache.frontmatter.icon;
-            datetime = FileCache.frontmatter.date;
+        emoji = FileCache.frontmatter.titleicon;
+        cover = FileCache.frontmatter.coverurl;
+        tags = FileCache.frontmatter.tags;
+        type = FileCache.frontmatter.type;
+        slug = FileCache.frontmatter.slug;
+        stats = FileCache.frontmatter.stats;
+        category = FileCache.frontmatter.category;
+        summary = FileCache.frontmatter.summary;
+        paword = FileCache.frontmatter.password;
+        favicon = FileCache.frontmatter.icon;
+        datetime = FileCache.frontmatter.date;
     } catch (error) {
         new Notice(i18nConfig["set-tags-fail"]);
     }

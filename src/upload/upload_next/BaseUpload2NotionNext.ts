@@ -1,6 +1,6 @@
-import {App, Notice, requestUrl, TFile} from "obsidian";
-import {Client} from '@notionhq/client';
-import {markdownToBlocks,} from "@tryfabric/martian";
+import { App, Notice, requestUrl, TFile } from "obsidian";
+import { Client } from '@notionhq/client';
+import { markdownToBlocks, } from "@tryfabric/martian";
 import * as yamlFrontMatter from "yaml-front-matter";
 // import * as yaml from "yaml"
 import MyPlugin from "src/main";
@@ -29,13 +29,13 @@ export class UploadBaseNext {
 
     async getDataBase(databaseID: string) {
         const response = await requestUrl({
-                url: `https://api.notion.com/v1/databases/${databaseID}`,
-                method: 'GET',
-                headers: {
-                    'Authorization': 'Bearer ' + this.plugin.settings.notionAPINext,
-                    'Notion-Version': '2022-06-28',
-                }
+            url: `https://api.notion.com/v1/databases/${databaseID}`,
+            method: 'GET',
+            headers: {
+                'Authorization': 'Bearer ' + this.plugin.settings.notionAPINext,
+                'Notion-Version': '2022-06-28',
             }
+        }
         )
 
         // Check if cover is present in the JSON response and then get the URL

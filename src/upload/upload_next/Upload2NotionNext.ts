@@ -5,8 +5,8 @@ import { markdownToBlocks, } from "@tryfabric/martian";
 import * as yamlFrontMatter from "yaml-front-matter";
 // import * as yaml from "yaml"
 import MyPlugin from "src/main";
-import {PluginSettings} from "../../ui/settingTabs";
-import {updateYamlInfo} from "../updateYaml";
+import { PluginSettings } from "../../ui/settingTabs";
+import { updateYamlInfo } from "../updateYaml";
 
 export class Upload2NotionNext extends UploadBaseNext {
     settings: PluginSettings;
@@ -205,10 +205,15 @@ export class Upload2NotionNext extends UploadBaseNext {
         nowFile: TFile,
         app: App,
     ): Promise<any> {
+		const options = {
+			notionLimits: {
+				truncate: false,
+			}
+		}
         let res: any
         const yamlContent: any = yamlFrontMatter.loadFront(markdown);
         const __content = yamlContent.__content
-        const file2Block = markdownToBlocks(__content);
+        const file2Block = markdownToBlocks(__content, options);
         const frontmasster = app.metadataCache.getFileCache(nowFile)?.frontmatter
         const notionID = frontmasster ? frontmasster.notionID : null
 

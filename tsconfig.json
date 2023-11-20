@@ -17,8 +17,8 @@
     ]
   },
   "include": [
-    "**/*.ts"
-,
-    "src/Upload2Notion.ts"
+    "**/*.ts",
+    "src/Upload2Notion.ts",
+    "src/*.ts"
   ]
 }
