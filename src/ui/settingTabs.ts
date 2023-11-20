@@ -10,6 +10,7 @@ export interface PluginSettings {
     notionUser: string;
     proxy: string;
     GeneralButton: boolean;
+	tagButton: boolean;
     CustomTitleButton: boolean;
     CustomTitleName: string;
     notionAPIGeneral: string;
@@ -28,6 +29,7 @@ export const DEFAULT_SETTINGS: PluginSettings = {
     notionUser: "",
     proxy: "",
     GeneralButton: true,
+	tagButton: true,
     CustomTitleButton: false,
     CustomTitleName: "",
     notionAPIGeneral: "",
@@ -101,6 +103,7 @@ export class ObsidianSettingTab extends PluginSettingTab {
                     .onChange(async (value) => {
                         this.plugin.settings.GeneralButton = value;
 
+						this.updateSettingEl(tagButtonEl, value)
                         this.updateSettingEl(CustomTitleEl, value)
                         // name should follow the result of the title button
                         if (value) {
@@ -119,6 +122,11 @@ export class ObsidianSettingTab extends PluginSettingTab {
                     })
             );
 
+		// add the tagButton to control whether to add tags to the general database
+		const tagButtonEl = this.createStyleDiv('tag-button', (this.plugin.settings.GeneralButton && this.plugin.settings.CustomTitleButton));
+		this.createSettingEl(tagButtonEl, i18nConfig.NotionTagButton, i18nConfig.NotionTagButtonDesc, 'toggle', i18nConfig.NotionCustomTitleText, this.plugin.settings.tagButton, 'tagButton')
+
+		// Custom Title Button
         const CustomTitleEl = this.createStyleDiv('custom-title', this.plugin.settings.GeneralButton);
         new Setting(CustomTitleEl)
             .setName(i18nConfig.NotionCustomTitle)
@@ -136,8 +144,8 @@ export class ObsidianSettingTab extends PluginSettingTab {
                     })
             );
 
+		// Custom Title Name
         const CustomNameEl = this.createStyleDiv('custom-name', (this.plugin.settings.CustomTitleButton && this.plugin.settings.GeneralButton));
-
         this.createSettingEl(CustomNameEl, i18nConfig.NotionCustomTitleName, i18nConfig.NotionCustomTitleNameDesc, 'text', i18nConfig.NotionCustomTitleText, this.plugin.settings.CustomTitleName, 'CustomTitleName')
 
         // new Setting(containerEl)

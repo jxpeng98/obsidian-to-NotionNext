@@ -59,14 +59,13 @@ export class Upload2NotionGeneral extends UploadBaseGeneral {
 						},
 					],
 				},
-				tags: {
-					multi_select:
-						tags && true
-							? tags.map((tag) => {
-								return { name: tag };
-							})
-							: [],
-				},
+				...(this.plugin.settings.tagsButton
+					? {
+						tags: {
+							multi_select: tags && true ? tags.map((tag) => ({ name: tag })) : [],
+						},
+					}
+					: {}),
 			},
 			children: childArr,
 		};

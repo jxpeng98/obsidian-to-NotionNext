@@ -5,6 +5,22 @@
 所以我在[原作者](https://github.com/EasyChris/obsidian-to-notion)的基础之上，增加了匹配[NotionNext](https://github.com/tangly1024/NotionNext)模板的功能。这样可以直接在Obsidian编辑，整理好之后一键发布。
 
 ## 更新说明
+### 1.1.0
+- 修复设置中自定义标题的显示问题。
+- 增加了标签同步的控制按钮。以减少空标签集造成的上传失败。
+
+如果你不想使用同步标签功能，你可以在设置中关闭。不论你在md文件表头添加了tags与否，都不会将标签同步到Notion数据库中。
+
+如果你需要同步标签到Notion数据库中，**你需要通过如下格式添加表填到md表头中。**
+
+```yaml
+tags: #空标签，选项1
+tags: [test,test1,test2] # 用中括号将所有的标签括起来，选项2
+tags: 
+  - test
+  - test1
+  - test2 # 每个标签单独一行，选项3
+```
 
 ### 1.0.1
 

@@ -15,6 +15,23 @@ Thus, based on the [original author's work](https://github.com/EasyChris/obsidia
 
 ## Update
 
+### 1.1.0
+- Fix the custom name setting tab display bug. 
+- Add a toggle to control whether to sync `tags` since the empty tags may cause the syncing error.
+
+If you switch off the `tags` function in the plugin settings, it will ignore the `tags` in your frontmatter. 
+
+If you prefer to sync tags to Notion database, you can switch on the `tags` function in the plugin settings. **You can only use the following format for tags:**
+
+```yaml
+tags: #empty tags, option 1
+tags: [test,test1,test2] # use the square brackets, option 2
+tags: 
+  - test
+  - test1
+  - test2 # use the dash option 3
+```
+
 ### 1.0.1
 
 - Fix the custom name element display bug in the settings.
