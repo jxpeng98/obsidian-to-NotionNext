@@ -136,7 +136,8 @@ export class ObsidianSettingTab extends PluginSettingTab {
                     })
             );
 
-        const CustomNameEl = this.createStyleDiv('custom-name', this.plugin.settings.CustomTitleButton);
+        const CustomNameEl = this.createStyleDiv('custom-name', (this.plugin.settings.CustomTitleButton && this.plugin.settings.GeneralButton));
+
         this.createSettingEl(CustomNameEl, i18nConfig.NotionCustomTitleName, i18nConfig.NotionCustomTitleNameDesc, 'text', i18nConfig.NotionCustomTitleText, this.plugin.settings.CustomTitleName, 'CustomTitleName')
 
         // new Setting(containerEl)
