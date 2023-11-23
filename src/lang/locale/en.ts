@@ -31,6 +31,9 @@ export const en = {
 	NotionCustomTitleName: "Preferred title name",
 	NotionCustomTitleNameDesc: "Enter the preferred title name for the first column of the Notion database (default: title)",
 	NotionCustomTitleText: "Enter the name",
+	NotionCustomValues: "Customise values property",
+	NotionCustomValuesDesc: "Modify the column name of the Notion database，one per line",
+	NotionCustomValuesText: "Enter all properties that you want to sync",
 	NotYetFinish:
 "Not finished. This function will be available in the next version",
 	PlaceHolder: "Enter database Name",

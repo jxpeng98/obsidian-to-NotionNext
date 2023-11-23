@@ -10,12 +10,13 @@ export interface PluginSettings {
     notionUser: string;
     proxy: string;
     GeneralButton: boolean;
-	tagButton: boolean;
+    tagButton: boolean;
     CustomTitleButton: boolean;
     CustomTitleName: string;
     notionAPIGeneral: string;
     databaseIDGeneral: string;
     CustomButton: boolean;
+    CustomValues: string;
     notionAPICustom: string;
     databaseIDCustom: string;
     [key: string]: any;
@@ -29,12 +30,13 @@ export const DEFAULT_SETTINGS: PluginSettings = {
     notionUser: "",
     proxy: "",
     GeneralButton: true,
-	tagButton: true,
+    tagButton: true,
     CustomTitleButton: false,
     CustomTitleName: "",
     notionAPIGeneral: "",
     databaseIDGeneral: "",
     CustomButton: false,
+    CustomValues: "",
     notionAPICustom: "",
     databaseIDCustom: "",
 };
@@ -108,8 +110,10 @@ export class ObsidianSettingTab extends PluginSettingTab {
                         // name should follow the result of the title button
                         if (value) {
                             this.updateSettingEl(CustomNameEl, this.plugin.settings.CustomTitleButton)
+                            this.updateSettingEl(CustomValuesEl, this.plugin.settings.CustomTitleButton)
                         } else {
                             this.updateSettingEl(CustomNameEl, value)
+                            this.updateSettingEl(CustomValuesEl, value)
                         }
 
                         this.updateSettingEl(notionAPIGeneralEl, value)
@@ -139,6 +143,8 @@ export class ObsidianSettingTab extends PluginSettingTab {
 
                         this.updateSettingEl(CustomNameEl, value)
 
+                        this.updateSettingEl(CustomValuesEl, value)
+
                         await this.plugin.saveSettings();
                         await this.plugin.commands.updateCommand();
                     })
@@ -148,6 +154,21 @@ export class ObsidianSettingTab extends PluginSettingTab {
         const CustomNameEl = this.createStyleDiv('custom-name', (this.plugin.settings.CustomTitleButton && this.plugin.settings.GeneralButton));
         this.createSettingEl(CustomNameEl, i18nConfig.NotionCustomTitleName, i18nConfig.NotionCustomTitleNameDesc, 'text', i18nConfig.NotionCustomTitleText, this.plugin.settings.CustomTitleName, 'CustomTitleName')
 
+        // Custom database properties
+        const CustomValuesEl = this.createStyleDiv('custom-values', (this.plugin.settings.CustomTitleButton && this.plugin.settings.GeneralButton));
+        new Setting(CustomValuesEl)
+            .setName(i18nConfig.NotionCustomValues)
+            .setDesc(i18nConfig.NotionCustomValuesDesc)
+            .addTextArea((text) =>
+                text
+                    .setPlaceholder(i18nConfig.NotionCustomValuesText)
+                    .setValue(this.plugin.settings.CustomValues)
+                    .onChange(async (value) => {
+                        this.plugin.settings.CustomValues = value;
+                        await this.plugin.saveSettings();
+                        await this.plugin.commands.updateCommand();
+                    })
+            );
         // new Setting(containerEl)
         // .setName("Convert tags(optional)")
         // .setDesc("Transfer the Obsidian tags to the Notion table. It requires the column with the name 'Tags'")
