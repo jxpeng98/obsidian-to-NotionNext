@@ -14,6 +14,9 @@ Thus, based on the [original author's work](https://github.com/EasyChris/obsidia
 **Now, support both NotionNext and General databases.**
 
 ## Update
+### 1.1.1
+- Fix the setting display bug in Japanese.
+- Add Japanese translation.
 
 ### 1.1.0
 - Fix the custom name setting tab display bug. 

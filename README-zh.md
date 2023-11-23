@@ -5,6 +5,9 @@
 所以我在[原作者](https://github.com/EasyChris/obsidian-to-notion)的基础之上，增加了匹配[NotionNext](https://github.com/tangly1024/NotionNext)模板的功能。这样可以直接在Obsidian编辑，整理好之后一键发布。
 
 ## 更新说明
+### 1.1.1
+- 修复了在日语系统下，无法显示设置按钮的错误。
+- 增加日语翻译。
 ### 1.1.0
 - 修复设置中自定义标题的显示问题。
 - 增加了标签同步的控制按钮。以减少空标签集造成的上传失败。
