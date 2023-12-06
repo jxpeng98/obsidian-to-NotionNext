@@ -7,6 +7,7 @@ import * as yamlFrontMatter from "yaml-front-matter";
 import MyPlugin from "src/main";
 import { PluginSettings } from "../../ui/settingTabs";
 import { updateYamlInfo } from "../updateYaml";
+import {LIMITS, paragraph} from "@tryfabric/martian/src/notion";
 
 export class Upload2NotionNext extends UploadBaseNext {
     settings: PluginSettings;
@@ -216,6 +217,27 @@ export class Upload2NotionNext extends UploadBaseNext {
         const file2Block = markdownToBlocks(__content, options);
         const frontmasster = app.metadataCache.getFileCache(nowFile)?.frontmatter
         const notionID = frontmasster ? frontmasster.notionID : null
+
+		// increase the limits
+		// Motivated by https://github.com/tryfabric/martian/issues/51
+		file2Block.forEach((block,index) => {
+			if (
+				block.type === 'paragraph' &&
+				block.paragraph.rich_text.length > LIMITS.RICH_TEXT_ARRAYS
+			) {
+
+				const newParagraphBlocks: any[] = []
+				const chunk:any = []
+				const richTextChunks = chunk(block.paragraph.rich_text, 100)
+
+				richTextChunks.forEach((chunk: any) => {
+					newParagraphBlocks.push(paragraph(chunk))
+				})
+
+				file2Block.splice(index, 1, ...newParagraphBlocks)
+
+			}
+		})
 
         if (notionID) {
             res = await this.updatePage(
