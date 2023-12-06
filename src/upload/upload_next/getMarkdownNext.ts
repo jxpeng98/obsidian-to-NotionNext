@@ -13,6 +13,7 @@ export async function getNowFileMarkdownContentNext(
     let type = '';
     let slug = '';
     let stats = '';
+	let status = '';
     let category = '';
     let summary = '';
     let paword = '';
@@ -26,7 +27,7 @@ export async function getNowFileMarkdownContentNext(
         tags = FileCache.frontmatter.tags;
         type = FileCache.frontmatter.type;
         slug = FileCache.frontmatter.slug;
-        stats = FileCache.frontmatter.stats;
+        stats = FileCache.frontmatter.stats || FileCache.frontmatter.status;
         category = FileCache.frontmatter.category;
         summary = FileCache.frontmatter.summary;
         paword = FileCache.frontmatter.password;

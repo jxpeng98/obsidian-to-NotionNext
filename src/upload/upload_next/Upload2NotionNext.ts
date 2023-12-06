@@ -251,6 +251,7 @@ export class Upload2NotionNext extends UploadBaseNext {
                 file2Block
             );
         }
+
         if (res.status === 200) {
             await updateYamlInfo(markdown, nowFile, res, app, this.plugin)
         } else {

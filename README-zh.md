@@ -5,6 +5,17 @@
 所以我在[原作者](https://github.com/EasyChris/obsidian-to-notion)的基础之上，增加了匹配[NotionNext](https://github.com/tangly1024/NotionNext)模板的功能。这样可以直接在Obsidian编辑，整理好之后一键发布。
 
 ## 更新说明
+### 1.1.2
+- 修复了一个拼写错误，导致无法同步`status`到NotionNext。现在你可以使用`stats`或者`status`来同步文章的状态到NotionNext。这个更新不会影响到同步到General数据库的功能。
+- **`stats`和`status`都可以使用，但是你只能使用其中一个。**
+
+```yaml
+stats: Draft # Draft, Invisible, Published, default is Draft， 默认是Draft
+# or 
+status: Draft # Draft, Invisible, Published, default is Draft， 默认是Draft
+# both of them will work, but you can only use one of them.
+```
+
 ### 1.1.1
 - 修复了在日语系统下，无法显示设置按钮的错误。
 - 增加日语翻译。

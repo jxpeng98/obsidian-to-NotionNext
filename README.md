@@ -14,6 +14,20 @@ Thus, based on the [original author's work](https://github.com/EasyChris/obsidia
 **Now, support both NotionNext and General databases.**
 
 ## Update
+### 1.1.2
+- Fix the typo that you cannot sync the markdown file `status` in the frontmatter to NotionNext. You can use `stats` or `status` to sync the status of the post to NotionNext. This update will not affect the function of syncing to General database. 
+- 修复了一个拼写错误，导致无法同步`status`到NotionNext。现在你可以使用`stats`或者`status`来同步文章的状态到NotionNext。这个更新不会影响到同步到General数据库的功能。
+- **Both `stats` and `status` will work, but you can only use one of them.**
+- **`stats`和`status`都可以使用，但是你只能使用其中一个。**
+
+For example, 
+```yaml
+stats: Draft # Draft, Invisible, Published, default is Draft， 默认是Draft
+# or 
+status: Draft # Draft, Invisible, Published, default is Draft， 默认是Draft
+# both of them will work, but you can only use one of them.
+```
+
 ### 1.1.1
 - Fix the setting display bug in Japanese.
 - Add Japanese translation.
@@ -167,7 +181,7 @@ date: 2023-07-23 # default is today， 默认是今天。 Format is YYYY-MM-DD�
 coverurl: https://img.jxpeng.dev/2023/08/843e27a210847f05a0f7cfb121fec100.jpg # default is empty， 默认是空
 type: Post # Post or Page, default is Post， 默认是Post
 slug: test # slug for url, default is empty， 默认是空
-stats: Draft # Draft, Invisible, Published, default is Draft， 默认是Draft
+stats: Draft # Draft, Invisible, Published, default is Draft， 默认是Draft 
 category: test # default is 'Obsidian'， 默认是'Obsidian'
 summary: this is a summary for test post # default is empty， 默认是空
 icon: fa-solid fa-camera # you can ignore this, default is empty， 默认是空，可直接删除
