@@ -3,7 +3,7 @@ import ObsidianSyncNotionPlugin from "../main";
 import {i18nConfig} from "../lang/I18n";
 import {ObsidianSettingTab} from "./settingTabs";
 
-export class SettingNextTab extends PluginSettingTab {
+export class SettingNextTabs extends PluginSettingTab {
 	plugin: ObsidianSyncNotionPlugin;
 	private settingTab: ObsidianSettingTab;
 

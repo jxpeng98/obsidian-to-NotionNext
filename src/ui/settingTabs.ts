@@ -2,7 +2,8 @@ import {App, ButtonComponent, PluginSettingTab, Setting} from "obsidian";
 import {i18nConfig} from "../lang/I18n";
 import ObsidianSyncNotionPlugin from "../main";
 import {SettingModal} from "./settingModal";
-import {SettingNextTab} from "./settingNextTabs";
+import {SettingNextTabs} from "./settingNextTabs";
+import {SettingGeneralTabs} from "./settingGeneralTabs";
 
 export interface PluginSettings {
     NextButton: boolean;
@@ -98,7 +99,7 @@ export class ObsidianSettingTab extends PluginSettingTab {
 
 		// notion next database settings
 
-		const NextTabs = new SettingNextTab(this.app, this.plugin, this);
+		const NextTabs = new SettingNextTabs(this.app, this.plugin, this);
 
 		NextTabs.display();
 
@@ -131,101 +132,106 @@ export class ObsidianSettingTab extends PluginSettingTab {
 
 
         // General Database Settings
-        containerEl.createEl('h2', { text: i18nConfig.NotionGeneralSettingHeader });
+		const GeneralTabs = new SettingGeneralTabs(this.app, this.plugin, this);
 
+		GeneralTabs.display();
+
+
+        // containerEl.createEl('h2', { text: i18nConfig.NotionGeneralSettingHeader });
+		//
+        // // new Setting(containerEl)
+        // //     .setName(i18nConfig.NotYetFinish)
         // new Setting(containerEl)
-        //     .setName(i18nConfig.NotYetFinish)
-        new Setting(containerEl)
-            .setName(i18nConfig.NotionGeneralButton)
-            .setDesc(i18nConfig.NotionGeneralButtonDesc)
-            .addToggle((toggle) =>
-                toggle
-                    .setValue(this.plugin.settings.GeneralButton)
-                    .onChange(async (value) => {
-                        this.plugin.settings.GeneralButton = value;
-
-						this.updateSettingEl(tagButtonEl, value)
-                        this.updateSettingEl(CustomTitleEl, value)
-                        // name should follow the result of the title button
-                        if (value) {
-                            this.updateSettingEl(CustomNameEl, this.plugin.settings.CustomTitleButton)
-                            this.updateSettingEl(CustomValuesEl, this.plugin.settings.CustomTitleButton)
-                        } else {
-                            this.updateSettingEl(CustomNameEl, value)
-                            this.updateSettingEl(CustomValuesEl, value)
-                        }
-
-                        this.updateSettingEl(notionAPIGeneralEl, value)
-                        this.updateSettingEl(databaseIDGeneralEl, value)
-
-
-                        await this.plugin.saveSettings();
-                        await this.plugin.commands.updateCommand();
-
-                    })
-            );
-
-		// add the tagButton to control whether to add tags to the general database
-		const tagButtonEl = this.createStyleDiv('tag-button', (this.plugin.settings.GeneralButton && this.plugin.settings.CustomTitleButton));
-		this.createSettingEl(tagButtonEl, i18nConfig.NotionTagButton, i18nConfig.NotionTagButtonDesc, 'toggle', i18nConfig.NotionCustomTitleText, this.plugin.settings.tagButton, 'tagButton')
-
-		// Custom Title Button
-        const CustomTitleEl = this.createStyleDiv('custom-title', this.plugin.settings.GeneralButton);
-        new Setting(CustomTitleEl)
-            .setName(i18nConfig.NotionCustomTitle)
-            .setDesc(i18nConfig.NotionCustomTitleDesc)
-            .addToggle((toggle) =>
-                toggle
-                    .setValue(this.plugin.settings.CustomTitleButton)
-                    .onChange(async (value) => {
-                        this.plugin.settings.CustomTitleButton = value;
-
-                        this.updateSettingEl(CustomNameEl, value)
-
-                        this.updateSettingEl(CustomValuesEl, value)
-
-                        await this.plugin.saveSettings();
-                        await this.plugin.commands.updateCommand();
-                    })
-            );
-
-		// Custom Title Name
-        const CustomNameEl = this.createStyleDiv('custom-name', (this.plugin.settings.CustomTitleButton && this.plugin.settings.GeneralButton));
-        this.createSettingEl(CustomNameEl, i18nConfig.NotionCustomTitleName, i18nConfig.NotionCustomTitleNameDesc, 'text', i18nConfig.NotionCustomTitleText, this.plugin.settings.CustomTitleName, 'CustomTitleName')
-
-        // Custom database properties
-        const CustomValuesEl = this.createStyleDiv('custom-values', (this.plugin.settings.CustomTitleButton && this.plugin.settings.GeneralButton));
-        new Setting(CustomValuesEl)
-            .setName(i18nConfig.NotionCustomValues)
-            .setDesc(i18nConfig.NotionCustomValuesDesc)
-            .addTextArea((text) =>
-                text
-                    .setPlaceholder(i18nConfig.NotionCustomValuesText)
-                    .setValue(this.plugin.settings.CustomValues)
-                    .onChange(async (value) => {
-                        this.plugin.settings.CustomValues = value;
-                        await this.plugin.saveSettings();
-                        await this.plugin.commands.updateCommand();
-                    })
-            );
-        // new Setting(containerEl)
-        // .setName("Convert tags(optional)")
-        // .setDesc("Transfer the Obsidian tags to the Notion table. It requires the column with the name 'Tags'")
-        // .addToggle((toggle) =>
-        // 	toggle
-        // 		.setValue(this.plugin.settings.allowTags)
-        // 		.onChange(async (value) => {
-        // 			this.plugin.settings.allowTags = value;
-        // 			await this.plugin.saveSettings();
-        // 		})
-        // );
-
-        const notionAPIGeneralEl = this.createStyleDiv('api-general', this.plugin.settings.GeneralButton);
-        this.createSettingEl(notionAPIGeneralEl, i18nConfig.NotionAPI, i18nConfig.NotionAPIDesc, 'password', i18nConfig.NotionAPIText, this.plugin.settings.notionAPIGeneral, 'notionAPIGeneral')
-
-
-        const databaseIDGeneralEl = this.createStyleDiv('databaseID-general', this.plugin.settings.GeneralButton);
-        this.createSettingEl(databaseIDGeneralEl, i18nConfig.DatabaseID, i18nConfig.NotionAPIDesc, 'password', i18nConfig.DatabaseIDText, this.plugin.settings.databaseIDGeneral, 'databaseIDGeneral')
+        //     .setName(i18nConfig.NotionGeneralButton)
+        //     .setDesc(i18nConfig.NotionGeneralButtonDesc)
+        //     .addToggle((toggle) =>
+        //         toggle
+        //             .setValue(this.plugin.settings.GeneralButton)
+        //             .onChange(async (value) => {
+        //                 this.plugin.settings.GeneralButton = value;
+		//
+		// 				this.updateSettingEl(tagButtonEl, value)
+        //                 this.updateSettingEl(CustomTitleEl, value)
+        //                 // name should follow the result of the title button
+        //                 if (value) {
+        //                     this.updateSettingEl(CustomNameEl, this.plugin.settings.CustomTitleButton)
+        //                     this.updateSettingEl(CustomValuesEl, this.plugin.settings.CustomTitleButton)
+        //                 } else {
+        //                     this.updateSettingEl(CustomNameEl, value)
+        //                     this.updateSettingEl(CustomValuesEl, value)
+        //                 }
+		//
+        //                 this.updateSettingEl(notionAPIGeneralEl, value)
+        //                 this.updateSettingEl(databaseIDGeneralEl, value)
+		//
+		//
+        //                 await this.plugin.saveSettings();
+        //                 await this.plugin.commands.updateCommand();
+		//
+        //             })
+        //     );
+		//
+		// // add the tagButton to control whether to add tags to the general database
+		// const tagButtonEl = this.createStyleDiv('tag-button', (this.plugin.settings.GeneralButton && this.plugin.settings.CustomTitleButton));
+		// this.createSettingEl(tagButtonEl, i18nConfig.NotionTagButton, i18nConfig.NotionTagButtonDesc, 'toggle', i18nConfig.NotionCustomTitleText, this.plugin.settings.tagButton, 'tagButton')
+		//
+		// // Custom Title Button
+        // const CustomTitleEl = this.createStyleDiv('custom-title', this.plugin.settings.GeneralButton);
+        // new Setting(CustomTitleEl)
+        //     .setName(i18nConfig.NotionCustomTitle)
+        //     .setDesc(i18nConfig.NotionCustomTitleDesc)
+        //     .addToggle((toggle) =>
+        //         toggle
+        //             .setValue(this.plugin.settings.CustomTitleButton)
+        //             .onChange(async (value) => {
+        //                 this.plugin.settings.CustomTitleButton = value;
+		//
+        //                 this.updateSettingEl(CustomNameEl, value)
+		//
+        //                 this.updateSettingEl(CustomValuesEl, value)
+		//
+        //                 await this.plugin.saveSettings();
+        //                 await this.plugin.commands.updateCommand();
+        //             })
+        //     );
+		//
+		// // Custom Title Name
+        // const CustomNameEl = this.createStyleDiv('custom-name', (this.plugin.settings.CustomTitleButton && this.plugin.settings.GeneralButton));
+        // this.createSettingEl(CustomNameEl, i18nConfig.NotionCustomTitleName, i18nConfig.NotionCustomTitleNameDesc, 'text', i18nConfig.NotionCustomTitleText, this.plugin.settings.CustomTitleName, 'CustomTitleName')
+		//
+        // // Custom database properties
+        // const CustomValuesEl = this.createStyleDiv('custom-values', (this.plugin.settings.CustomTitleButton && this.plugin.settings.GeneralButton));
+        // new Setting(CustomValuesEl)
+        //     .setName(i18nConfig.NotionCustomValues)
+        //     .setDesc(i18nConfig.NotionCustomValuesDesc)
+        //     .addTextArea((text) =>
+        //         text
+        //             .setPlaceholder(i18nConfig.NotionCustomValuesText)
+        //             .setValue(this.plugin.settings.CustomValues)
+        //             .onChange(async (value) => {
+        //                 this.plugin.settings.CustomValues = value;
+        //                 await this.plugin.saveSettings();
+        //                 await this.plugin.commands.updateCommand();
+        //             })
+        //     );
+        // // new Setting(containerEl)
+        // // .setName("Convert tags(optional)")
+        // // .setDesc("Transfer the Obsidian tags to the Notion table. It requires the column with the name 'Tags'")
+        // // .addToggle((toggle) =>
+        // // 	toggle
+        // // 		.setValue(this.plugin.settings.allowTags)
+        // // 		.onChange(async (value) => {
+        // // 			this.plugin.settings.allowTags = value;
+        // // 			await this.plugin.saveSettings();
+        // // 		})
+        // // );
+		//
+        // const notionAPIGeneralEl = this.createStyleDiv('api-general', this.plugin.settings.GeneralButton);
+        // this.createSettingEl(notionAPIGeneralEl, i18nConfig.NotionAPI, i18nConfig.NotionAPIDesc, 'password', i18nConfig.NotionAPIText, this.plugin.settings.notionAPIGeneral, 'notionAPIGeneral')
+		//
+		//
+        // const databaseIDGeneralEl = this.createStyleDiv('databaseID-general', this.plugin.settings.GeneralButton);
+        // this.createSettingEl(databaseIDGeneralEl, i18nConfig.DatabaseID, i18nConfig.NotionAPIDesc, 'password', i18nConfig.DatabaseIDText, this.plugin.settings.databaseIDGeneral, 'databaseIDGeneral')
 
         // Custom Database Settings
 
