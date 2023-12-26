@@ -13,6 +13,11 @@ import {SettingGeneralTabs} from "./settingGeneralTabs";
 
 
 export class SettingModal extends Modal {
+	databaseFormat: string = 'none';
+	databaseAbbreviateName: string = '';
+	notionAPINext: string = '';
+	databaseIDNext: string = '';
+	GeneralButton: boolean = false;
 	plugin: ObsidianSyncNotionPlugin;
 	settingTab: ObsidianSettingTab;
 
@@ -20,6 +25,7 @@ export class SettingModal extends Modal {
 		super(app);
 		this.plugin = plugin;
 		this.settingTab = settingTab;
+
 	}
 
 	display(): void {
@@ -42,8 +48,9 @@ export class SettingModal extends Modal {
 					.addOption('general', i18nConfig.databaseGeneral)
 					.addOption('next', i18nConfig.databaseNext)
 					.addOption('custom', i18nConfig.databaseCustom)
-					.setValue(this.plugin.settings.databaseFormat)
+					.setValue(this.databaseFormat)
 					.onChange(async (value) => {
+						this.databaseFormat = value;
 						this.updateContentBasedOnSelection(value, nextTabs);
 					});
 
@@ -58,11 +65,135 @@ export class SettingModal extends Modal {
 
 		// Generate content based on the selected value
 		if (value === 'general') {
-			nextTabs.createEl('h2', { text: i18nConfig.NotionGeneralSettingHeader });
-			// Additional content for 'general'...
+			nextTabs.createEl('h3', { text: i18nConfig.NotionGeneralSettingHeader });
+
+			// add abbreviate name
+			new Setting(nextTabs)
+				.setName(i18nConfig.databaseAbbreviateName)
+				.setDesc(i18nConfig.databaseAbbreviateNameDesc)
+				.addText((text) =>
+					text
+						.setPlaceholder(i18nConfig.databaseAbbreviateNameText)
+						.setValue(this.databaseAbbreviateName)
+						.onChange(async (value) => {
+							this.databaseAbbreviateName = value;
+						})
+				);
+
+
+			new Setting(nextTabs)
+				.setName(i18nConfig.NotionGeneralButton)
+				.setDesc(i18nConfig.NotionGeneralButtonDesc)
+				.addToggle((toggle) =>
+					toggle
+						.setValue(this.GeneralButton)
+						.onChange(async (value) => {
+							this.GeneralButton = value;
+
+							this.updateSettingEl(notionAPIGeneralEl, value)
+							this.updateSettingEl(databaseIDGeneralEl, value)
+
+
+						})
+				);
+
+
+			const notionAPIGeneralEl = this.createStyleDiv('api-general', this.plugin.settings.GeneralButton);
+
+			new Setting(notionAPIGeneralEl)
+				.setName(i18nConfig.NotionAPI)
+				.setDesc(i18nConfig.NotionAPIDesc)
+				.addText((text) => {
+					text.inputEl.type = 'password';
+					return text
+						.setPlaceholder(i18nConfig.NotionAPIText)
+						.setValue(this.notionAPINext)
+						.onChange(async (value) => {
+							this.notionAPINext = value; // Update the plugin settings directly
+						})
+				});
+
+
+			const databaseIDGeneralEl = this.createStyleDiv('databaseID-general', this.plugin.settings.GeneralButton);
+
+			new Setting(databaseIDGeneralEl)
+				.setName(i18nConfig.DatabaseID)
+				.setDesc(i18nConfig.NotionAPIDesc)
+				.addText((text) => {
+					text.inputEl.type = 'password';
+					return text
+						.setPlaceholder(i18nConfig.DatabaseIDText)
+						.setValue(this.databaseIDNext)
+						.onChange(async (value) => {
+							this.databaseIDNext = value; // Update the plugin settings directly
+						})
+				});
+
+
+
 		} else if (value === 'next') {
-			nextTabs.createEl('h2', { text: i18nConfig.NotionNextSettingHeader });
-			// Additional content for 'next'...
+			nextTabs.createEl('h3', { text: i18nConfig.NotionNextSettingHeader });
+			// add abbreviate name
+			this.createSettingEl(nextTabs, i18nConfig.databaseAbbreviateName, i18nConfig.databaseAbbreviateNameDesc, 'text', i18nConfig.databaseAbbreviateNameText, this.databaseAbbreviateName)
+
+			new Setting(nextTabs)
+				.setName(i18nConfig.databaseAbbreviateName)
+				.setDesc(i18nConfig.databaseAbbreviateNameDesc)
+				.addText((text) =>
+					text
+						.setPlaceholder(i18nConfig.databaseAbbreviateNameText)
+						.setValue(this.databaseAbbreviateName)
+						.onChange(async (value) => {
+							this.databaseAbbreviateName = value;
+						})
+				);
+
+			// add api key
+			const notionAPINextEl = this.createStyleDiv('api-next', this.plugin.settings.NextButton)
+
+			new Setting(notionAPINextEl)
+				.setName(i18nConfig.NotionAPI)
+				.setDesc(i18nConfig.NotionAPIDesc)
+				.addText((text) => {
+					text.inputEl.type = 'password';
+					return text
+						.setPlaceholder(i18nConfig.NotionAPIText)
+						.setValue(this.notionAPINext)
+						.onChange(async (value) => {
+							this.notionAPINext = value; // Update the plugin settings directly
+						})
+				});
+
+			// add database id
+			const databaseIDNextEl = this.createStyleDiv('databaseID-next', this.plugin.settings.NextButton)
+
+			new Setting(databaseIDNextEl)
+				.setName(i18nConfig.DatabaseID)
+				.setDesc(i18nConfig.NotionAPIDesc)
+				.addText((text) => {
+					text.inputEl.type = 'password';
+					return text
+						.setPlaceholder(i18nConfig.DatabaseIDText)
+						.setValue(this.databaseIDNext)
+						.onChange(async (value) => {
+							this.databaseIDNext = value; // Update the plugin settings directly
+						})
+				});
+
+			// // test button
+			// new Setting(nextTabs)
+			// 	.setName(i18nConfig.NotionNextButton)
+			// 	.setDesc(i18nConfig.NotionNextButtonDesc)
+			// 	.addToggle((toggle) =>
+			// 		toggle
+			// 			.setValue(this.plugin.settings.NextButton)
+			// 			.onChange(async (value) => {
+			// 				this.plugin.settings.NextButton = value;
+			// 			})
+			// 	);
+
+		} else if (value === 'custom') {
+
 		}
 		// Implement for 'custom' if needed
 	}
@@ -91,7 +222,7 @@ export class SettingModal extends Modal {
 	}
 
 	// function to add one setting element in the setting tab.
-	public createSettingEl(contentEl: HTMLElement, name: string, desc: string, type: string, placeholder: string, holderValue: any, settingsKey: string) {
+	public createSettingEl(contentEl: HTMLElement, name: string, desc: string, type: string, placeholder: string, holderValue: any) {
 		if (type === 'password') {
 			return new Setting(contentEl)
 				.setName(name)
@@ -102,7 +233,7 @@ export class SettingModal extends Modal {
 						.setPlaceholder(placeholder)
 						.setValue(holderValue)
 						.onChange(async (value) => {
-							this.plugin.settings[settingsKey] = value; // Update the plugin settings directly
+							holderValue = value; // Update the plugin settings directly
 							await this.plugin.saveSettings();
 						})
 				});
@@ -114,9 +245,8 @@ export class SettingModal extends Modal {
 					toggle
 						.setValue(holderValue)
 						.onChange(async (value) => {
-							this.plugin.settings[settingsKey] = value; // Update the plugin settings directly
+							holderValue = value; // Update the plugin settings directly
 							await this.plugin.saveSettings();
-							await this.plugin.commands.updateCommand();
 						})
 				);
 		} else if (type === 'text') {
@@ -128,9 +258,8 @@ export class SettingModal extends Modal {
 						.setPlaceholder(placeholder)
 						.setValue(holderValue)
 						.onChange(async (value) => {
-							this.plugin.settings[settingsKey] = value; // Update the plugin settings directly
+							holderValue = value; // Update the plugin settings directly
 							await this.plugin.saveSettings();
-							await this.plugin.commands.updateCommand();
 						})
 				);
 		}
