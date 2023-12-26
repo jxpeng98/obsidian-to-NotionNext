@@ -1,4 +1,9 @@
 export const en = {
+	databaseFormat: "Database Format",
+	databaseFormatDesc: "Select the database format you want to sync to NotionNext or General",
+	databaseNext: "NotionNext",
+	databaseGeneral: "General",
+	databaseCustom: "Custom",
 	ribbonIcon: "Share to NotionNext",
 	GeneralSetting: "General information Settings",
 	CommandID: "share-to-notionnext",

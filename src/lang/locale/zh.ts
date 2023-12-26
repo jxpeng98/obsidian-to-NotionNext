@@ -1,4 +1,9 @@
 export const zh = {
+	databaseFormat: "数据库格式",
+	databaseFormatDesc: "选择你想要同步的数据库格式Next 或者 普通",
+	databaseNext: "NotionNext",
+	databaseGeneral: "普通",
+	databaseCustom: "自定义",
 	ribbonIcon: "分享到 NotionNext",
 	GeneralSetting: "通用设置",
 	CommandID: "share-to-notionnext",

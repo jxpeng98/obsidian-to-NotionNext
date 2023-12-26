@@ -1,4 +1,9 @@
 export const ja = {
+	databaseFormat: "データベース形式",
+	databaseFormatDesc: "同期したいデータベース形式を選択してください",
+	databaseNext: "NotionNext",
+	databaseGeneral: "一般的なNotion",
+	databaseCustom: "カスタム",
     ribbonIcon: "NotionNextで共有",
     GeneralSetting: "一般設定",
     CommandID: "share-to-notionnext",
