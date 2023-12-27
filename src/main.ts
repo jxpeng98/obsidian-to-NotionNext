@@ -4,7 +4,7 @@ import { Upload2NotionGeneral } from "src/upload/upload_general/Upload2NotionGen
 import { Upload2NotionNext } from "src/upload/upload_next/Upload2NotionNext";
 import { i18nConfig } from "src/lang/I18n";
 import ribbonCommands from "src/commands/NotionCommands";
-import { ObsidianSettingTab, PluginSettings, DEFAULT_SETTINGS } from "src/ui/settingTabs";
+import { ObsidianSettingTab, PluginSettings, DEFAULT_SETTINGS, DatabaseDetails } from "src/ui/settingTabs";
 
 // Remember to rename these classes and interfaces!
 
@@ -54,6 +54,15 @@ export default class ObsidianSyncNotionPlugin extends Plugin {
     async saveSettings() {
         await this.saveData(this.settings);
     }
+
+	async addDatabaseDetails(dbDetails: DatabaseDetails) {
+		this.settings.databaseDetails = {
+			...this.settings.databaseDetails,
+			[dbDetails.abName]: dbDetails,
+		};
+
+		await this.saveSettings();
+	}
 
 }
 

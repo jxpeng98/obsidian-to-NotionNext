@@ -40,10 +40,10 @@ export class SettingNextTabs extends PluginSettingTab {
 
 
 		const notionAPINextEl = this.settingModal.createStyleDiv('api-next', this.plugin.settings.NextButton)
-		this.settingModal.createSettingEl(notionAPINextEl, i18nConfig.NotionAPI, i18nConfig.NotionAPIDesc, 'password', i18nConfig.NotionAPIText, this.plugin.settings.notionAPINext, 'notionAPINext')
+		this.settingModal.createSettingEl(notionAPINextEl, i18nConfig.NotionAPI, i18nConfig.NotionAPIDesc, 'password', i18nConfig.NotionAPIText, this.plugin.settings.notionAPINext)
 
 		const databaseIDNextEl = this.settingModal.createStyleDiv('databaseID-next', this.plugin.settings.NextButton)
-		this.settingModal.createSettingEl(databaseIDNextEl, i18nConfig.DatabaseID, i18nConfig.NotionAPIDesc, 'password', i18nConfig.DatabaseIDText, this.plugin.settings.databaseIDNext, 'databaseIDNext')
+		this.settingModal.createSettingEl(databaseIDNextEl, i18nConfig.DatabaseID, i18nConfig.NotionAPIDesc, 'password', i18nConfig.DatabaseIDText, this.plugin.settings.databaseIDNext)
 	}
 
 }

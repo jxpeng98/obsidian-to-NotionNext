@@ -3,7 +3,7 @@ import { App, Notice } from "obsidian";
 import { Upload2NotionNext } from "./upload_next/Upload2NotionNext";
 import { Upload2NotionGeneral } from "./upload_general/Upload2NotionGeneral";
 import { Upload2NotionCustom } from "./upoload_custom/Upload2NotionCustom";
-import { PluginSettings } from "../ui/settingTabs";
+import {DatabaseDetails, PluginSettings} from "../ui/settingTabs";
 import ObsidianSyncNotionPlugin from "../main";
 import { getNowFileMarkdownContentNext } from "./upload_next/getMarkdownNext";
 import { getNowFileMarkdownContentGeneral } from "./upload_general/getMarkdownGeneral";
@@ -12,10 +12,11 @@ import {getNowFileMarkdownContentCustom} from "./upoload_custom/getMarkdownCusto
 export async function uploadCommandNext(
     plugin: ObsidianSyncNotionPlugin,
     settings: PluginSettings,
+	dbDetails: DatabaseDetails,
     app: App,
 ) {
 
-    const { notionAPINext, databaseIDNext } = settings;
+    const { notionAPI, databaseID } = dbDetails;
 
     // Check if NNon exists
     // if (NNon === undefined) {
@@ -25,7 +26,7 @@ export async function uploadCommandNext(
     // }
 
     // Check if the user has set up the Notion API and database ID
-    if (notionAPINext === "" || databaseIDNext === "") {
+    if (notionAPI === "" || databaseID === "") {
         const setAPIMessage = i18nConfig["set-api-id"];
         new Notice(setAPIMessage);
         return;
@@ -35,7 +36,7 @@ export async function uploadCommandNext(
 
     if (markDownData) {
         const { basename } = nowFile;
-        const upload = new Upload2NotionNext(plugin);
+        const upload = new Upload2NotionNext(plugin, dbDetails);
         const res = await upload.syncMarkdownToNotionNext(basename, emoji, cover, tags, type, slug, stats, category, summary, paword, favicon, datetime, markDownData, nowFile, this.app);
 
         if (res.status === 200) {
@@ -52,13 +53,14 @@ export async function uploadCommandNext(
 export async function uploadCommandGeneral(
     plugin: ObsidianSyncNotionPlugin,
     settings: PluginSettings,
+	dbDetails: DatabaseDetails,
     app: App,
 ) {
 
-    const { notionAPIGeneral, databaseIDGeneral } = settings;
+    const { notionAPI, databaseID } = settings;
 
     // Check if the user has set up the Notion API and database ID
-    if (notionAPIGeneral === "" || databaseIDGeneral === "") {
+    if (notionAPI === "" || databaseID === "") {
         const setAPIMessage = i18nConfig["set-api-id"];
         new Notice(setAPIMessage);
         return;
@@ -69,7 +71,7 @@ export async function uploadCommandGeneral(
     if (markDownData) {
         const { basename } = nowFile;
 
-        const upload = new Upload2NotionGeneral(plugin);
+        const upload = new Upload2NotionGeneral(plugin, dbDetails);
         const res = await upload.syncMarkdownToNotionGeneral(basename, cover, tags, markDownData, nowFile, this.app);
 
         if (res.status === 200) {

@@ -1,8 +1,9 @@
 import { i18nConfig } from "src/lang/I18n";
-import { Editor, MarkdownView } from "obsidian";
+import {Editor, MarkdownView, setTooltip} from "obsidian";
 import { FuzzySuggester, DatabaseList } from "./FuzzySuggester";
 import { uploadCommandGeneral, uploadCommandNext } from "../upload/uploadCommand";
 import ObsidianSyncNotionPlugin from "src/main";
+import {DatabaseDetails} from "../ui/settingTabs";
 
 
 interface Command {
@@ -21,26 +22,11 @@ export default class RibbonCommands {
 	constructor(plugin: ObsidianSyncNotionPlugin) {
 		this.plugin = plugin;
 
-		// Check if NextButton is true, then include the corresponding command
-		if (this.plugin.settings.NextButton) {
-			this.Ncommand.push({
-				id: "share-to-notionnext",
-				name: i18nConfig.CommandName, // Use the translated text from i18nConfig
-				editorCallback: async (editor: Editor, view: MarkdownView) => {
-					await uploadCommandNext(this.plugin, this.plugin.settings, this.plugin.app);
-				}
-			});
-		}
+		// iterate through the database detail
 
-		// Check if GeneralButton is true, then include the corresponding command
-		if (this.plugin.settings.GeneralButton) {
-			this.Ncommand.push({
-				id: "share-to-notion",
-				name: i18nConfig.CommandNameGeneral, // Use the translated text from i18nConfig
-				editorCallback: async (editor: Editor, view: MarkdownView) => {
-					await uploadCommandGeneral(this.plugin, this.plugin.settings, this.plugin.app);
-				}
-			});
+		for (let key in this.plugin.settings.databaseDetails) {
+			let dbDetails = this.plugin.settings.databaseDetails[key];
+			this.addCommandForDatabase(dbDetails);
 		}
 
 		// Register all the commands
@@ -77,24 +63,9 @@ export default class RibbonCommands {
 
 		this.Ncommand = [];
 
-		if (this.plugin.settings.NextButton) {
-			this.Ncommand.push({
-				id: "share-to-notionnext",
-				name: i18nConfig.CommandName, // Use the translated text from i18nConfig
-				editorCallback: async (editor: Editor, view: MarkdownView) => {
-					await uploadCommandNext(this.plugin, this.plugin.settings, this.plugin.app);
-				}
-			});
-		}
-
-		if (this.plugin.settings.GeneralButton) {
-			this.Ncommand.push({
-				id: "share-to-notion",
-				name: i18nConfig.CommandNameGeneral, // Use the translated text from i18nConfig
-				editorCallback: async (editor: Editor, view: MarkdownView) => {
-					await uploadCommandGeneral(this.plugin, this.plugin.settings, this.plugin.app);
-				}
-			});
+		for (let key in this.plugin.settings.databaseDetails) {
+			let dbDetails = this.plugin.settings.databaseDetails[key];
+			this.addCommandForDatabase(dbDetails);
 		}
 
 		this.Ncommand.forEach(command => {
@@ -107,4 +78,30 @@ export default class RibbonCommands {
 			);
 		});
 	}
+
+	private addCommandForDatabase(dbDetails: DatabaseDetails) {
+		// Example logic - adjust based on your specific requirements
+		let commandId = `share-to-${dbDetails.abName}`;
+		let commandName = `Share to ${dbDetails.abName}`; // or use a translated name
+
+		let editorCallback: (editor: Editor, view: MarkdownView) => Promise<void>;
+		if (dbDetails.format === 'next') {
+			editorCallback = async (editor, view) => {
+				await uploadCommandNext(this.plugin, this.plugin.settings, dbDetails, this.plugin.app);
+			};
+		} else if (dbDetails.format === 'general') {
+			editorCallback = async (editor, view) => {
+				await uploadCommandGeneral(this.plugin, this.plugin.settings, dbDetails, this.plugin.app);
+			};
+		}
+		// else if (dbDetails.format === 'custom') {
+		// 	editorCallback = async (editor, view) => {
+		// 		await uploadCommandGeneral(this.plugin, dbDetails, this.plugin.app);
+		// 	};
+		// }
+
+		this.Ncommand.push({ id: commandId, name: commandName, editorCallback });
+	}
+
+
 }

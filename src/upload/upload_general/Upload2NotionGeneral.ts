@@ -4,14 +4,15 @@ import { markdownToBlocks } from "@tryfabric/martian";
 import * as yamlFrontMatter from "yaml-front-matter";
 // import * as yaml from "yaml"
 import MyPlugin from "src/main";
-import { PluginSettings } from "../../ui/settingTabs";
+import {DatabaseDetails, PluginSettings} from "../../ui/settingTabs";
 import { UploadBaseGeneral } from "./BaseUpload2NotionGeneral";
 import { updateYamlInfo } from "../updateYaml";
 
 export class Upload2NotionGeneral extends UploadBaseGeneral {
 	settings: PluginSettings;
+	dbDetails: DatabaseDetails;
 
-	constructor(plugin: MyPlugin) {
+	constructor(plugin: MyPlugin, dbDetails: DatabaseDetails) {
 		super(plugin);
 	}
 
@@ -26,8 +27,9 @@ export class Upload2NotionGeneral extends UploadBaseGeneral {
 	) {
 		await this.deletePage(notionID);
 
+		const { databaseID } = this.dbDetails;
 		const databasecover = await this.getDataBase(
-			this.plugin.settings.databaseIDGeneral,
+			databaseID,
 		);
 
 		if (cover == null) {
@@ -125,7 +127,10 @@ export class Upload2NotionGeneral extends UploadBaseGeneral {
 		const file2Block = markdownToBlocks(__content, options);
 		const frontmasster =
 			app.metadataCache.getFileCache(nowFile)?.frontmatter;
-		const notionID = frontmasster ? frontmasster.notionID : null;
+		const {abName} = this.dbDetails
+		const notionIDKey = `${abName}-NotionID`;
+		const notionID = frontmasster ? frontmasster[notionIDKey] : null;
+
 
 		if (notionID) {
 			res = await this.updatePage(

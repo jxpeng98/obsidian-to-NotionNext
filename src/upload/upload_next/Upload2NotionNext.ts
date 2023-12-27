@@ -5,14 +5,15 @@ import { markdownToBlocks, } from "@tryfabric/martian";
 import * as yamlFrontMatter from "yaml-front-matter";
 // import * as yaml from "yaml"
 import MyPlugin from "src/main";
-import { PluginSettings } from "../../ui/settingTabs";
+import {DatabaseDetails, PluginSettings} from "../../ui/settingTabs";
 import { updateYamlInfo } from "../updateYaml";
 import {LIMITS, paragraph} from "@tryfabric/martian/src/notion";
 
 export class Upload2NotionNext extends UploadBaseNext {
     settings: PluginSettings;
+	dbDetails: DatabaseDetails
 
-    constructor(plugin: MyPlugin) {
+    constructor(plugin: MyPlugin, dbDetails: DatabaseDetails) {
         super(plugin);
     }
 
@@ -36,7 +37,9 @@ export class Upload2NotionNext extends UploadBaseNext {
     ) {
         await this.deletePage(notionID)
 
-        const databasecover = await this.getDataBase(this.plugin.settings.databaseIDNext)
+		const { databaseID} = this.dbDetails
+
+        const databasecover = await this.getDataBase(databaseID)
 
         if (cover == null) {
             cover = databasecover
@@ -216,7 +219,10 @@ export class Upload2NotionNext extends UploadBaseNext {
         const __content = yamlContent.__content
         const file2Block = markdownToBlocks(__content, options);
         const frontmasster = app.metadataCache.getFileCache(nowFile)?.frontmatter
-        const notionID = frontmasster ? frontmasster.notionID : null
+		const {abName} = this.dbDetails
+		const notionIDKey = `${abName}-NotionID`;
+		const notionID = frontmasster ? frontmasster[notionIDKey] : null;
+
 
 		// increase the limits
 		// Motivated by https://github.com/tryfabric/martian/issues/51

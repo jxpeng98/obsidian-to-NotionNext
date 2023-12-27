@@ -23,6 +23,18 @@ export interface PluginSettings {
     notionAPICustom: string;
     databaseIDCustom: string;
     [key: string]: any;
+	databaseDetails: Record<string, DatabaseDetails>
+}
+
+export interface DatabaseDetails {
+	format: string;
+	abName: string;
+	notionAPI: string;
+	databaseID: string;
+	tagButton: boolean;
+	customTitleButton: boolean;
+	customTitleName: string;
+	// customValues: string;
 }
 
 export const DEFAULT_SETTINGS: PluginSettings = {
@@ -42,6 +54,7 @@ export const DEFAULT_SETTINGS: PluginSettings = {
     CustomValues: "",
     notionAPICustom: "",
     databaseIDCustom: "",
+	databaseDetails: {},
 };
 
 
@@ -80,21 +93,32 @@ export class ObsidianSettingTab extends PluginSettingTab {
 						let modal = new SettingModal(this.app, this.plugin, this);
 
 						modal.onClose = () => {
-							// if (modal.saved) {
-							// 	const database = {
-							//
-							// 	}
-							// 	this.plugin.addDatabase(database);
-							//
-							// 	this.plugin.calloutManager.addDatabase(database);
-							//
-							// 	this.display();
-							// }
+							if (modal.data.saved) {
+								const dbDetails = {
+									format: modal.data.databaseFormat,
+									abName: modal.data.databaseAbbreviateName,
+									notionAPI: modal.data.notionAPI,
+									databaseID: modal.data.databaseID,
+									tagButton: modal.data.tagButton,
+									customTitleButton: modal.data.customTitleButton,
+									customTitleName: modal.data.customTitleName,
+									// customValues: modal.data.customValues,
+								}
+
+								this.plugin.addDatabaseDetails(dbDetails);
+
+								this.plugin.commands.updateCommand();
+
+								this.display()
+							}
 						}
 
 						modal.open();
 					});
 			});
+
+
+		// list all created database
 
 
 
