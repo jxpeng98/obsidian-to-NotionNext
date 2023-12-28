@@ -64,6 +64,23 @@ export default class ObsidianSyncNotionPlugin extends Plugin {
 		await this.saveSettings();
 	}
 
+	async deleteDatabaseDetails(dbDetails: DatabaseDetails) {
+		delete this.settings.databaseDetails[dbDetails.abName];
+
+		await this.saveSettings();
+	}
+
+	async updateDatabaseDetails(dbDetails: DatabaseDetails) {
+		// delete the old database details
+		delete this.settings.databaseDetails[dbDetails.abName];
+
+		this.settings.databaseDetails = {
+			...this.settings.databaseDetails,
+			[dbDetails.abName]: dbDetails,
+		};
+
+		await this.saveSettings();
+	}
 }
 
 

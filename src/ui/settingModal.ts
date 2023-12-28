@@ -15,6 +15,7 @@ import {SettingGeneralTabs} from "./settingGeneralTabs";
 export class SettingModal extends Modal {
 	data: Record<string, any> = {
 		databaseFormat: 'none',
+		databaseFullName: '',
 		databaseAbbreviateName: '',
 		notionAPI: '',
 		databaseID: '',
@@ -33,6 +34,7 @@ export class SettingModal extends Modal {
 		this.settingTab = settingTab;
 		if (dbDetails) {
 			this.data.databaseFormat = dbDetails.format;
+			this.data.databaseFullName = dbDetails.fullName;
 			this.data.databaseAbbreviateName = dbDetails.abName;
 			this.data.notionAPI = dbDetails.notionAPI;
 			this.data.databaseID = dbDetails.databaseID;
@@ -110,6 +112,9 @@ export class SettingModal extends Modal {
 		if (value === 'general') {
 			nextTabs.createEl('h3', { text: i18nConfig.NotionGeneralSettingHeader });
 
+			// add full name
+			this.createSettingEl(nextTabs, i18nConfig.databaseFullName, i18nConfig.databaseFullNameDesc, 'text', i18nConfig.databaseFullNameText, this.data.databaseFullName, 'databaseFullName')
+
 			// add abbreviate name
 			this.createSettingEl(nextTabs, i18nConfig.databaseAbbreviateName, i18nConfig.databaseAbbreviateNameDesc, 'text', i18nConfig.databaseAbbreviateNameText, this.data.databaseAbbreviateName, 'databaseAbbreviateName')
 
@@ -128,6 +133,9 @@ export class SettingModal extends Modal {
 
 			nextTabs.createEl('h3', { text: i18nConfig.NotionNextSettingHeader });
 
+			// add full name
+			this.createSettingEl(nextTabs, i18nConfig.databaseFullName, i18nConfig.databaseFullNameDesc, 'text', i18nConfig.databaseFullNameText, this.data.databaseFullName, 'databaseFullName')
+
 			// add abbreviate name
 			this.createSettingEl(nextTabs, i18nConfig.databaseAbbreviateName, i18nConfig.databaseAbbreviateNameDesc, 'text', i18nConfig.databaseAbbreviateNameText, this.data.databaseAbbreviateName, 'databaseAbbreviateName')
 
@@ -140,6 +148,9 @@ export class SettingModal extends Modal {
 
 		} else if (value === 'custom') {
 			nextTabs.createEl('h3', { text: i18nConfig.NotionCustomSettingHeader});
+
+			// add full name
+			this.createSettingEl(nextTabs, i18nConfig.databaseFullName, i18nConfig.databaseFullNameDesc, 'text', i18nConfig.databaseFullNameText, this.data.databaseFullName, 'databaseFullName')
 
 			// add abbreviate name
 			this.createSettingEl(nextTabs, i18nConfig.databaseAbbreviateName, i18nConfig.databaseAbbreviateNameDesc, 'text', i18nConfig.databaseAbbreviateNameText, this.data.databaseAbbreviateName, 'databaseAbbreviateName')

@@ -4,6 +4,7 @@ import ObsidianSyncNotionPlugin from "../main";
 import {SettingModal} from "./settingModal";
 import {SettingNextTabs} from "./settingNextTabs";
 import {SettingGeneralTabs} from "./settingGeneralTabs";
+import {set} from "yaml/dist/schema/yaml-1.1/set";
 
 export interface PluginSettings {
     NextButton: boolean;
@@ -28,6 +29,7 @@ export interface PluginSettings {
 
 export interface DatabaseDetails {
 	format: string;
+	fullName: string;
 	abName: string;
 	notionAPI: string;
 	databaseID: string;
@@ -60,6 +62,7 @@ export const DEFAULT_SETTINGS: PluginSettings = {
 
 export class ObsidianSettingTab extends PluginSettingTab {
     plugin: ObsidianSyncNotionPlugin;
+	databaseEl: HTMLDivElement;
 
     constructor(app: App, plugin: ObsidianSyncNotionPlugin) {
         super(app, plugin);
@@ -96,6 +99,7 @@ export class ObsidianSettingTab extends PluginSettingTab {
 							if (modal.data.saved) {
 								const dbDetails = {
 									format: modal.data.databaseFormat,
+									fullName: modal.data.databaseFullName,
 									abName: modal.data.databaseAbbreviateName,
 									notionAPI: modal.data.notionAPI,
 									databaseID: modal.data.databaseID,
@@ -117,8 +121,14 @@ export class ObsidianSettingTab extends PluginSettingTab {
 					});
 			});
 
+		// new section to display all created database
+		containerEl.createEl('h2', {text: "Database List"});
 
+		this.databaseEl = containerEl.createDiv('database-list');
 		// list all created database
+		this.showDatabase();
+
+
 
 
 
@@ -212,4 +222,70 @@ export class ObsidianSettingTab extends PluginSettingTab {
         }
     }
 
+	// function to show all the database details
+	showDatabase() {
+		this.databaseEl.empty();
+
+		for (let key in this.plugin.settings.databaseDetails) {
+			let dbDetails = this.plugin.settings.databaseDetails[key];
+
+			const databaseDiv = this.databaseEl.createDiv('database-div');
+
+			let settingEl = new Setting(databaseDiv)
+				.setName(`${dbDetails.fullName} (${dbDetails.abName})`)
+				.setDesc(dbDetails.format)
+
+				// settingEl
+				// .addButton((button: ButtonComponent): ButtonComponent => {
+				// 	return button
+				// 		.setTooltip("Edit Database")
+				// 		.setIcon("pencil")
+				// 		.onClick(async () => {
+				// 			let modal = new SettingModal(this.app, this.plugin, this, dbDetails);
+				//
+				// 			modal.onClose = () => {
+				// 				if (modal.data.saved) {
+				// 					const dbDetails = {
+				// 						format: modal.data.databaseFormat,
+				// 						fullName: modal.data.databaseFullName,
+				// 						abName: modal.data.databaseAbbreviateName,
+				// 						notionAPI: modal.data.notionAPI,
+				// 						databaseID: modal.data.databaseID,
+				// 						tagButton: modal.data.tagButton,
+				// 						customTitleButton: modal.data.customTitleButton,
+				// 						customTitleName: modal.data.customTitleName,
+				// 						// customValues: modal.data.customValues,
+				// 					}
+				//
+				// 					this.plugin.updateDatabaseDetails(dbDetails);
+				//
+				// 					this.plugin.commands.updateCommand();
+				//
+				// 					this.display()
+				// 				}
+				// 			}
+				//
+				// 			modal.open();
+				// 		});
+				// });
+
+				settingEl
+				.addButton((button: ButtonComponent): ButtonComponent => {
+					return button
+						.setTooltip("Delete Database")
+						.setIcon("trash")
+						.onClick(async () => {
+							await this.plugin.deleteDatabaseDetails(dbDetails);
+
+							await this.plugin.commands.updateCommand();
+
+							this.display()
+						});
+				});
+		}
+	}
 }
+function addExtraButton(arg0: (button: ButtonComponent) => ButtonComponent): any {
+    throw new Error("Function not implemented.");
+}
+

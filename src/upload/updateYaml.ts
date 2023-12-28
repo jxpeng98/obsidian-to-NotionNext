@@ -1,6 +1,6 @@
 import { App, Notice, TFile } from "obsidian";
 import ObsidianSyncNotionPlugin from "../main";
-import { PluginSettings } from "../ui/settingTabs";
+import {DatabaseDetails, PluginSettings} from "../ui/settingTabs";
 
 export async function updateYamlInfo(
     yamlContent: string,
@@ -8,10 +8,14 @@ export async function updateYamlInfo(
     res: any,
     app: App,
     plugin: ObsidianSyncNotionPlugin,
+	dbDetails: DatabaseDetails,
 ) {
     let { url, id } = res.json
     // replace www to notionID
     const { notionUser } = plugin.settings;
+	const { abName } = dbDetails
+	const notionIDKey = `NotionID-${abName}`;
+	const linkKey = `link-${abName}`;
 
     if (notionUser !== "") {
         // replace url str "www" to notionID
@@ -19,15 +23,15 @@ export async function updateYamlInfo(
     }
 
     await app.fileManager.processFrontMatter(nowFile, yamlContent => {
-        if (yamlContent['notionID']) {
-            delete yamlContent['notionID']
+        if (yamlContent[notionIDKey]) {
+            delete yamlContent[notionIDKey]
         }
-        if (yamlContent['link']) {
-            delete yamlContent['link']
+        if (yamlContent[linkKey]) {
+            delete yamlContent[linkKey]
         }
         // add new notionID and link
-        yamlContent.notionID = id;
-        yamlContent.link = url;
+        yamlContent[notionIDKey] = id;
+        yamlContent[linkKey] = url;
     });
 
     try {

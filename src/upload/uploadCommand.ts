@@ -57,7 +57,7 @@ export async function uploadCommandGeneral(
     app: App,
 ) {
 
-    const { notionAPI, databaseID } = settings;
+    const { notionAPI, databaseID } = dbDetails;
 
     // Check if the user has set up the Notion API and database ID
     if (notionAPI === "" || databaseID === "") {

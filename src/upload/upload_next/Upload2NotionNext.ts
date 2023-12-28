@@ -15,6 +15,7 @@ export class Upload2NotionNext extends UploadBaseNext {
 
     constructor(plugin: MyPlugin, dbDetails: DatabaseDetails) {
         super(plugin);
+		this.dbDetails = dbDetails
     }
 
     // 因为需要解析notion的block进行对比，非常的麻烦，
@@ -280,7 +281,7 @@ export class Upload2NotionNext extends UploadBaseNext {
             );
         }
         if (res.status === 200) {
-            await updateYamlInfo(markdown, nowFile, res, app, this.plugin)
+            await updateYamlInfo(markdown, nowFile, res, app, this.plugin, this.dbDetails)
         } else {
             new Notice(`${res.text}`)
         }
