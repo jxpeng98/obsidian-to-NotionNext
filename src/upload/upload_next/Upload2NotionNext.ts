@@ -14,7 +14,7 @@ export class Upload2NotionNext extends UploadBaseNext {
 	dbDetails: DatabaseDetails
 
     constructor(plugin: MyPlugin, dbDetails: DatabaseDetails) {
-        super(plugin);
+        super(plugin, dbDetails);
 		this.dbDetails = dbDetails
     }
 

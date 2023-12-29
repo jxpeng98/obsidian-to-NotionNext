@@ -13,7 +13,7 @@ export class Upload2NotionCustom extends UploadBaseCustom {
 	dbDetails: DatabaseDetails;
 
 	constructor(plugin: MyPlugin, dbDetails: DatabaseDetails) {
-		super(plugin);
+		super(plugin, dbDetails);
 		this.dbDetails = dbDetails;
 	}
 
@@ -116,7 +116,7 @@ export class Upload2NotionCustom extends UploadBaseCustom {
 					"Content-Type": "application/json",
 					// 'User-Agent': 'obsidian.md',
 					Authorization:
-						"Bearer " + this.plugin.settings.notionAPIGeneral,
+						"Bearer " + notionAPI,
 					"Notion-Version": "2022-06-28",
 				},
 				body: JSON.stringify(bodyString),

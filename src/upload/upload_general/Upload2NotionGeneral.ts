@@ -13,7 +13,7 @@ export class Upload2NotionGeneral extends UploadBaseGeneral {
 	dbDetails: DatabaseDetails;
 
 	constructor(plugin: MyPlugin, dbDetails: DatabaseDetails) {
-		super(plugin);
+		super(plugin, dbDetails);
 		this.dbDetails = dbDetails;
 	}
 

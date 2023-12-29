@@ -4,23 +4,27 @@ import { markdownToBlocks, } from "@tryfabric/martian";
 import * as yamlFrontMatter from "yaml-front-matter";
 // import * as yaml from "yaml"
 import MyPlugin from "src/main";
+import {DatabaseDetails} from "../../ui/settingTabs";
 
 export class UploadBaseNext {
     plugin: MyPlugin;
     notion: Client;
     agent: any;
+	dbDetails: DatabaseDetails
 
-    constructor(plugin: MyPlugin) {
+    constructor(plugin: MyPlugin, dbDetails: DatabaseDetails) {
         this.plugin = plugin;
+		this.dbDetails = dbDetails
     }
 
     async deletePage(notionID: string) {
+		const {notionAPI} = this.dbDetails
         return requestUrl({
             url: `https://api.notion.com/v1/blocks/${notionID}`,
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + this.plugin.settings.notionAPINext,
+                'Authorization': 'Bearer ' + notionAPI,
                 'Notion-Version': '2022-06-28',
             },
             body: ''
@@ -28,11 +32,13 @@ export class UploadBaseNext {
     }
 
     async getDataBase(databaseID: string) {
+		const {notionAPI} = this.dbDetails
+
         const response = await requestUrl({
             url: `https://api.notion.com/v1/databases/${databaseID}`,
             method: 'GET',
             headers: {
-                'Authorization': 'Bearer ' + this.plugin.settings.notionAPINext,
+                'Authorization': 'Bearer ' + notionAPI,
                 'Notion-Version': '2022-06-28',
             }
         }
