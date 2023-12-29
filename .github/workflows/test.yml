@@ -4,7 +4,6 @@ on:
     push:
         branches:
             - "*"
-            - "!master"
 
 env:
     PLUGIN_NAME: share-to-notionnext # Change this to match the id of your plugin.
