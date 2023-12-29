@@ -1,6 +1,10 @@
-import { App, PluginSettingTab, Setting } from "obsidian";
-import { i18nConfig } from "../lang/I18n";
+import {App, ButtonComponent, PluginSettingTab, Setting} from "obsidian";
+import {i18nConfig} from "../lang/I18n";
 import ObsidianSyncNotionPlugin from "../main";
+import {SettingModal} from "./settingModal";
+import {SettingNextTabs} from "./settingNextTabs";
+import {SettingGeneralTabs} from "./settingGeneralTabs";
+import {set} from "yaml/dist/schema/yaml-1.1/set";
 
 export interface PluginSettings {
     NextButton: boolean;
@@ -10,15 +14,29 @@ export interface PluginSettings {
     notionUser: string;
     proxy: string;
     GeneralButton: boolean;
-	tagButton: boolean;
+    tagButton: boolean;
     CustomTitleButton: boolean;
     CustomTitleName: string;
     notionAPIGeneral: string;
     databaseIDGeneral: string;
     CustomButton: boolean;
+    CustomValues: string;
     notionAPICustom: string;
     databaseIDCustom: string;
     [key: string]: any;
+	databaseDetails: Record<string, DatabaseDetails>
+}
+
+export interface DatabaseDetails {
+	format: string;
+	fullName: string;
+	abName: string;
+	notionAPI: string;
+	databaseID: string;
+	tagButton: boolean;
+	customTitleButton: boolean;
+	customTitleName: string;
+	// customValues: string;
 }
 
 export const DEFAULT_SETTINGS: PluginSettings = {
@@ -29,19 +47,22 @@ export const DEFAULT_SETTINGS: PluginSettings = {
     notionUser: "",
     proxy: "",
     GeneralButton: true,
-	tagButton: true,
+    tagButton: true,
     CustomTitleButton: false,
     CustomTitleName: "",
     notionAPIGeneral: "",
     databaseIDGeneral: "",
     CustomButton: false,
+    CustomValues: "",
     notionAPICustom: "",
     databaseIDCustom: "",
+	databaseDetails: {},
 };
 
 
 export class ObsidianSettingTab extends PluginSettingTab {
     plugin: ObsidianSyncNotionPlugin;
+	databaseEl: HTMLDivElement;
 
     constructor(app: App, plugin: ObsidianSyncNotionPlugin) {
         super(app, plugin);
@@ -60,112 +81,69 @@ export class ObsidianSettingTab extends PluginSettingTab {
 
         this.createSettingEl(containerEl, i18nConfig.NotionUser, i18nConfig.NotionUserDesc, 'text', i18nConfig.NotionUserText, this.plugin.settings.notionUser, 'notionUser')
 
-        containerEl.createEl('h2', { text: i18nConfig.NotionNextSettingHeader })
 
 
-        new Setting(containerEl)
-            .setName(i18nConfig.NotionNextButton)
-            .setDesc(i18nConfig.NotionNextButtonDesc)
-            .addToggle((toggle) =>
-                toggle
-                    .setValue(this.plugin.settings.NextButton)
-                    .onChange(async (value) => {
-                        this.plugin.settings.NextButton = value;
+		// add new button
 
-                        this.updateSettingEl(notionAPINextEl, value)
+		new Setting(containerEl)
+			.setName("Add New Database")
+			.setDesc("Add New Database")
+			.addButton((button: ButtonComponent): ButtonComponent => {
+				return button
+					.setTooltip("Add New Database")
+					.setIcon("plus")
+					.onClick(async () => {
+						let modal = new SettingModal(this.app, this.plugin, this);
 
-                        this.updateSettingEl(databaseIDNextEl, value)
+						modal.onClose = () => {
+							if (modal.data.saved) {
+								const dbDetails = {
+									format: modal.data.databaseFormat,
+									fullName: modal.data.databaseFullName,
+									abName: modal.data.databaseAbbreviateName,
+									notionAPI: modal.data.notionAPI,
+									databaseID: modal.data.databaseID,
+									tagButton: modal.data.tagButton,
+									customTitleButton: modal.data.customTitleButton,
+									customTitleName: modal.data.customTitleName,
+									// customValues: modal.data.customValues,
+								}
 
-                        await this.plugin.saveSettings();
-                        await this.plugin.commands.updateCommand();
-                    })
-            );
+								this.plugin.addDatabaseDetails(dbDetails);
 
+								this.plugin.commands.updateCommand();
 
-        const notionAPINextEl = this.createStyleDiv('api-next', this.plugin.settings.NextButton)
-        this.createSettingEl(notionAPINextEl, i18nConfig.NotionAPI, i18nConfig.NotionAPIDesc, 'password', i18nConfig.NotionAPIText, this.plugin.settings.notionAPINext, 'notionAPINext')
+								this.display()
+							}
+						}
 
-        const databaseIDNextEl = this.createStyleDiv('databaseID-next', this.plugin.settings.NextButton)
-        this.createSettingEl(databaseIDNextEl, i18nConfig.DatabaseID, i18nConfig.NotionAPIDesc, 'password', i18nConfig.DatabaseIDText, this.plugin.settings.databaseIDNext, 'databaseIDNext')
+						modal.open();
+					});
+			});
 
+		// new section to display all created database
+		containerEl.createEl('h2', {text: "Database List"});
 
-        // General Database Settings
-        containerEl.createEl('h2', { text: i18nConfig.NotionGeneralSettingHeader });
-
-        // new Setting(containerEl)
-        //     .setName(i18nConfig.NotYetFinish)
-        new Setting(containerEl)
-            .setName(i18nConfig.NotionGeneralButton)
-            .setDesc(i18nConfig.NotionGeneralButtonDesc)
-            .addToggle((toggle) =>
-                toggle
-                    .setValue(this.plugin.settings.GeneralButton)
-                    .onChange(async (value) => {
-                        this.plugin.settings.GeneralButton = value;
-
-						this.updateSettingEl(tagButtonEl, value)
-                        this.updateSettingEl(CustomTitleEl, value)
-                        // name should follow the result of the title button
-                        if (value) {
-                            this.updateSettingEl(CustomNameEl, this.plugin.settings.CustomTitleButton)
-                        } else {
-                            this.updateSettingEl(CustomNameEl, value)
-                        }
-
-                        this.updateSettingEl(notionAPIGeneralEl, value)
-                        this.updateSettingEl(databaseIDGeneralEl, value)
+		this.databaseEl = containerEl.createDiv('database-list');
+		// list all created database
+		this.showDatabase();
 
 
-                        await this.plugin.saveSettings();
-                        await this.plugin.commands.updateCommand();
-
-                    })
-            );
-
-		// add the tagButton to control whether to add tags to the general database
-		const tagButtonEl = this.createStyleDiv('tag-button', (this.plugin.settings.GeneralButton && this.plugin.settings.CustomTitleButton));
-		this.createSettingEl(tagButtonEl, i18nConfig.NotionTagButton, i18nConfig.NotionTagButtonDesc, 'toggle', i18nConfig.NotionCustomTitleText, this.plugin.settings.tagButton, 'tagButton')
-
-		// Custom Title Button
-        const CustomTitleEl = this.createStyleDiv('custom-title', this.plugin.settings.GeneralButton);
-        new Setting(CustomTitleEl)
-            .setName(i18nConfig.NotionCustomTitle)
-            .setDesc(i18nConfig.NotionCustomTitleDesc)
-            .addToggle((toggle) =>
-                toggle
-                    .setValue(this.plugin.settings.CustomTitleButton)
-                    .onChange(async (value) => {
-                        this.plugin.settings.CustomTitleButton = value;
-
-                        this.updateSettingEl(CustomNameEl, value)
-
-                        await this.plugin.saveSettings();
-                        await this.plugin.commands.updateCommand();
-                    })
-            );
-
-		// Custom Title Name
-        const CustomNameEl = this.createStyleDiv('custom-name', (this.plugin.settings.CustomTitleButton && this.plugin.settings.GeneralButton));
-        this.createSettingEl(CustomNameEl, i18nConfig.NotionCustomTitleName, i18nConfig.NotionCustomTitleNameDesc, 'text', i18nConfig.NotionCustomTitleText, this.plugin.settings.CustomTitleName, 'CustomTitleName')
-
-        // new Setting(containerEl)
-        // .setName("Convert tags(optional)")
-        // .setDesc("Transfer the Obsidian tags to the Notion table. It requires the column with the name 'Tags'")
-        // .addToggle((toggle) =>
-        // 	toggle
-        // 		.setValue(this.plugin.settings.allowTags)
-        // 		.onChange(async (value) => {
-        // 			this.plugin.settings.allowTags = value;
-        // 			await this.plugin.saveSettings();
-        // 		})
-        // );
-
-        const notionAPIGeneralEl = this.createStyleDiv('api-general', this.plugin.settings.GeneralButton);
-        this.createSettingEl(notionAPIGeneralEl, i18nConfig.NotionAPI, i18nConfig.NotionAPIDesc, 'password', i18nConfig.NotionAPIText, this.plugin.settings.notionAPIGeneral, 'notionAPIGeneral')
 
 
-        const databaseIDGeneralEl = this.createStyleDiv('databaseID-general', this.plugin.settings.GeneralButton);
-        this.createSettingEl(databaseIDGeneralEl, i18nConfig.DatabaseID, i18nConfig.NotionAPIDesc, 'password', i18nConfig.DatabaseIDText, this.plugin.settings.databaseIDGeneral, 'databaseIDGeneral')
+
+		// // notion next database settings
+		//
+		// const NextTabs = new SettingNextTabs(this.app, this.plugin, this);
+		//
+		// NextTabs.display();
+		//
+		//
+        // // General Database Settings
+		// const GeneralTabs = new SettingGeneralTabs(this.app, this.plugin, this);
+		//
+		// GeneralTabs.display();
+
 
         // Custom Database Settings
 
@@ -185,13 +163,13 @@ export class ObsidianSettingTab extends PluginSettingTab {
     }
 
     // create a function to create a div with a style for pop over elements
-    private createStyleDiv(className: string, commandValue: boolean = false) {
+    public createStyleDiv(className: string, commandValue: boolean = false) {
         return this.containerEl.createDiv(className, (div) => {
             this.updateSettingEl(div, commandValue);
         });
     }
     // update the setting display style in the setting tab
-    private updateSettingEl(element: HTMLElement, commandValue: boolean) {
+    public updateSettingEl(element: HTMLElement, commandValue: boolean) {
         element.style.borderTop = commandValue ? "1px solid var(--background-modifier-border)" : "none";
         element.style.paddingTop = commandValue ? "0.75em" : "0";
         element.style.display = commandValue ? "block" : "none";
@@ -199,7 +177,7 @@ export class ObsidianSettingTab extends PluginSettingTab {
     }
 
     // function to add one setting element in the setting tab.
-    private createSettingEl(containerEl: HTMLElement, name: string, desc: string, type: string, placeholder: string, holderValue: any, settingsKey: string) {
+    public createSettingEl(containerEl: HTMLElement, name: string, desc: string, type: string, placeholder: string, holderValue: any, settingsKey: string) {
         if (type === 'password') {
             return new Setting(containerEl)
                 .setName(name)
@@ -244,4 +222,82 @@ export class ObsidianSettingTab extends PluginSettingTab {
         }
     }
 
+	// function to show all the database details
+	showDatabase() {
+		this.databaseEl.empty();
+
+		for (let key in this.plugin.settings.databaseDetails) {
+			let dbDetails = this.plugin.settings.databaseDetails[key];
+
+			const databaseDiv = this.databaseEl.createDiv('database-div');
+
+			let settingEl = new Setting(databaseDiv)
+				.setName(`${dbDetails.fullName} (${dbDetails.abName})`)
+				.setDesc(dbDetails.format)
+
+
+				// add a button for preview data
+				// settingEl
+				// .addButton((button: ButtonComponent): ButtonComponent => {
+				// 	return button
+				// 		.setTooltip("Preview Database")
+				// 		.setIcon("eye")
+				// 		.onClick(async () => {
+				// 			this.plugin.previewDatabase(dbDetails);
+				// 		});
+				// });
+
+				// settingEl
+				// .addButton((button: ButtonComponent): ButtonComponent => {
+				// 	return button
+				// 		.setTooltip("Edit Database")
+				// 		.setIcon("pencil")
+				// 		.onClick(async () => {
+				// 			let modal = new SettingModal(this.app, this.plugin, this, dbDetails);
+				//
+				// 			modal.onClose = () => {
+				// 				if (modal.data.saved) {
+				// 					const dbDetails = {
+				// 						format: modal.data.databaseFormat,
+				// 						fullName: modal.data.databaseFullName,
+				// 						abName: modal.data.databaseAbbreviateName,
+				// 						notionAPI: modal.data.notionAPI,
+				// 						databaseID: modal.data.databaseID,
+				// 						tagButton: modal.data.tagButton,
+				// 						customTitleButton: modal.data.customTitleButton,
+				// 						customTitleName: modal.data.customTitleName,
+				// 						// customValues: modal.data.customValues,
+				// 					}
+				//
+				// 					this.plugin.updateDatabaseDetails(dbDetails);
+				//
+				// 					this.plugin.commands.updateCommand();
+				//
+				// 					this.display()
+				// 				}
+				// 			}
+				//
+				// 			modal.open();
+				// 		});
+				// });
+
+				settingEl
+				.addButton((button: ButtonComponent): ButtonComponent => {
+					return button
+						.setTooltip("Delete Database")
+						.setIcon("trash")
+						.onClick(async () => {
+							await this.plugin.deleteDatabaseDetails(dbDetails);
+
+							await this.plugin.commands.updateCommand();
+
+							this.display()
+						});
+				});
+		}
+	}
 }
+function addExtraButton(arg0: (button: ButtonComponent) => ButtonComponent): any {
+    throw new Error("Function not implemented.");
+}
+
