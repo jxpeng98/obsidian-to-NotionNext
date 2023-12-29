@@ -14,6 +14,7 @@ export class Upload2NotionGeneral extends UploadBaseGeneral {
 
 	constructor(plugin: MyPlugin, dbDetails: DatabaseDetails) {
 		super(plugin);
+		this.dbDetails = dbDetails;
 	}
 
 	// 因为需要解析notion的block进行对比，非常的麻烦，
@@ -28,12 +29,13 @@ export class Upload2NotionGeneral extends UploadBaseGeneral {
 		await this.deletePage(notionID);
 
 		const { databaseID } = this.dbDetails;
-		const databasecover = await this.getDataBase(
+
+		const databaseCover = await this.getDataBase(
 			databaseID,
 		);
 
 		if (cover == null) {
-			cover = databasecover;
+			cover = databaseCover;
 		}
 
 		return await this.createPage(title, cover, tags, childArr);
@@ -45,13 +47,22 @@ export class Upload2NotionGeneral extends UploadBaseGeneral {
 		tags: string[],
 		childArr: any,
 	) {
+
+		const {
+			databaseID,
+			customTitleButton,
+			customTitleName,
+			tagButton,
+			notionAPI
+		} = this.dbDetails;
+
 		const bodyString: any = {
 			parent: {
-				database_id: this.plugin.settings.databaseIDGeneral,
+				database_id: databaseID,
 			},
 			properties: {
-				[this.plugin.settings.CustomTitleButton
-					? this.plugin.settings.CustomTitleName
+				[customTitleButton
+					? customTitleName
 					: "title"]: {
 					title: [
 						{
@@ -61,7 +72,7 @@ export class Upload2NotionGeneral extends UploadBaseGeneral {
 						},
 					],
 				},
-				...(this.plugin.settings.tagsButton
+				...(tagButton
 					? {
 						tags: {
 							multi_select: tags && true ? tags.map((tag) => ({ name: tag })) : [],
@@ -98,7 +109,7 @@ export class Upload2NotionGeneral extends UploadBaseGeneral {
 					"Content-Type": "application/json",
 					// 'User-Agent': 'obsidian.md',
 					Authorization:
-						"Bearer " + this.plugin.settings.notionAPIGeneral,
+						"Bearer " + notionAPI,
 					"Notion-Version": "2022-06-28",
 				},
 				body: JSON.stringify(bodyString),
@@ -144,7 +155,7 @@ export class Upload2NotionGeneral extends UploadBaseGeneral {
 			res = await this.createPage(title, cover, tags, file2Block);
 		}
 		if (res.status === 200) {
-			await updateYamlInfo(markdown, nowFile, res, app, this.plugin);
+			await updateYamlInfo(markdown, nowFile, res, app, this.plugin, this.dbDetails);
 		} else {
 			new Notice(`${res.text}`);
 		}

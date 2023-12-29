@@ -82,7 +82,7 @@ export default class RibbonCommands {
 	private addCommandForDatabase(dbDetails: DatabaseDetails) {
 		// Example logic - adjust based on your specific requirements
 		let commandId = `share-to-${dbDetails.abName}`;
-		let commandName = `Share to ${dbDetails.abName}`; // or use a translated name
+		let commandName = `Share to ${dbDetails.fullName} (${dbDetails.abName})`; // or use a translated name
 
 		let editorCallback: (editor: Editor, view: MarkdownView) => Promise<void>;
 		if (dbDetails.format === 'next') {

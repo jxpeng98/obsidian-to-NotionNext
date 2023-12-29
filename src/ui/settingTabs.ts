@@ -235,6 +235,18 @@ export class ObsidianSettingTab extends PluginSettingTab {
 				.setName(`${dbDetails.fullName} (${dbDetails.abName})`)
 				.setDesc(dbDetails.format)
 
+
+				// add a button for preview data
+				// settingEl
+				// .addButton((button: ButtonComponent): ButtonComponent => {
+				// 	return button
+				// 		.setTooltip("Preview Database")
+				// 		.setIcon("eye")
+				// 		.onClick(async () => {
+				// 			this.plugin.previewDatabase(dbDetails);
+				// 		});
+				// });
+
 				// settingEl
 				// .addButton((button: ButtonComponent): ButtonComponent => {
 				// 	return button

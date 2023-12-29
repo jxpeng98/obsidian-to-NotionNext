@@ -13,7 +13,38 @@ Thus, based on the [original author's work](https://github.com/EasyChris/obsidia
 
 **Now, support both NotionNext and General databases.**
 
+**现在支持NotionNext和普通Notion数据库。**
+
+## TODO List
+
+- [ ] Support custom properties for Notion General database. 支持自定义属性
+- [ ] Support preview for database details in plugin settings. 支持预览数据库详情
+- [ ] Support edit for database details in plugin settings. 支持编辑数据库详情
+
 ## Update
+### 2.0.0 (Big Update)
+
+- redesign the plugin settings UI. From this version, the settings UI will be separated into two parts: 
+  - one for general settings: bannerUrl and your notion username (ID)
+  - one for database list: You can add new database or delete the database.
+- 重新设计了插件设置界面。从这个版本开始，设置界面将被分成两部分：
+  - 一部分是通用设置：bannerUrl和你的notion用户名（ID）
+  - 一部分是数据库列表：你可以添加新的数据库或者删除数据库。
+  
+![](https://minioapi.pjx.ac.cn/img1/2023/12/f7e89241f45cfee6b902ec4b69dd6f63.png)
+
+- You can add more databases in the plugin settings.
+- 你可以在插件设置中添加更多的数据库。
+![](https://minioapi.pjx.ac.cn/img1/2023/12/023bf46ebbc92c3991d2c443c575bc80.gif)
+
+- You can sync one note to multiple databases.
+- 你可以将一个笔记同步到多个数据库中。
+
+![](https://minioapi.pjx.ac.cn/img1/2023/12/75f793bad756162e46bf41e54166eb32.png)
+
+**Note: You need to add your previous database in the new template.**
+**注意：你需要将之前的数据库添加到新的模板中。**
+
 
 ### 1.2.0
 

@@ -87,13 +87,14 @@ export async function uploadCommandGeneral(
 export async function uploadCommandCustom(
     plugin: ObsidianSyncNotionPlugin,
     settings: PluginSettings,
+	dbDetails: DatabaseDetails,
     app: App,
 ) {
 
-    const { notionAPIGeneral, databaseIDGeneral } = settings;
+    const { notionAPI, databaseID } = settings;
 
     // Check if the user has set up the Notion API and database ID
-    if (notionAPIGeneral === "" || databaseIDGeneral === "") {
+    if (notionAPI === "" || databaseID === "") {
         const setAPIMessage = i18nConfig["set-api-id"];
         new Notice(setAPIMessage);
         return;
@@ -104,7 +105,7 @@ export async function uploadCommandCustom(
     if (markDownData) {
         const { basename } = nowFile;
 
-        const upload = new Upload2NotionCustom(plugin);
+        const upload = new Upload2NotionCustom(plugin,dbDetails);
         const res = await upload.syncMarkdownToNotionCustom(basename, cover, tags, customValues, markDownData, nowFile, this.app);
 
         if (res.status === 200) {

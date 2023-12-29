@@ -40,10 +40,10 @@ export class Upload2NotionNext extends UploadBaseNext {
 
 		const { databaseID} = this.dbDetails
 
-        const databasecover = await this.getDataBase(databaseID)
+        const databaseCover = await this.getDataBase(databaseID)
 
         if (cover == null) {
-            cover = databasecover
+            cover = databaseCover
         }
 
         return await this.createPage(
@@ -77,9 +77,16 @@ export class Upload2NotionNext extends UploadBaseNext {
         datetime: string,
         childArr: any
     ) {
+
+		const {
+			databaseID,
+			notionAPI
+		} = this.dbDetails
+
+
         const bodyString: any = {
             parent: {
-                database_id: this.plugin.settings.databaseIDNext
+                database_id: databaseID,
             },
             icon: {
                 emoji: emoji || '📜'
@@ -183,7 +190,7 @@ export class Upload2NotionNext extends UploadBaseNext {
                 headers: {
                     'Content-Type': 'application/json',
                     // 'User-Agent': 'obsidian.md',
-                    'Authorization': 'Bearer ' + this.plugin.settings.notionAPINext,
+                    'Authorization': 'Bearer ' + notionAPI,
                     'Notion-Version': '2022-06-28',
                 },
                 body: JSON.stringify(bodyString),

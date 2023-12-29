@@ -4,15 +4,17 @@ import { markdownToBlocks } from "@tryfabric/martian";
 import * as yamlFrontMatter from "yaml-front-matter";
 // import * as yaml from "yaml"
 import MyPlugin from "src/main";
-import { PluginSettings } from "../../ui/settingTabs";
+import {DatabaseDetails, PluginSettings} from "../../ui/settingTabs";
 import { updateYamlInfo } from "../updateYaml";
 import {UploadBaseCustom} from "./BaseUpload2NotionCustom";
 
 export class Upload2NotionCustom extends UploadBaseCustom {
 	settings: PluginSettings;
+	dbDetails: DatabaseDetails;
 
-	constructor(plugin: MyPlugin) {
+	constructor(plugin: MyPlugin, dbDetails: DatabaseDetails) {
 		super(plugin);
+		this.dbDetails = dbDetails;
 	}
 
 	// 因为需要解析notion的block进行对比，非常的麻烦，
@@ -27,12 +29,14 @@ export class Upload2NotionCustom extends UploadBaseCustom {
 	) {
 		await this.deletePage(notionID);
 
-		const databasecover = await this.getDataBase(
-			this.plugin.settings.databaseIDGeneral,
+		const { databaseID } = this.dbDetails;
+
+		const databaseCover = await this.getDataBase(
+			databaseID
 		);
 
 		if (cover == null) {
-			cover = databasecover;
+			cover = databaseCover;
 		}
 
 		return await this.createPage(title, cover, tags, customValues, childArr);
@@ -45,13 +49,22 @@ export class Upload2NotionCustom extends UploadBaseCustom {
 		customValues: Record<string, string>,
 		childArr: any,
 	) {
+
+		const {
+			databaseID,
+			customTitleButton,
+			customTitleName,
+			tagButton,
+			notionAPI
+		} = this.dbDetails;
+
 		const bodyString: any = {
 			parent: {
-				database_id: this.plugin.settings.databaseIDGeneral,
+				database_id: databaseID,
 			},
 			properties: {
-				[this.plugin.settings.CustomTitleButton
-					? this.plugin.settings.CustomTitleName
+				[customTitleButton
+					? customTitleName
 					: "title"]: {
 					title: [
 						{
@@ -148,7 +161,7 @@ export class Upload2NotionCustom extends UploadBaseCustom {
 			res = await this.createPage(title, cover, tags, customValues, file2Block);
 		}
 		if (res.status === 200) {
-			await updateYamlInfo(markdown, nowFile, res, app, this.plugin);
+			await updateYamlInfo(markdown, nowFile, res, app, this.plugin, this.dbDetails);
 		} else {
 			new Notice(`${res.text}`);
 		}

@@ -66,7 +66,7 @@ export class SettingModal extends Modal {
 					.addOption('none', '')
 					.addOption('general', i18nConfig.databaseGeneral)
 					.addOption('next', i18nConfig.databaseNext)
-					.addOption('custom', i18nConfig.databaseCustom)
+					// .addOption('custom', i18nConfig.databaseCustom)
 					.setValue(this.data.databaseFormat)
 					.onChange(async (value) => {
 						this.data.databaseFormat = value;
@@ -120,6 +120,31 @@ export class SettingModal extends Modal {
 
 			// tag button
 			this.createSettingEl(nextTabs, i18nConfig.NotionTagButton, i18nConfig.NotionTagButtonDesc, 'toggle', i18nConfig.NotionCustomTitleText, this.data.tagButton, 'tagButton')
+
+			// add custom title button
+
+			new Setting(nextTabs)
+				.setName(i18nConfig.NotionCustomTitle)
+				.setDesc(i18nConfig.NotionCustomTitleDesc)
+				.addToggle((toggle) =>
+					toggle
+						.setValue(this.data.CustomTitleButton)
+						.onChange(async (value) => {
+							this.data.CustomTitleButton = value;
+
+							this.updateSettingEl(CustomNameEl, value)
+
+							// this.updateSettingEl(CustomValuesEl, value)
+
+							await this.plugin.saveSettings();
+							await this.plugin.commands.updateCommand();
+						})
+				);
+
+
+			// add custom title name
+			const CustomNameEl = this.createStyleDiv('custom-name', (this.data.CustomTitleButton), nextTabs);
+			this.createSettingEl(CustomNameEl, i18nConfig.NotionCustomTitleName, i18nConfig.NotionCustomTitleNameDesc, 'text', i18nConfig.NotionCustomTitleText, this.data.CustomTitleName, 'CustomTitleName')
 
 
 			// add api key
