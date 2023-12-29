@@ -3,7 +3,7 @@
 [![Test](https://github.com/jxpeng98/obsidian-to-NotionNext/actions/workflows/test.yml/badge.svg)](https://github.com/jxpeng98/obsidian-to-NotionNext/actions/workflows/test.yml)
 [![Release](https://github.com/jxpeng98/obsidian-to-NotionNext/actions/workflows/release.yml/badge.svg)](https://github.com/jxpeng98/obsidian-to-NotionNext/actions/workflows/release.yml)
 [![Github all releases](https://img.shields.io/github/downloads/jxpeng98/obsidian-to-NotionNext/total.svg)](https://GitHub.com/jxpeng98/obsidian-to-NotionNext/releases/)
-[![GitLab latest release](https://badgen.net/github/release/jxpeng98/obsidian-to-NotionNext)](https://github.com/jxpeng98/obsidian-to-NotionNext/releases)
+[![GitHub release (with filter)](https://img.shields.io/github/v/release/jxpeng98/obsidian-to-NotionNext)](https://github.com/jxpeng98/obsidian-to-NotionNext/releases/)
 
 [中文文档](README-zh.md)
 
