@@ -30,11 +30,12 @@ Thus, based on the [original author's work](https://github.com/EasyChris/obsidia
 - 重新设计了插件设置界面。从这个版本开始，设置界面将被分成两部分：
   - 一部分是通用设置：bannerUrl和你的notion用户名（ID）
   - 一部分是数据库列表：你可以添加新的数据库或者删除数据库。
-  
+
 ![](https://minioapi.pjx.ac.cn/img1/2023/12/f7e89241f45cfee6b902ec4b69dd6f63.png)
 
 - You can add more databases in the plugin settings.
 - 你可以在插件设置中添加更多的数据库。
+
 ![](https://minioapi.pjx.ac.cn/img1/2023/12/023bf46ebbc92c3991d2c443c575bc80.gif)
 
 - You can sync one note to multiple databases.
