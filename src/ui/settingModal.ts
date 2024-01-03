@@ -42,6 +42,7 @@ export class SettingModal extends Modal {
 			this.data.customTitleButton = dbDetails.customTitleButton;
 			this.data.customTitleName = dbDetails.customTitleName;
 			// this.data.customValues = dbDetails.customValues;
+			this.data.saved = dbDetails.saved;
 		}
 
 	}
@@ -58,28 +59,53 @@ export class SettingModal extends Modal {
 		const nextTabs = contentEl.createDiv('next-tabs');
 
 
-		new Setting(settingDiv)
-			.setName(i18nConfig.databaseFormat)
-			.setDesc(i18nConfig.databaseFormatDesc)
-			.addDropdown((component) => {
-				component
-					.addOption('none', '')
-					.addOption('general', i18nConfig.databaseGeneral)
-					.addOption('next', i18nConfig.databaseNext)
-					// .addOption('custom', i18nConfig.databaseCustom)
-					.setValue(this.data.databaseFormat)
-					.onChange(async (value) => {
-						this.data.databaseFormat = value;
-						nextTabs.empty();
-						this.updateContentBasedOnSelection(value, nextTabs);
-					});
 
-				// Initialize content based on the current dropdown value
-				this.updateContentBasedOnSelection(this.plugin.settings.databaseFormat, nextTabs);
-			});
+		if (this.data.saved) {
+			new Setting(settingDiv)
+				.setName(i18nConfig.databaseFormat)
+				.setDesc(i18nConfig.databaseFormatDesc)
+				.addDropdown((component) => {
+					component
+						.addOption('none', '')
+						.addOption('general', i18nConfig.databaseGeneral)
+						.addOption('next', i18nConfig.databaseNext)
+						// .addOption('custom', i18nConfig.databaseCustom)
+						.setValue(this.data.databaseFormat)
+						.onChange(async (value) => {
+							this.data.databaseFormat = value;
+							nextTabs.empty();
+							this.updateContentBasedOnSelection(value, nextTabs);
+						});
+
+					// Initialize content based on the current dropdown value
+					this.updateContentBasedOnSelection(this.data.databaseFormat, nextTabs);
+				});
+
+		} else {
+			new Setting(settingDiv)
+				.setName(i18nConfig.databaseFormat)
+				.setDesc(i18nConfig.databaseFormatDesc)
+				.addDropdown((component) => {
+					component
+						.addOption('none', '')
+						.addOption('general', i18nConfig.databaseGeneral)
+						.addOption('next', i18nConfig.databaseNext)
+						// .addOption('custom', i18nConfig.databaseCustom)
+						.setValue(this.data.databaseFormat)
+						.onChange(async (value) => {
+							this.data.databaseFormat = value;
+							nextTabs.empty();
+							this.updateContentBasedOnSelection(value, nextTabs);
+						});
+
+					// Initialize content based on the current dropdown value
+					this.updateContentBasedOnSelection(this.plugin.settings.databaseFormat, nextTabs);
+				});
+		}
+
+
 
 		// add save button
-
 		let footerEl = contentEl.createDiv('save-button');
 		let saveButton = new Setting(footerEl)
 		saveButton.addButton((button: ButtonComponent) => {

@@ -81,10 +81,7 @@ export default class ObsidianSyncNotionPlugin extends Plugin {
 
 		await this.saveSettings();
 	}
-
-	// previewDatabase(dbDetails: DatabaseDetails) {
-	//
-	// }
+	
 }
 
 

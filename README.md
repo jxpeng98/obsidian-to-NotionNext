@@ -18,10 +18,21 @@ Thus, based on the [original author's work](https://github.com/EasyChris/obsidia
 ## TODO List
 
 - [ ] Support custom properties for Notion General database. 支持自定义属性
-- [ ] Support preview for database details in plugin settings. 支持预览数据库详情
-- [ ] Support edit for database details in plugin settings. 支持编辑数据库详情
+- [x] Support preview for database details in plugin settings. 支持预览数据库详情
+- [x] Support edit for database details in plugin settings. 支持编辑数据库详情
 
 ## Update
+
+### 2.0.1
+
+- Add the preview and edit function for database details in the plugin settings. 增加插件设置中数据库详情的预览和编辑功能。
+![](https://minioapi.pjx.ac.cn/img1/2024/01/952f1e579daeac35b257ff7d744b0a3d.png)
+  - Preview:
+  ![](https://minioapi.pjx.ac.cn/img1/2024/01/952f1e579daeac35b257ff7d744b0a3d.png)
+
+  - Edit:
+	![](https://minioapi.pjx.ac.cn/img1/2024/01/ded3d62660f5488c76488304a3fb269e.png)
+  
 ### 2.0.0 (Big Update)
 
 - redesign the plugin settings UI. From this version, the settings UI will be separated into two parts: 

@@ -5,6 +5,7 @@ import {SettingModal} from "./settingModal";
 import {SettingNextTabs} from "./settingNextTabs";
 import {SettingGeneralTabs} from "./settingGeneralTabs";
 import {set} from "yaml/dist/schema/yaml-1.1/set";
+import {PreviewModal} from "./PreviewModal";
 
 export interface PluginSettings {
     NextButton: boolean;
@@ -37,6 +38,7 @@ export interface DatabaseDetails {
 	customTitleButton: boolean;
 	customTitleName: string;
 	// customValues: string;
+	saved: boolean;
 }
 
 export const DEFAULT_SETTINGS: PluginSettings = {
@@ -82,7 +84,6 @@ export class ObsidianSettingTab extends PluginSettingTab {
         this.createSettingEl(containerEl, i18nConfig.NotionUser, i18nConfig.NotionUserDesc, 'text', i18nConfig.NotionUserText, this.plugin.settings.notionUser, 'notionUser')
 
 
-
 		// add new button
 
 		new Setting(containerEl)
@@ -107,6 +108,7 @@ export class ObsidianSettingTab extends PluginSettingTab {
 									customTitleButton: modal.data.customTitleButton,
 									customTitleName: modal.data.customTitleName,
 									// customValues: modal.data.customValues,
+									saved: modal.data.saved,
 								}
 
 								this.plugin.addDatabaseDetails(dbDetails);
@@ -237,49 +239,52 @@ export class ObsidianSettingTab extends PluginSettingTab {
 
 
 				// add a button for preview data
-				// settingEl
-				// .addButton((button: ButtonComponent): ButtonComponent => {
-				// 	return button
-				// 		.setTooltip("Preview Database")
-				// 		.setIcon("eye")
-				// 		.onClick(async () => {
-				// 			this.plugin.previewDatabase(dbDetails);
-				// 		});
-				// });
+				settingEl
+				.addButton((button: ButtonComponent): ButtonComponent => {
+					return button
+						.setTooltip("Preview Database")
+						.setIcon("eye")
+						.onClick(async () => {
+							let modal = new PreviewModal(this.app, this.plugin, this, dbDetails);
 
-				// settingEl
-				// .addButton((button: ButtonComponent): ButtonComponent => {
-				// 	return button
-				// 		.setTooltip("Edit Database")
-				// 		.setIcon("pencil")
-				// 		.onClick(async () => {
-				// 			let modal = new SettingModal(this.app, this.plugin, this, dbDetails);
-				//
-				// 			modal.onClose = () => {
-				// 				if (modal.data.saved) {
-				// 					const dbDetails = {
-				// 						format: modal.data.databaseFormat,
-				// 						fullName: modal.data.databaseFullName,
-				// 						abName: modal.data.databaseAbbreviateName,
-				// 						notionAPI: modal.data.notionAPI,
-				// 						databaseID: modal.data.databaseID,
-				// 						tagButton: modal.data.tagButton,
-				// 						customTitleButton: modal.data.customTitleButton,
-				// 						customTitleName: modal.data.customTitleName,
-				// 						// customValues: modal.data.customValues,
-				// 					}
-				//
-				// 					this.plugin.updateDatabaseDetails(dbDetails);
-				//
-				// 					this.plugin.commands.updateCommand();
-				//
-				// 					this.display()
-				// 				}
-				// 			}
-				//
-				// 			modal.open();
-				// 		});
-				// });
+							modal.open();
+						});
+				});
+
+				settingEl
+				.addButton((button: ButtonComponent): ButtonComponent => {
+					return button
+						.setTooltip("Edit Database")
+						.setIcon("pencil")
+						.onClick(async () => {
+							let modal = new SettingModal(this.app, this.plugin, this, dbDetails);
+
+							modal.onClose = () => {
+								if (modal.data.saved) {
+									const dbDetails = {
+										format: modal.data.databaseFormat,
+										fullName: modal.data.databaseFullName,
+										abName: modal.data.databaseAbbreviateName,
+										notionAPI: modal.data.notionAPI,
+										databaseID: modal.data.databaseID,
+										tagButton: modal.data.tagButton,
+										customTitleButton: modal.data.customTitleButton,
+										customTitleName: modal.data.customTitleName,
+										// customValues: modal.data.customValues,
+										saved: modal.data.saved,
+									}
+
+									this.plugin.updateDatabaseDetails(dbDetails);
+
+									this.plugin.commands.updateCommand();
+
+									this.display()
+								}
+							}
+
+							modal.open();
+						});
+				});
 
 				settingEl
 				.addButton((button: ButtonComponent): ButtonComponent => {
@@ -297,7 +302,5 @@ export class ObsidianSettingTab extends PluginSettingTab {
 		}
 	}
 }
-function addExtraButton(arg0: (button: ButtonComponent) => ButtonComponent): any {
-    throw new Error("Function not implemented.");
-}
+
 
