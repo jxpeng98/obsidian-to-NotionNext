@@ -20,6 +20,14 @@ jobs:
               with:
                   node-version: "18"
 
+            - name: Generate changelog
+              id: changelog
+              uses: release-changelog/action@v1.0.0
+              with:
+                  repo-token: ${{ secrets.REPO_ACCESS_TOKEN }}
+                  version: ${{ github.ref }}
+                  file: CHANGELOG.md
+
             - name: Build
               id: build
               run: |

@@ -13,6 +13,7 @@ import {SettingGeneralTabs} from "./settingGeneralTabs";
 
 
 export class SettingModal extends Modal {
+	[key: string]: any; // Index signature
 	data: Record<string, any> = {
 		databaseFormat: 'none',
 		databaseFullName: '',
@@ -139,13 +140,13 @@ export class SettingModal extends Modal {
 			nextTabs.createEl('h3', { text: i18nConfig.NotionGeneralSettingHeader });
 
 			// add full name
-			this.createSettingEl(nextTabs, i18nConfig.databaseFullName, i18nConfig.databaseFullNameDesc, 'text', i18nConfig.databaseFullNameText, this.data.databaseFullName, 'databaseFullName')
+			this.createSettingEl(nextTabs, i18nConfig.databaseFullName, i18nConfig.databaseFullNameDesc, 'text', i18nConfig.databaseFullNameText, this.data.databaseFullName, 'data','databaseFullName')
 
 			// add abbreviate name
-			this.createSettingEl(nextTabs, i18nConfig.databaseAbbreviateName, i18nConfig.databaseAbbreviateNameDesc, 'text', i18nConfig.databaseAbbreviateNameText, this.data.databaseAbbreviateName, 'databaseAbbreviateName')
+			this.createSettingEl(nextTabs, i18nConfig.databaseAbbreviateName, i18nConfig.databaseAbbreviateNameDesc, 'text', i18nConfig.databaseAbbreviateNameText, this.data.databaseAbbreviateName, 'data','databaseAbbreviateName')
 
 			// tag button
-			this.createSettingEl(nextTabs, i18nConfig.NotionTagButton, i18nConfig.NotionTagButtonDesc, 'toggle', i18nConfig.NotionCustomTitleText, this.data.tagButton, 'tagButton')
+			this.createSettingEl(nextTabs, i18nConfig.NotionTagButton, i18nConfig.NotionTagButtonDesc, 'toggle', i18nConfig.NotionCustomTitleText, this.data.tagButton, 'data','tagButton')
 
 			// add custom title button
 
@@ -162,22 +163,22 @@ export class SettingModal extends Modal {
 
 							// this.updateSettingEl(CustomValuesEl, value)
 
-							await this.plugin.saveSettings();
-							await this.plugin.commands.updateCommand();
+							// await this.plugin.saveSettings();
+							// await this.plugin.commands.updateCommand();
 						})
 				);
 
 
 			// add custom title name
 			const CustomNameEl = this.createStyleDiv('custom-name', (this.data.CustomTitleButton), nextTabs);
-			this.createSettingEl(CustomNameEl, i18nConfig.NotionCustomTitleName, i18nConfig.NotionCustomTitleNameDesc, 'text', i18nConfig.NotionCustomTitleText, this.data.CustomTitleName, 'CustomTitleName')
+			this.createSettingEl(CustomNameEl, i18nConfig.NotionCustomTitleName, i18nConfig.NotionCustomTitleNameDesc, 'text', i18nConfig.NotionCustomTitleText, this.data.CustomTitleName, 'data','CustomTitleName')
 
 
 			// add api key
-			this.createSettingEl(nextTabs, i18nConfig.NotionAPI, i18nConfig.NotionAPIDesc, 'password', i18nConfig.NotionAPIText, this.data.notionAPI, 'notionAPI')
+			this.createSettingEl(nextTabs, i18nConfig.NotionAPI, i18nConfig.NotionAPIDesc, 'password', i18nConfig.NotionAPIText, this.data.notionAPI, 'data','notionAPI')
 
 			// add database id
-			this.createSettingEl(nextTabs, i18nConfig.DatabaseID, i18nConfig.NotionAPIDesc, 'password', i18nConfig.DatabaseIDText, this.data.databaseID, 'databaseID')
+			this.createSettingEl(nextTabs, i18nConfig.DatabaseID, i18nConfig.NotionAPIDesc, 'password', i18nConfig.DatabaseIDText, this.data.databaseID, 'data','databaseID')
 
 
 		} else if (value === 'next') {
@@ -185,29 +186,29 @@ export class SettingModal extends Modal {
 			nextTabs.createEl('h3', { text: i18nConfig.NotionNextSettingHeader });
 
 			// add full name
-			this.createSettingEl(nextTabs, i18nConfig.databaseFullName, i18nConfig.databaseFullNameDesc, 'text', i18nConfig.databaseFullNameText, this.data.databaseFullName, 'databaseFullName')
+			this.createSettingEl(nextTabs, i18nConfig.databaseFullName, i18nConfig.databaseFullNameDesc, 'text', i18nConfig.databaseFullNameText, this.data.databaseFullName,'data','databaseFullName')
 
 			// add abbreviate name
-			this.createSettingEl(nextTabs, i18nConfig.databaseAbbreviateName, i18nConfig.databaseAbbreviateNameDesc, 'text', i18nConfig.databaseAbbreviateNameText, this.data.databaseAbbreviateName, 'databaseAbbreviateName')
+			this.createSettingEl(nextTabs, i18nConfig.databaseAbbreviateName, i18nConfig.databaseAbbreviateNameDesc, 'text', i18nConfig.databaseAbbreviateNameText, this.data.databaseAbbreviateName, 'data','databaseAbbreviateName')
 
 			// add api key
-			this.createSettingEl(nextTabs, i18nConfig.NotionAPI, i18nConfig.NotionAPIDesc, 'password', i18nConfig.NotionAPIText, this.data.notionAPI, 'notionAPI')
+			this.createSettingEl(nextTabs, i18nConfig.NotionAPI, i18nConfig.NotionAPIDesc, 'password', i18nConfig.NotionAPIText, this.data.notionAPI, 'data','notionAPI')
 
 
 			// add database id
-			this.createSettingEl(nextTabs, i18nConfig.DatabaseID, i18nConfig.NotionAPIDesc, 'password', i18nConfig.DatabaseIDText, this.data.databaseID, 'databaseID')
+			this.createSettingEl(nextTabs, i18nConfig.DatabaseID, i18nConfig.NotionAPIDesc, 'password', i18nConfig.DatabaseIDText, this.data.databaseID, 'data','databaseID')
 
 		} else if (value === 'custom') {
 			nextTabs.createEl('h3', { text: i18nConfig.NotionCustomSettingHeader});
 
 			// add full name
-			this.createSettingEl(nextTabs, i18nConfig.databaseFullName, i18nConfig.databaseFullNameDesc, 'text', i18nConfig.databaseFullNameText, this.data.databaseFullName, 'databaseFullName')
+			this.createSettingEl(nextTabs, i18nConfig.databaseFullName, i18nConfig.databaseFullNameDesc, 'text', i18nConfig.databaseFullNameText, this.data.databaseFullName, 'data','databaseFullName')
 
 			// add abbreviate name
-			this.createSettingEl(nextTabs, i18nConfig.databaseAbbreviateName, i18nConfig.databaseAbbreviateNameDesc, 'text', i18nConfig.databaseAbbreviateNameText, this.data.databaseAbbreviateName, 'databaseAbbreviateName')
+			this.createSettingEl(nextTabs, i18nConfig.databaseAbbreviateName, i18nConfig.databaseAbbreviateNameDesc, 'text', i18nConfig.databaseAbbreviateNameText, this.data.databaseAbbreviateName, 'data','databaseAbbreviateName')
 
 			// tag button
-			this.createSettingEl(nextTabs, i18nConfig.NotionTagButton, i18nConfig.NotionTagButtonDesc, 'toggle', i18nConfig.NotionCustomTitleText, this.data.tagButton, 'tagButton')
+			this.createSettingEl(nextTabs, i18nConfig.NotionTagButton, i18nConfig.NotionTagButtonDesc, 'toggle', i18nConfig.NotionCustomTitleText, this.data.tagButton,'data', 'tagButton')
 
 			// add custom title button
 
@@ -224,15 +225,15 @@ export class SettingModal extends Modal {
 
 							// this.updateSettingEl(CustomValuesEl, value)
 
-							await this.plugin.saveSettings();
-							await this.plugin.commands.updateCommand();
+							// await this.plugin.saveSettings();
+							// await this.plugin.commands.updateCommand();
 						})
 				);
 
 
 			// add custom title name
 			const CustomNameEl = this.createStyleDiv('custom-name', (this.data.CustomTitleButton), nextTabs);
-			this.createSettingEl(CustomNameEl, i18nConfig.NotionCustomTitleName, i18nConfig.NotionCustomTitleNameDesc, 'text', i18nConfig.NotionCustomTitleText, this.data.CustomTitleName, 'CustomTitleName')
+			this.createSettingEl(CustomNameEl, i18nConfig.NotionCustomTitleName, i18nConfig.NotionCustomTitleNameDesc, 'text', i18nConfig.NotionCustomTitleText, this.data.CustomTitleName,'data', 'CustomTitleName')
 
 			// // add custom values
 			// const CustomValuesEl = this.createStyleDiv('custom-values', (this.data.CustomTitleButton), nextTabs);
@@ -252,11 +253,11 @@ export class SettingModal extends Modal {
 
 			// add api key
 			const notionAPIGeneralEl = this.createStyleDiv('api-general', this.plugin.settings.GeneralButton, nextTabs);
-			this.createSettingEl(notionAPIGeneralEl, i18nConfig.NotionAPI, i18nConfig.NotionAPIDesc, 'password', i18nConfig.NotionAPIText, this.data.notionAPI, 'notionAPI')
+			this.createSettingEl(notionAPIGeneralEl, i18nConfig.NotionAPI, i18nConfig.NotionAPIDesc, 'password', i18nConfig.NotionAPIText, this.data.notionAPI,'data', 'notionAPI')
 
 			// add database id
 			const databaseIDGeneralEl = this.createStyleDiv('databaseID-general', this.plugin.settings.GeneralButton, nextTabs);
-			this.createSettingEl(databaseIDGeneralEl, i18nConfig.DatabaseID, i18nConfig.NotionAPIDesc, 'password', i18nConfig.DatabaseIDText, this.data.databaseID, 'databaseID')
+			this.createSettingEl(databaseIDGeneralEl, i18nConfig.DatabaseID, i18nConfig.NotionAPIDesc, 'password', i18nConfig.DatabaseIDText, this.data.databaseID, 'data', 'databaseID')
 		}
 
 	}
@@ -285,7 +286,7 @@ export class SettingModal extends Modal {
 	}
 
 	// function to add one setting element in the setting tab.
-	public createSettingEl(contentEl: HTMLElement, name: string, desc: string, type: string, placeholder: string, holderValue: any,settingsKey: string) {
+	public createSettingEl(contentEl: HTMLElement, name: string, desc: string, type: string, placeholder: string, holderValue: any, dataRecord: string, settingsKey: string) {
 		if (type === 'password') {
 			return new Setting(contentEl)
 				.setName(name)
@@ -296,7 +297,7 @@ export class SettingModal extends Modal {
 						.setPlaceholder(placeholder)
 						.setValue(holderValue)
 						.onChange(async (value) => {
-							this.data[settingsKey] = value; // Update the settings dictionary							await this.plugin.saveSettings();
+							this[dataRecord][settingsKey] = value; // Update the settings dictionary							await this.plugin.saveSettings();
 						})
 				});
 		} else if (type === 'toggle') {
@@ -307,7 +308,7 @@ export class SettingModal extends Modal {
 					toggle
 						.setValue(holderValue)
 						.onChange(async (value) => {
-							this.data[settingsKey] = value; // Update the settings dictionary							await this.plugin.saveSettings();
+							this[dataRecord][settingsKey] = value; // Update the settings dictionary							await this.plugin.saveSettings();
 						})
 				);
 		} else if (type === 'text') {
@@ -319,7 +320,7 @@ export class SettingModal extends Modal {
 						.setPlaceholder(placeholder)
 						.setValue(holderValue)
 						.onChange(async (value) => {
-							this.data[settingsKey] = value; // Update the settings dictionary							await this.plugin.saveSettings();
+							this[dataRecord][settingsKey] = value; // Update the settings dictionary							await this.plugin.saveSettings();
 						})
 				);
 		}

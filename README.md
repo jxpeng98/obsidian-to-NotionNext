@@ -2,8 +2,10 @@
 
 [![Test](https://github.com/jxpeng98/obsidian-to-NotionNext/actions/workflows/test.yml/badge.svg)](https://github.com/jxpeng98/obsidian-to-NotionNext/actions/workflows/test.yml)
 [![Release](https://github.com/jxpeng98/obsidian-to-NotionNext/actions/workflows/release.yml/badge.svg)](https://github.com/jxpeng98/obsidian-to-NotionNext/actions/workflows/release.yml)
-[![Github all releases](https://img.shields.io/github/downloads/jxpeng98/obsidian-to-NotionNext/total.svg)](https://GitHub.com/jxpeng98/obsidian-to-NotionNext/releases/)
+[![Obsidian Downloads](https://img.shields.io/badge/dynamic/json?logo=obsidian&color=%23483699&label=downloads&query=%24%5B%22share-to-notionnext%22%5D.downloads&url=https%3A%2F%2Fraw.githubusercontent.com%2Fobsidianmd%2Fobsidian-releases%2Fmaster%2Fcommunity-plugin-stats.json)](https://GitHub.com/jxpeng98/obsidian-to-NotionNext/releases/)
 [![GitHub release (with filter)](https://img.shields.io/github/v/release/jxpeng98/obsidian-to-NotionNext)](https://github.com/jxpeng98/obsidian-to-NotionNext/releases/)
+
+[//]: # ([![Github all releases]&#40;https://img.shields.io/github/downloads/jxpeng98/obsidian-to-NotionNext/total.svg&#41;]&#40;https://GitHub.com/jxpeng98/obsidian-to-NotionNext/releases/&#41;)
 
 [中文文档](README-zh.md)
 
@@ -22,6 +24,12 @@ Thus, based on the [original author's work](https://github.com/EasyChris/obsidia
 - [x] Support edit for database details in plugin settings. 支持编辑数据库详情
 
 ## Update
+
+### 2.1.0
+
+- add confirmation interface for deleting a database 增加删除数据库的确认界面
+- fix the typo in the edit database modal 修复编辑数据库界面的标题错误
+- improve the logic for the database editing 改进数据库编辑界面的逻辑
 
 ### 2.0.1
 

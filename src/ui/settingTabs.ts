@@ -1,4 +1,4 @@
-import {App, ButtonComponent, PluginSettingTab, Setting} from "obsidian";
+import {App, ButtonComponent, Modal, PluginSettingTab, Setting} from "obsidian";
 import {i18nConfig} from "../lang/I18n";
 import ObsidianSyncNotionPlugin from "../main";
 import {SettingModal} from "./settingModal";
@@ -6,6 +6,8 @@ import {SettingNextTabs} from "./settingNextTabs";
 import {SettingGeneralTabs} from "./settingGeneralTabs";
 import {set} from "yaml/dist/schema/yaml-1.1/set";
 import {PreviewModal} from "./PreviewModal";
+import {EditModal} from "./EditModal";
+import {DeleteModal} from "./DeleteModal";
 
 export interface PluginSettings {
     NextButton: boolean;
@@ -251,30 +253,45 @@ export class ObsidianSettingTab extends PluginSettingTab {
 						});
 				});
 
+				// add a button for edit data
 				settingEl
 				.addButton((button: ButtonComponent): ButtonComponent => {
 					return button
 						.setTooltip("Edit Database")
 						.setIcon("pencil")
 						.onClick(async () => {
-							let modal = new SettingModal(this.app, this.plugin, this, dbDetails);
+							let modal = new EditModal(this.app, this.plugin, this, dbDetails);
 
 							modal.onClose = () => {
-								if (modal.data.saved) {
-									const dbDetails = {
-										format: modal.data.databaseFormat,
-										fullName: modal.data.databaseFullName,
-										abName: modal.data.databaseAbbreviateName,
-										notionAPI: modal.data.notionAPI,
-										databaseID: modal.data.databaseID,
-										tagButton: modal.data.tagButton,
-										customTitleButton: modal.data.customTitleButton,
-										customTitleName: modal.data.customTitleName,
+								if (modal.dataTemp.savedTempInd) {
+									const dbDetailsNew: DatabaseDetails = {
+										format: modal.dataTemp.databaseFormatTemp,
+										fullName: modal.dataTemp.databaseFullNameTemp,
+										abName: modal.dataTemp.databaseAbbreviateNameTemp,
+										notionAPI: modal.dataTemp.notionAPITemp,
+										databaseID: modal.dataTemp.databaseIDTemp,
+										tagButton: modal.dataTemp.tagButtonTemp,
+										customTitleButton: modal.dataTemp.customTitleButtonTemp,
+										customTitleName: modal.dataTemp.customTitleNameTemp,
 										// customValues: modal.data.customValues,
-										saved: modal.data.saved,
+										saved: modal.dataTemp.savedTemp,
 									}
 
-									this.plugin.updateDatabaseDetails(dbDetails);
+									const dbDetailsPrev: DatabaseDetails = {
+										format: modal.dataPrev.databaseFormatPrev,
+										fullName: modal.dataPrev.databaseFullNamePrev,
+										abName: modal.dataPrev.databaseAbbreviateNamePrev,
+										notionAPI: modal.dataPrev.notionAPIPrev,
+										databaseID: modal.dataPrev.databaseIDPrev,
+										tagButton: modal.dataPrev.tagButtonPrev,
+										customTitleButton: modal.dataPrev.customTitleButtonPrev,
+										customTitleName: modal.dataPrev.customTitleNamePrev,
+										// customValues: modal.data.customValues,
+										saved: modal.dataPrev.savedPrev,
+									}
+
+									this.plugin.deleteDatabaseDetails(dbDetailsPrev);
+									this.plugin.updateDatabaseDetails(dbDetailsNew);
 
 									this.plugin.commands.updateCommand();
 
@@ -292,11 +309,20 @@ export class ObsidianSettingTab extends PluginSettingTab {
 						.setTooltip("Delete Database")
 						.setIcon("trash")
 						.onClick(async () => {
-							await this.plugin.deleteDatabaseDetails(dbDetails);
+							let modal = new DeleteModal(this.app, this.plugin, this, dbDetails);
 
-							await this.plugin.commands.updateCommand();
+							modal.onClose = () => {
+								if (modal.data.deleted) {
+									this.plugin.deleteDatabaseDetails(dbDetails);
 
-							this.display()
+									this.plugin.commands.updateCommand();
+
+									this.display()
+								}
+							}
+
+							modal.open();
+
 						});
 				});
 		}
