@@ -2,8 +2,6 @@ import {App, ButtonComponent, Modal, PluginSettingTab, Setting} from "obsidian";
 import {i18nConfig} from "../lang/I18n";
 import ObsidianSyncNotionPlugin from "../main";
 import {SettingModal} from "./settingModal";
-import {SettingNextTabs} from "./settingNextTabs";
-import {SettingGeneralTabs} from "./settingGeneralTabs";
 import {set} from "yaml/dist/schema/yaml-1.1/set";
 import {PreviewModal} from "./PreviewModal";
 import {EditModal} from "./EditModal";

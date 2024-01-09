@@ -8,8 +8,6 @@ import {
 import { i18nConfig } from "../lang/I18n";
 import ObsidianSyncNotionPlugin from "../main";
 import {DatabaseDetails, ObsidianSettingTab} from "./settingTabs";
-import {SettingNextTabs} from "./settingNextTabs";
-import {SettingGeneralTabs} from "./settingGeneralTabs";
 
 
 export class SettingModal extends Modal {
