@@ -155,9 +155,9 @@ export class SettingModal extends Modal {
 				.setDesc(i18nConfig.NotionCustomTitleDesc)
 				.addToggle((toggle) =>
 					toggle
-						.setValue(this.data.CustomTitleButton)
+						.setValue(this.data.customTitleButton)
 						.onChange(async (value) => {
-							this.data.CustomTitleButton = value;
+							this.data.customTitleButton = value;
 
 							this.updateSettingEl(CustomNameEl, value)
 
@@ -170,8 +170,8 @@ export class SettingModal extends Modal {
 
 
 			// add custom title name
-			const CustomNameEl = this.createStyleDiv('custom-name', (this.data.CustomTitleButton), nextTabs);
-			this.createSettingEl(CustomNameEl, i18nConfig.NotionCustomTitleName, i18nConfig.NotionCustomTitleNameDesc, 'text', i18nConfig.NotionCustomTitleText, this.data.CustomTitleName, 'data', 'CustomTitleName')
+			const CustomNameEl = this.createStyleDiv('custom-name', (this.data.customTitleButton), nextTabs);
+			this.createSettingEl(CustomNameEl, i18nConfig.NotionCustomTitleName, i18nConfig.NotionCustomTitleNameDesc, 'text', i18nConfig.NotionCustomTitleText, this.data.customTitleName, 'data', 'customTitleName')
 
 
 			// add api key
@@ -199,6 +199,7 @@ export class SettingModal extends Modal {
 			this.createSettingEl(nextTabs, i18nConfig.DatabaseID, i18nConfig.NotionAPIDesc, 'password', i18nConfig.DatabaseIDText, this.data.databaseID, 'data', 'databaseID')
 
 		} else if (value === 'custom') {
+
 			nextTabs.createEl('h3', {text: i18nConfig.NotionCustomSettingHeader});
 
 			// add full name
@@ -214,7 +215,7 @@ export class SettingModal extends Modal {
 			this.createSettingEl(nextTabs, i18nConfig.DatabaseID, i18nConfig.NotionAPIDesc, 'password', i18nConfig.DatabaseIDText, this.data.databaseID, 'data', 'databaseID')
 
 			// add custom title name
-			this.createSettingEl(nextTabs, i18nConfig.NotionCustomTitleName, i18nConfig.NotionCustomTitleNameDesc, 'text', i18nConfig.NotionCustomTitleText, this.data.CustomTitleName, 'data', 'CustomTitleName')
+			this.createSettingEl(nextTabs, i18nConfig.NotionCustomTitleName, i18nConfig.NotionCustomTitleNameDesc, 'text', i18nConfig.NotionCustomTitleText, this.data.customTitleName, 'data', 'customTitleName')
 
 			// add new property button
 			new Setting(nextTabs)

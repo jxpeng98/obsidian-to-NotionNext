@@ -16,8 +16,8 @@ export interface PluginSettings {
     proxy: string;
     GeneralButton: boolean;
     tagButton: boolean;
-    CustomTitleButton: boolean;
-    CustomTitleName: string;
+    customTitleButton: boolean;
+    customTitleName: string;
     notionAPIGeneral: string;
     databaseIDGeneral: string;
     CustomButton: boolean;
@@ -51,8 +51,8 @@ export const DEFAULT_SETTINGS: PluginSettings = {
     proxy: "",
     GeneralButton: true,
     tagButton: true,
-    CustomTitleButton: false,
-    CustomTitleName: "",
+    customTitleButton: false,
+    customTitleName: "",
     notionAPIGeneral: "",
     databaseIDGeneral: "",
     CustomButton: false,

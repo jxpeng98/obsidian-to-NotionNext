@@ -177,9 +177,9 @@ export class EditModal extends SettingModal {
 				.setDesc(i18nConfig.NotionCustomTitleDesc)
 				.addToggle((toggle) =>
 					toggle
-						.setValue(this.dataTemp.CustomTitleButtonTemp)
+						.setValue(this.dataTemp.customTitleButtonTemp)
 						.onChange(async (value) => {
-							this.dataTemp.CustomTitleButtonTemp = value;
+							this.dataTemp.customTitleButtonTemp = value;
 
 							this.updateSettingEl(CustomNameEl, value)
 
@@ -192,8 +192,8 @@ export class EditModal extends SettingModal {
 
 
 			// add custom title name
-			const CustomNameEl = this.createStyleDiv('custom-name', (this.dataTemp.CustomTitleButtonTemp), nextTabs);
-			this.createSettingEl(CustomNameEl, i18nConfig.NotionCustomTitleName, i18nConfig.NotionCustomTitleNameDesc, 'text', i18nConfig.NotionCustomTitleText, this.dataTemp.CustomTitleNameTemp,'dataTemp', 'CustomTitleNameTemp')
+			const CustomNameEl = this.createStyleDiv('custom-name', (this.dataTemp.customTitleButtonTemp), nextTabs);
+			this.createSettingEl(CustomNameEl, i18nConfig.NotionCustomTitleName, i18nConfig.NotionCustomTitleNameDesc, 'text', i18nConfig.NotionCustomTitleText, this.dataTemp.customTitleNameTemp,'dataTemp', 'customTitleNameTemp')
 
 
 			// add api key
@@ -236,7 +236,7 @@ export class EditModal extends SettingModal {
 			this.createSettingEl(nextTabs, i18nConfig.DatabaseID, i18nConfig.NotionAPIDesc, 'password', i18nConfig.DatabaseIDText, this.dataTemp.databaseIDTemp, 'dataTemp', 'databaseIDTemp')
 
 			// add custom title name
-			this.createSettingEl(nextTabs, i18nConfig.NotionCustomTitleName, i18nConfig.NotionCustomTitleNameDesc, 'text', i18nConfig.NotionCustomTitleText, this.dataTemp.CustomTitleNameTemp, 'dataTemp', 'CustomTitleNameTemp')
+			this.createSettingEl(nextTabs, i18nConfig.NotionCustomTitleName, i18nConfig.NotionCustomTitleNameDesc, 'text', i18nConfig.NotionCustomTitleText, this.dataTemp.customTitleNameTemp, 'dataTemp', 'customTitleNameTemp')
 
 			// add new property button
 			new Setting(nextTabs)
