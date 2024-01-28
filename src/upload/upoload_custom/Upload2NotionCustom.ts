@@ -23,7 +23,6 @@ export class Upload2NotionCustom extends UploadBaseCustom {
 		notionID: string,
 		title: string,
 		cover: string,
-		tags: string[],
 		customValues: Record<string, string>,
 		childArr: any,
 	) {
@@ -39,13 +38,12 @@ export class Upload2NotionCustom extends UploadBaseCustom {
 			cover = databaseCover;
 		}
 
-		return await this.createPage(title, cover, tags, customValues, childArr);
+		return await this.createPage(title, cover, customValues, childArr);
 	}
 
 	async createPage(
 		title: string,
 		cover: string,
-		tags: string[],
 		customValues: Record<string, string>,
 		childArr: any,
 	) {
@@ -54,7 +52,6 @@ export class Upload2NotionCustom extends UploadBaseCustom {
 			databaseID,
 			customTitleButton,
 			customTitleName,
-			tagButton,
 			notionAPI
 		} = this.dbDetails;
 
@@ -129,7 +126,6 @@ export class Upload2NotionCustom extends UploadBaseCustom {
 	async syncMarkdownToNotionCustom(
 		title: string,
 		cover: string,
-		tags: string[],
 		customValues: Record<string, string>,
 		markdown: string,
 		nowFile: TFile,
@@ -153,12 +149,11 @@ export class Upload2NotionCustom extends UploadBaseCustom {
 				notionID,
 				title,
 				cover,
-				tags,
 				customValues,
 				file2Block,
 			);
 		} else {
-			res = await this.createPage(title, cover, tags, customValues, file2Block);
+			res = await this.createPage(title, cover, customValues, file2Block);
 		}
 		if (res.status === 200) {
 			await updateYamlInfo(markdown, nowFile, res, app, this.plugin, this.dbDetails);

@@ -116,10 +116,24 @@ export class PreviewModal extends Modal {
 
 		dbIdSetting.settingEl.style.display = 'none'; // Hide initially
 
+		// Preview the custom properties
+
+		if (this.dbDetails.format === 'custom') {
+
+			const customPropertiesEl = new Setting(previewEl)
+			customPropertiesEl
+				.setName('Custom Properties')
+				.addTextArea(text => text
+					.setValue(JSON.stringify(this.dbDetails.customProperties, null, 2))
+					.setDisabled(true));
+		}
+
 	}
 
 
 	onOpen() {
 		this.display()
 	}
+
+
 }

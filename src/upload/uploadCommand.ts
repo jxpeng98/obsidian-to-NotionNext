@@ -100,13 +100,13 @@ export async function uploadCommandCustom(
         return;
     }
 
-    const { markDownData, nowFile, cover, tags ,customValues} = await getNowFileMarkdownContentCustom(app, settings)
+    const { markDownData, nowFile, cover,  customValues} = await getNowFileMarkdownContentCustom(app, dbDetails, settings)
 
     if (markDownData) {
         const { basename } = nowFile;
 
         const upload = new Upload2NotionCustom(plugin,dbDetails);
-        const res = await upload.syncMarkdownToNotionCustom(basename, cover, tags, customValues, markDownData, nowFile, this.app);
+        const res = await upload.syncMarkdownToNotionCustom(basename, cover, customValues, markDownData, nowFile, this.app);
 
         if (res.status === 200) {
             new Notice(`${i18nConfig["sync-success"]}${basename}`);

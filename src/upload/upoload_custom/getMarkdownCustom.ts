@@ -1,28 +1,29 @@
 import {App, Notice} from "obsidian";
 import {i18nConfig} from "../../lang/I18n";
-import {PluginSettings} from "../../ui/settingTabs";
+import {DatabaseDetails, PluginSettings} from "../../ui/settingTabs";
 
 export async function getNowFileMarkdownContentCustom(
     app: App,
+	dbDetails: DatabaseDetails,
     settings: PluginSettings,
 ) {
     const nowFile = app.workspace.getActiveFile();
     let cover = '';
-    let tags = [];
-    let customValues: Record<string, string> = {};
+	let customValues: Record<string, any> = {}; // Change 'any' to a more specific type if possible
 
     const FileCache = app.metadataCache.getFileCache(nowFile);
     try {
             cover = FileCache.frontmatter.coverurl;
-            tags = FileCache.frontmatter.tags;
 
-            // split the CustomValues into an array
-            const customValuesNames = settings.CustomValues.split('\n').map(value => value.trim());
+		// Get custom property names from dbDetails
+		const customPropertyNames = dbDetails.customProperties.map(property => property.customValue);
 
-            // get the custom values from the frontmatter
-            customValuesNames.forEach(valueName => {
-                customValues[valueName] = FileCache.frontmatter[valueName];
-            });
+		// Extract custom values from the frontmatter based on the names
+		customPropertyNames.forEach(propertyName => {
+			if (FileCache.frontmatter[propertyName] !== undefined) {
+				customValues[propertyName] = FileCache.frontmatter[propertyName];
+			}
+		});
     } catch (error) {
         new Notice(i18nConfig["set-tags-fail"]);
     }
@@ -33,7 +34,6 @@ export async function getNowFileMarkdownContentCustom(
             markDownData,
             nowFile,
             cover,
-            tags,
             customValues,
         };
     } else {
