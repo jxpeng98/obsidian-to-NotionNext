@@ -159,6 +159,44 @@ export class Upload2NotionCustom extends UploadBaseCustom {
 						start: value || new Date().toISOString(),
 					},
 				};
+			case "number":
+				return {
+					number: Number(value),
+				};
+			case "phone_number":
+				return {
+					phone_number: value,
+				};
+			case "email":
+				return {
+					email: value,
+				};
+			case "url":
+				return {
+					url: value,
+				};
+			case "files":
+				return {
+					files: Array.isArray(value) ? value.map(url => ({
+						name: url,
+						type: "external",
+						external: {
+							url: url,
+						},
+					})) : [
+						{
+							name: value,
+							type: "external",
+							external: {
+								url: value,
+							},
+						},
+					],
+				};
+			case "checkbox":
+				return {
+					checkbox: Boolean(value) || false,
+				};
 			case "select":
 				return {
 					select: {

@@ -42,7 +42,7 @@ export class CustomModal extends Modal {
 							this.properties[propertyIndex].customType = value; // Update the customType of the specific property
 						});
 				}
-			)
+		)
 		} else {
 		propertyLine
 			.setName("Property " + (propertyIndex))
@@ -64,19 +64,19 @@ export class CustomModal extends Modal {
 					.addOption("select", "Select")
 					.addOption("multi_select", "Multi-Select")
 					.addOption("date", "Date")
-					.addOption("person", "Person")
+					// .addOption("person", "Person")
 					.addOption("file", "Files & Media")
 					.addOption("checkbox", "Checkbox")
 					.addOption("url", "URL")
 					.addOption("email", "Email")
 					.addOption("phone_number", "Phone Number")
-					.addOption("formula", "Formula")
-					.addOption("relation", "Relation")
-					.addOption("rollup", "Rollup")
-					.addOption("created_time", "Created time")
-					.addOption("created_by", "Created by")
-					.addOption("last_edited_time", "Last Edited Time")
-					.addOption("last_edited_by", "Last Edited By")
+					// .addOption("formula", "Formula")
+					// .addOption("relation", "Relation")
+					// .addOption("rollup", "Rollup")
+					// .addOption("created_time", "Created time")
+					// .addOption("created_by", "Created by")
+					// .addOption("last_edited_time", "Last Edited Time")
+					// .addOption("last_edited_by", "Last Edited By")
 					.setValue("text")
 					.onChange(async (value) => {
 						this.properties[propertyIndex].customType = value; // Update the customType of the specific property
