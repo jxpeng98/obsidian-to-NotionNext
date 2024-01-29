@@ -4,7 +4,7 @@ import {ObsidianSettingTab} from "./settingTabs";
 
 export class CustomModal extends Modal {
 	propertyLines: Setting[] = []; // Store all property line settings
-	properties: { customValue: string, customType: string }[] = []; // Array to store property values and types
+	properties: { customName: string, customType: string }[] = []; // Array to store property values and types
 	plugin: ObsidianSyncNotionPlugin;
 	settingTab: ObsidianSettingTab;
 
@@ -14,19 +14,45 @@ export class CustomModal extends Modal {
 
 	createPropertyLine(containerEl: HTMLElement): void {
 		const propertyIndex = this.properties.length;
-		this.properties.push({customValue: "", customType: ""}); // Initialize with empty values
+		this.properties.push({customName: "", customType: ""}); // Initialize with empty values
 
 		const propertyLine = new Setting(containerEl)
 
+		if (propertyIndex === 0) {
+			propertyLine
+				.setName("Title")
+				.setDesc("The title of the page, must be the first property")
+
+				propertyLine.addText((text) => {
+					text
+						.setPlaceholder("Property name")
+						.setValue("")
+						.onChange(async (value) => {
+							this.properties[propertyIndex].customName = value; // Update the customValue of the specific property
+						});
+
+				}
+			)
+
+			propertyLine.addDropdown((dropdown) => {
+					dropdown
+						.addOption("title", "Title")
+						.setValue("")
+						.onChange(async (value) => {
+							this.properties[propertyIndex].customType = value; // Update the customType of the specific property
+						});
+				}
+			)
+		} else {
 		propertyLine
-			.setName("Property " + (propertyIndex + 1))
+			.setName("Property " + (propertyIndex))
 
 		propertyLine.addText((text) => {
 				text
 					.setPlaceholder("Property name")
 					.setValue("")
 					.onChange(async (value) => {
-						this.properties[propertyIndex].customValue = value; // Update the customValue of the specific property
+						this.properties[propertyIndex].customName = value; // Update the customValue of the specific property
 					});
 			}
 		)
@@ -70,7 +96,7 @@ export class CustomModal extends Modal {
 					});
 			}
 		);
-
+		}
 		this.propertyLines.push(propertyLine);
 	}
 

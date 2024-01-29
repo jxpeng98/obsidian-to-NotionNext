@@ -1,4 +1,4 @@
-import {App, Notice} from "obsidian";
+import {App, Notice, TAbstractFile, TFile} from "obsidian";
 import {i18nConfig} from "../../lang/I18n";
 import {DatabaseDetails, PluginSettings} from "../../ui/settingTabs";
 
@@ -8,22 +8,29 @@ export async function getNowFileMarkdownContentCustom(
     settings: PluginSettings,
 ) {
     const nowFile = app.workspace.getActiveFile();
-    let cover = '';
-	let customValues: Record<string, any> = {}; // Change 'any' to a more specific type if possible
+	if (!nowFile) {
+		new Notice(i18nConfig["open-file"]);
+		return;
+	}
+	let cover = '';
+	let customValues: Record<string, any> = {};
 
     const FileCache = app.metadataCache.getFileCache(nowFile);
     try {
             cover = FileCache.frontmatter.coverurl;
 
 		// Get custom property names from dbDetails
-		const customPropertyNames = dbDetails.customProperties.map(property => property.customValue);
+		const customPropertyValues = dbDetails.customProperties.map(property => property.customName);
 
 		// Extract custom values from the frontmatter based on the names
-		customPropertyNames.forEach(propertyName => {
+		customPropertyValues.forEach( propertyName => {
 			if (FileCache.frontmatter[propertyName] !== undefined) {
 				customValues[propertyName] = FileCache.frontmatter[propertyName];
 			}
 		});
+
+		customValues['title'] = nowFile.basename; // Use 'basename' for the file name without extension
+
     } catch (error) {
         new Notice(i18nConfig["set-tags-fail"]);
     }

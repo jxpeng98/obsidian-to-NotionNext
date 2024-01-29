@@ -235,9 +235,6 @@ export class EditModal extends SettingModal {
 			// add database id
 			this.createSettingEl(nextTabs, i18nConfig.DatabaseID, i18nConfig.NotionAPIDesc, 'password', i18nConfig.DatabaseIDText, this.dataTemp.databaseIDTemp, 'dataTemp', 'databaseIDTemp')
 
-			// add custom title name
-			this.createSettingEl(nextTabs, i18nConfig.NotionCustomTitleName, i18nConfig.NotionCustomTitleNameDesc, 'text', i18nConfig.NotionCustomTitleText, this.dataTemp.customTitleNameTemp, 'dataTemp', 'customTitleNameTemp')
-
 			// add new property button
 			new Setting(nextTabs)
 				.setName(i18nConfig.NotionCustomValues)

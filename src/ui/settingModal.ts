@@ -214,9 +214,6 @@ export class SettingModal extends Modal {
 			// add database id
 			this.createSettingEl(nextTabs, i18nConfig.DatabaseID, i18nConfig.NotionAPIDesc, 'password', i18nConfig.DatabaseIDText, this.data.databaseID, 'data', 'databaseID')
 
-			// add custom title name
-			this.createSettingEl(nextTabs, i18nConfig.NotionCustomTitleName, i18nConfig.NotionCustomTitleNameDesc, 'text', i18nConfig.NotionCustomTitleText, this.data.customTitleName, 'data', 'customTitleName')
-
 			// add new property button
 			new Setting(nextTabs)
 				.setName(i18nConfig.NotionCustomValues)
@@ -251,9 +248,9 @@ export class SettingModal extends Modal {
 	renderCustomPreview(properties: any[], nextTabs: HTMLElement) {
 		const previewContainer = nextTabs.createDiv('preview-container');
 
-		properties.forEach((property: { customValue: any; customType: any; }) => {
+		properties.forEach((property: { customName: any; customType: any; }) => {
 			const propertyEl = previewContainer.createEl('div', {cls: 'property-preview'});
-			propertyEl.createEl('span', {text: `Property: ${property.customValue}, Type: ${property.customType}`});
+			propertyEl.createEl('span', {text: `Property: ${property.customName}, Type: ${property.customType}`});
 		});
 
 	}

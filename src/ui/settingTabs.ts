@@ -37,7 +37,7 @@ export interface DatabaseDetails {
 	tagButton: boolean;
 	customTitleButton: boolean;
 	customTitleName: string;
-	customProperties:{ customValue: string, customType: string }[];
+	customProperties:{ customName: string, customType: string }[];
 	// customValues: string;
 	saved: boolean;
 }

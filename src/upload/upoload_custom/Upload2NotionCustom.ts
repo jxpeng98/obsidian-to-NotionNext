@@ -1,11 +1,10 @@
-import { App, Notice, requestUrl, TFile } from "obsidian";
-import { Client } from "@notionhq/client";
-import { markdownToBlocks } from "@tryfabric/martian";
+import {App, Notice, requestUrl, TFile} from "obsidian";
+import {markdownToBlocks} from "@tryfabric/martian";
 import * as yamlFrontMatter from "yaml-front-matter";
 // import * as yaml from "yaml"
 import MyPlugin from "src/main";
 import {DatabaseDetails, PluginSettings} from "../../ui/settingTabs";
-import { updateYamlInfo } from "../updateYaml";
+import {updateYamlInfo} from "../updateYaml";
 import {UploadBaseCustom} from "./BaseUpload2NotionCustom";
 
 export class Upload2NotionCustom extends UploadBaseCustom {
@@ -21,14 +20,13 @@ export class Upload2NotionCustom extends UploadBaseCustom {
 	// 暂时就直接删除，新建一个page
 	async updatePage(
 		notionID: string,
-		title: string,
 		cover: string,
 		customValues: Record<string, string>,
 		childArr: any,
 	) {
 		await this.deletePage(notionID);
 
-		const { databaseID } = this.dbDetails;
+		const {databaseID} = this.dbDetails;
 
 		const databaseCover = await this.getDataBase(
 			databaseID
@@ -38,11 +36,10 @@ export class Upload2NotionCustom extends UploadBaseCustom {
 			cover = databaseCover;
 		}
 
-		return await this.createPage(title, cover, customValues, childArr);
+		return await this.createPage(cover, customValues, childArr);
 	}
 
 	async createPage(
-		title: string,
 		cover: string,
 		customValues: Record<string, string>,
 		childArr: any,
@@ -50,42 +47,11 @@ export class Upload2NotionCustom extends UploadBaseCustom {
 
 		const {
 			databaseID,
-			customTitleButton,
-			customTitleName,
+			customProperties,
 			notionAPI
 		} = this.dbDetails;
 
-		const bodyString: any = {
-			parent: {
-				database_id: databaseID,
-			},
-			properties: {
-				[customTitleButton
-					? customTitleName
-					: "title"]: {
-					title: [
-						{
-							text: {
-								content: title,
-							},
-						},
-					],
-				},
-				...(Object.keys(customValues).reduce((acc, key) => {
-					acc[key] = {
-						rich_text: [
-							{
-								text: {
-									content: customValues[key] || '',
-								},
-							},
-						],
-					};
-					return acc;
-				}, {} as Record<string, { rich_text: { text: { content: string } }[] } >)),
-			},
-			children: childArr,
-		};
+		const bodyString: any = this.buildBodyString(customProperties, customValues, childArr);
 
 		if (cover) {
 			bodyString.cover = {
@@ -124,7 +90,6 @@ export class Upload2NotionCustom extends UploadBaseCustom {
 	}
 
 	async syncMarkdownToNotionCustom(
-		title: string,
 		cover: string,
 		customValues: Record<string, string>,
 		markdown: string,
@@ -147,13 +112,12 @@ export class Upload2NotionCustom extends UploadBaseCustom {
 		if (notionID) {
 			res = await this.updatePage(
 				notionID,
-				title,
 				cover,
 				customValues,
 				file2Block,
 			);
 		} else {
-			res = await this.createPage(title, cover, customValues, file2Block);
+			res = await this.createPage(cover, customValues, file2Block);
 		}
 		if (res.status === 200) {
 			await updateYamlInfo(markdown, nowFile, res, app, this.plugin, this.dbDetails);
@@ -162,4 +126,72 @@ export class Upload2NotionCustom extends UploadBaseCustom {
 		}
 		return res;
 	}
+
+	private buildPropertyObject(customName: string, customType: string, customValues: Record<string, any>) {
+		const value = customValues[customName] || '';
+
+		switch (customType) {
+			case "title":
+				return {
+					title: [
+						{
+							text: {
+								content: value,
+							},
+						},
+					],
+				};
+			case "rich_text":
+				return {
+					rich_text: [
+						{
+							text: {
+								content: value || '',
+							},
+						},
+					],
+				};
+			case "date":
+				return {
+					date: {
+						start: value || new Date().toISOString(),
+					},
+				};
+			case "select":
+				return {
+					select: {
+						name: value,
+					},
+				};
+			case "multi_select":
+				return {
+					multi_select: Array.isArray(value) ? value.map(item => ({name: item})) : [{name: value}],
+				};
+		}
+	}
+
+	private buildBodyString(
+		customProperties: { customName: string; customType: string }[],
+		customValues: Record<string, string>,
+		childArr: any,
+	) {
+
+		const properties: { [key: string]: any } = {};
+
+		customProperties.forEach(({customName, customType}) => {
+			properties[customName] = this.buildPropertyObject(customName, customType, customValues);
+			}
+		);
+
+
+		return {
+			parent: {
+				database_id: this.dbDetails.databaseID,
+			},
+			properties,
+			children: childArr,
+		};
+	}
+
+
 }
