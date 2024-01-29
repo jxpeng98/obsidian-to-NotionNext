@@ -20,13 +20,13 @@ jobs:
               with:
                   node-version: "18"
 
-            - name: Generate changelog
-              id: changelog
-              uses: saadmk11/changelog-ci@v1.1.2
-              with:
-                  github_token: ${{ secrets.REPO_ACCESS_TOKEN }}
-                  release_version: ${{ github.ref }}
-                  changelog_filename: CHANGELOG.md
+#            - name: Generate changelog
+#              id: changelog
+#              uses: saadmk11/changelog-ci@v1.1.2
+#              with:
+#                  github_token: ${{ secrets.REPO_ACCESS_TOKEN }}
+#                  release_version: ${{ github.ref }}
+#                  changelog_filename: CHANGELOG.md
 
             - name: Build
               id: build

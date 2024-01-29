@@ -57,4 +57,11 @@ export const ja = {
     NotionCustomSettingHeader: "Notionカスタムデータベース設定",
     NotionCustomButton: "Notionカスタマイズコマンドの切り替え",
     NotionCustomButtonDesc: "このオプションを開くと、Notionカスタムデータベース同期コマンドがコマンドパレットに表示されます",
+	CustomPropertyName: "カスタムプロパティ名",
+	CustomPropertyFirstColumn: "最初の列のカスタムプロパティ名",
+	CustomPropertyFirstColumnDesc: "最初の列のカスタムプロパティ名を入力してください",
+	CustomProperty: "カスタムプロパティ",
+	AddCustomProperty: "カスタムプロパティを追加",
+	AddNewProperty: "新しいプロパティを追加",
+	AddNewPropertyDesc: "新しいプロパティを追加してください",
 };

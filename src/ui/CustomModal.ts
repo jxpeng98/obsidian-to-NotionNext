@@ -1,6 +1,7 @@
 import {App, Modal, Setting} from "obsidian";
 import ObsidianSyncNotionPlugin from "../main";
 import {ObsidianSettingTab} from "./settingTabs";
+import {i18nConfig} from "../lang/I18n";
 
 export class CustomModal extends Modal {
 	propertyLines: Setting[] = []; // Store all property line settings
@@ -20,8 +21,8 @@ export class CustomModal extends Modal {
 
 		if (propertyIndex === 0) {
 			propertyLine
-				.setName("Title")
-				.setDesc("The title of the page, must be the first property")
+				.setName(i18nConfig.CustomPropertyFirstColumn)
+				.setDesc(i18nConfig.CustomPropertyFirstColumnDesc)
 
 				propertyLine.addText((text) => {
 					text
@@ -45,11 +46,11 @@ export class CustomModal extends Modal {
 		)
 		} else {
 		propertyLine
-			.setName("Property " + (propertyIndex))
+			.setName(i18nConfig.CustomProperty + (propertyIndex))
 
 		propertyLine.addText((text) => {
 				text
-					.setPlaceholder("Property name")
+					.setPlaceholder(i18nConfig.CustomPropertyName)
 					.setValue("")
 					.onChange(async (value) => {
 						this.properties[propertyIndex].customName = value; // Update the customValue of the specific property
@@ -104,7 +105,7 @@ export class CustomModal extends Modal {
 	display(): void {
 
 		this.containerEl.addClass("custom-modal");
-		this.titleEl.setText("Add Custom Property");
+		this.titleEl.setText(i18nConfig.AddCustomProperty);
 
 		let {contentEl} = this;
 		contentEl.empty();
@@ -112,8 +113,8 @@ export class CustomModal extends Modal {
 		const customDiv = contentEl.createDiv("custom-div");
 
 		new Setting(customDiv)
-			.setName("Add new property")
-			.setDesc("Add new property match with your notion database")
+			.setName(i18nConfig.AddNewProperty)
+			.setDesc(i18nConfig.AddNewPropertyDesc)
 			.addButton((button) => {
 				return button
 					.setTooltip("Add")

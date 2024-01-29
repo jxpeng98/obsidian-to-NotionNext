@@ -60,4 +60,11 @@ export const zh = {
 	NotionCustomSettingHeader: "Notion 自定义数据库设置",
 	NotionCustomButton: "Notion 自定义数据库同步命令开关",
 	NotionCustomButtonDesc: "打开此选项，同步到自定义数据库命令将显示在命令面板中",
+	CustomPropertyName: "自定义属性名",
+	CustomPropertyFirstColumn: "第一列属性名",
+	CustomPropertyFirstColumnDesc: "第一列必须为标题属性名",
+	CustomProperty: "自定义属性",
+	AddCustomProperty: "添加自定义属性",
+	AddNewProperty: "添加新属性",
+	AddNewPropertyDesc: "添加一个和Notion数据库匹配的新属性",
 }

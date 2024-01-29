@@ -1,7 +1,7 @@
 {
   "id": "share-to-notionnext",
   "name": "Share to NotionNext",
-  "version": "2.2.0",
+  "version": "2.2.1",
   "minAppVersion": "0.0.1",
   "description": "Shares obsidian md file to notion with notion api for NotionNext web deploy, originally created by EasyChris/obsidian-to-notion.",
   "author": "EasyChris, jxpeng98",

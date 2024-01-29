@@ -21,6 +21,13 @@
 - [x] Support edit for database details in plugin settings. 支持编辑数据库详情
 
 ## Update
+### 2.2.1
+
+- improve the localisation for the custom properties setting. 改进自定义属性设置的本地化。
+
+**Warning: the edit function for the custom properties is not perfect for now. You need to re-enter all the properties if you want to edit the properties.**
+
+**注意：自定义属性的编辑功能现在还不完善。如果你想编辑属性，你需要重新输入所有的属性。**
 
 ### 2.2.0 (Big Update)
 

@@ -65,4 +65,11 @@ export const en = {
 	NotionCustomSettingHeader: "Notion Custom Database Settings",
 	NotionCustomButton: "Notion Customised command switch",
 	NotionCustomButtonDesc: "Open this option, Sync to Notion Customised Database command will be displayed in the command palette",
+	CustomPropertyName: "Property Name",
+	CustomPropertyFirstColumn: "Title Column",
+	CustomPropertyFirstColumnDesc: "The title of the page, must be the first property",
+	CustomProperty: "Property",
+	AddCustomProperty: "Add Custom Property",
+	AddNewProperty: "Add New Property",
+	AddNewPropertyDesc: "Add new property match with your notion database",
 }
