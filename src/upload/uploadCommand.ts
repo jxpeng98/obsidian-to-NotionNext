@@ -113,7 +113,7 @@ export async function uploadCommandCustom(
 		return;
 	}
 
-	const {markDownData, nowFile, cover, customValues} = await getNowFileMarkdownContentCustom(app, dbDetails, settings)
+	const {markDownData, nowFile, cover, customValues} = await getNowFileMarkdownContentCustom(app, dbDetails)
 
 	if (markDownData) {
 		const { basename} = nowFile;
