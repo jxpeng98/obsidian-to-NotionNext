@@ -1,13 +1,12 @@
-import {App, Notice, TAbstractFile, TFile} from "obsidian";
+import {App, Notice} from "obsidian";
 import {i18nConfig} from "../../lang/I18n";
-import {DatabaseDetails, PluginSettings} from "../../ui/settingTabs";
+import {DatabaseDetails} from "../../ui/settingTabs";
 
 export async function getNowFileMarkdownContentCustom(
-    app: App,
+	app: App,
 	dbDetails: DatabaseDetails,
-    settings: PluginSettings,
 ) {
-    const nowFile = app.workspace.getActiveFile();
+	const nowFile = app.workspace.getActiveFile();
 	if (!nowFile) {
 		new Notice(i18nConfig["open-file"]);
 		return;
@@ -15,36 +14,44 @@ export async function getNowFileMarkdownContentCustom(
 	let cover = '';
 	let customValues: Record<string, any> = {};
 
-    const FileCache = app.metadataCache.getFileCache(nowFile);
-    try {
-            cover = FileCache.frontmatter.coverurl;
+	const FileCache = app.metadataCache.getFileCache(nowFile);
+	try {
+		cover = FileCache.frontmatter.coverurl;
 
-		// Get custom property names from dbDetails
-		const customPropertyValues = dbDetails.customProperties.map(property => property.customName);
+		// Get custom property names from dbDetails excluding the title type property
+		const customPropertyNames = dbDetails.customProperties
+			.filter(property => property.customType !== 'title') // Exclude 'title' type property
+			.map(property => property.customName);
 
-		// Extract custom values from the frontmatter based on the names
-		customPropertyValues.forEach( propertyName => {
-			if (FileCache.frontmatter[propertyName] !== undefined) {
+		// Extract custom values from the front matter based on the names
+		customPropertyNames.forEach(propertyName => {
+			if (FileCache.frontmatter && FileCache.frontmatter[propertyName] !== undefined) {
 				customValues[propertyName] = FileCache.frontmatter[propertyName];
 			}
 		});
 
-		customValues['title'] = nowFile.basename; // Use 'basename' for the file name without extension
+		// Check if any of the customProperties has a customType of 'title'
+		const titleProperty = dbDetails.customProperties.find(property => property.customType === 'title');
 
-    } catch (error) {
-        new Notice(i18nConfig["set-tags-fail"]);
-    }
+		// If a 'title' type property exists, use the file's basename as its value
+		if (titleProperty) {
+			customValues[titleProperty.customName] = nowFile.basename; // Use 'basename' for the file name without extension
+		}
 
-    if (nowFile) {
-        const markDownData = await nowFile.vault.read(nowFile);
-        return {
-            markDownData,
-            nowFile,
-            cover,
-            customValues,
-        };
-    } else {
-        new Notice(i18nConfig["open-file"]);
-        return;
-    }
+	} catch (error) {
+		new Notice(i18nConfig["set-tags-fail"]);
+	}
+
+	if (nowFile) {
+		const markDownData = await nowFile.vault.read(nowFile);
+		return {
+			markDownData,
+			nowFile,
+			cover,
+			customValues,
+		};
+	} else {
+		new Notice(i18nConfig["open-file"]);
+		return;
+	}
 }

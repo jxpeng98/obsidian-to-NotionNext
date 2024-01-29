@@ -107,7 +107,9 @@ export class Upload2NotionCustom extends UploadBaseCustom {
 		const file2Block = markdownToBlocks(__content, options);
 		const frontmasster =
 			app.metadataCache.getFileCache(nowFile)?.frontmatter;
-		const notionID = frontmasster ? frontmasster.notionID : null;
+		const {abName} = this.dbDetails
+		const notionIDKey = `NotionID-${abName}`;
+		const notionID = frontmasster ? frontmasster[notionIDKey] : null;
 
 		if (notionID) {
 			res = await this.updatePage(

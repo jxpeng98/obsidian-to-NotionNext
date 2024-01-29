@@ -228,7 +228,7 @@ export class Upload2NotionNext extends UploadBaseNext {
         const file2Block = markdownToBlocks(__content, options);
         const frontmasster = app.metadataCache.getFileCache(nowFile)?.frontmatter
 		const {abName} = this.dbDetails
-		const notionIDKey = `${abName}-NotionID`;
+		const notionIDKey = `NotionID-${abName}`;
 		const notionID = frontmasster ? frontmasster[notionIDKey] : null;
 
 
