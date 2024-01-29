@@ -3,6 +3,7 @@ import {SettingModal} from "./settingModal";
 import ObsidianSyncNotionPlugin from "../main";
 import {DatabaseDetails, ObsidianSettingTab} from "./settingTabs";
 import {i18nConfig} from "../lang/I18n";
+import {CustomModal} from "./CustomModal";
 
 export class EditModal extends SettingModal {
 	dataTemp: Record<string, any> = {
@@ -21,6 +22,7 @@ export class EditModal extends SettingModal {
 		customTitleButtonTemp: false,
 		// customTitleButtonTempInd: false,
 		customTitleNameTemp: '',
+		customPropertiesTemp: [],
 		// customTitleNameTempInd: false,
 		// customValues: '',
 		savedTemp: false,
@@ -42,6 +44,7 @@ export class EditModal extends SettingModal {
 		customTitleButtonPrev: false,
 		// customTitleButtonPrevInd: false,
 		customTitleNamePrev: '',
+		customPropertiesPrev: [],
 		// customTitleNamePrevInd: false,
 		// customValues: '',
 		savedPrev: false,
@@ -67,6 +70,7 @@ export class EditModal extends SettingModal {
 			this.dataTemp.tagButtonTemp = dbDetails.tagButton;
 			this.dataTemp.customTitleButtonTemp = dbDetails.customTitleButton;
 			this.dataTemp.customTitleNameTemp = dbDetails.customTitleName;
+			this.dataTemp.customPropertiesTemp = dbDetails.customProperties;
 			// this.dataTemp.customValues = dbDetails.customValues;
 			this.dataTemp.savedTemp = dbDetails.saved;
 
@@ -79,6 +83,7 @@ export class EditModal extends SettingModal {
 			this.dataPrev.tagButtonPrev = dbDetails.tagButton;
 			this.dataPrev.customTitleButtonPrev = dbDetails.customTitleButton;
 			this.dataPrev.customTitleNamePrev = dbDetails.customTitleName;
+			this.dataPrev.customPropertiesPrev = dbDetails.customProperties;
 			// this.dataTemp.customValues = dbDetails.customValues;
 			this.dataPrev.savedPrev = dbDetails.saved;
 		}
@@ -103,7 +108,7 @@ export class EditModal extends SettingModal {
 						.addOption('none', '')
 						.addOption('general', i18nConfig.databaseGeneral)
 						.addOption('next', i18nConfig.databaseNext)
-						// .addOption('custom', i18nConfig.databaseCustom)
+						.addOption('custom', i18nConfig.databaseCustom)
 						.setValue(this.dataTemp.databaseFormatTemp)
 						.onChange(async (value) => {
 							this.dataTemp.databaseFormatTemp = value;
@@ -172,9 +177,9 @@ export class EditModal extends SettingModal {
 				.setDesc(i18nConfig.NotionCustomTitleDesc)
 				.addToggle((toggle) =>
 					toggle
-						.setValue(this.dataTemp.CustomTitleButtonTemp)
+						.setValue(this.dataTemp.customTitleButtonTemp)
 						.onChange(async (value) => {
-							this.dataTemp.CustomTitleButtonTemp = value;
+							this.dataTemp.customTitleButtonTemp = value;
 
 							this.updateSettingEl(CustomNameEl, value)
 
@@ -187,8 +192,8 @@ export class EditModal extends SettingModal {
 
 
 			// add custom title name
-			const CustomNameEl = this.createStyleDiv('custom-name', (this.dataTemp.CustomTitleButtonTemp), nextTabs);
-			this.createSettingEl(CustomNameEl, i18nConfig.NotionCustomTitleName, i18nConfig.NotionCustomTitleNameDesc, 'text', i18nConfig.NotionCustomTitleText, this.dataTemp.CustomTitleNameTemp,'dataTemp', 'CustomTitleNameTemp')
+			const CustomNameEl = this.createStyleDiv('custom-name', (this.dataTemp.customTitleButtonTemp), nextTabs);
+			this.createSettingEl(CustomNameEl, i18nConfig.NotionCustomTitleName, i18nConfig.NotionCustomTitleNameDesc, 'text', i18nConfig.NotionCustomTitleText, this.dataTemp.customTitleNameTemp,'dataTemp', 'customTitleNameTemp')
 
 
 			// add api key
@@ -211,70 +216,46 @@ export class EditModal extends SettingModal {
 			// add api key
 			this.createSettingEl(nextTabs, i18nConfig.NotionAPI, i18nConfig.NotionAPIDesc, 'password', i18nConfig.NotionAPIText, this.dataTemp.notionAPITemp, 'dataTemp','notionAPITemp')
 
-
 			// add database id
 			this.createSettingEl(nextTabs, i18nConfig.DatabaseID, i18nConfig.NotionAPIDesc, 'password', i18nConfig.DatabaseIDText, this.dataTemp.databaseIDTemp, 'dataTemp','databaseIDTemp')
 
 		} else if (value === 'custom') {
-			nextTabs.createEl('h3', { text: i18nConfig.NotionCustomSettingHeader});
+
+			nextTabs.createEl('h3', {text: i18nConfig.NotionCustomSettingHeader});
 
 			// add full name
-			this.createSettingEl(nextTabs, i18nConfig.databaseFullName, i18nConfig.databaseFullNameDesc, 'text', i18nConfig.databaseFullNameText, this.dataTemp.databaseFullNameTemp,'dataTemp', 'databaseFullNameTemp')
+			this.createSettingEl(nextTabs, i18nConfig.databaseFullName, i18nConfig.databaseFullNameDesc, 'text', i18nConfig.databaseFullNameText, this.dataTemp.databaseFullNameTemp, 'dataTemp', 'databaseFullNameTemp')
 
 			// add abbreviate name
-			this.createSettingEl(nextTabs, i18nConfig.databaseAbbreviateName, i18nConfig.databaseAbbreviateNameDesc, 'text', i18nConfig.databaseAbbreviateNameText, this.dataTemp.databaseAbbreviateNameTemp, 'dataTemp','databaseAbbreviateNameTemp')
-
-			// tag button
-			this.createSettingEl(nextTabs, i18nConfig.NotionTagButton, i18nConfig.NotionTagButtonDesc, 'toggle', i18nConfig.NotionCustomTitleText, this.dataTemp.tagButtonTemp, 'dataTemp','tagButtonTemp')
-
-			// add custom title button
-
-			new Setting(nextTabs)
-				.setName(i18nConfig.NotionCustomTitle)
-				.setDesc(i18nConfig.NotionCustomTitleDesc)
-				.addToggle((toggle) =>
-					toggle
-						.setValue(this.dataTemp.CustomTitleButtonTemp)
-						.onChange(async (value) => {
-							this.dataTemp.CustomTitleButtonTemp = value;
-
-							this.updateSettingEl(CustomNameEl, value)
-
-							// this.updateSettingEl(CustomValuesEl, value)
-
-							// await this.plugin.saveSettings();
-							// await this.plugin.commands.updateCommand();
-						})
-				);
-
-
-			// add custom title name
-			const CustomNameEl = this.createStyleDiv('custom-name', (this.dataTemp.CustomTitleButtonTemp), nextTabs);
-			this.createSettingEl(CustomNameEl, i18nConfig.NotionCustomTitleName, i18nConfig.NotionCustomTitleNameDesc, 'text', i18nConfig.NotionCustomTitleText, this.dataTemp.CustomTitleNameTemp,'dataTemp', 'CustomTitleNameTemp')
-
-			// // add custom values
-			// const CustomValuesEl = this.createStyleDiv('custom-values', (this.dataTemp.CustomTitleButton), nextTabs);
-			// new Setting(CustomValuesEl)
-			// 	.setName(i18nConfig.NotionCustomValues)
-			// 	.setDesc(i18nConfig.NotionCustomValuesDesc)
-			// 	.addTextArea((text) => {
-			// 		return text
-			// 			.setPlaceholder(i18nConfig.NotionCustomValuesText)
-			// 			.setValue(this.dataTemp.CustomValues)
-			// 			.onChange(async (value) => {
-			// 				this.dataTemp.CustomValues = value;
-			// 				await this.plugin.saveSettings();
-			// 			});
-			// 	});
-
+			this.createSettingEl(nextTabs, i18nConfig.databaseAbbreviateName, i18nConfig.databaseAbbreviateNameDesc, 'text', i18nConfig.databaseAbbreviateNameText, this.dataTemp.databaseAbbreviateNameTemp, 'dataTemp', 'databaseAbbreviateNameTemp')
 
 			// add api key
-			const notionAPIGeneralEl = this.createStyleDiv('api-general', this.plugin.settings.GeneralButton, nextTabs);
-			this.createSettingEl(notionAPIGeneralEl, i18nConfig.NotionAPI, i18nConfig.NotionAPIDesc, 'password', i18nConfig.NotionAPIText, this.dataTemp.notionAPITemp, 'dataTemp','notionAPITemp')
+			this.createSettingEl(nextTabs, i18nConfig.NotionAPI, i18nConfig.NotionAPIDesc, 'password', i18nConfig.NotionAPIText, this.dataTemp.notionAPITemp, 'dataTemp', 'notionAPITemp')
 
 			// add database id
-			const databaseIDGeneralEl = this.createStyleDiv('databaseID-general', this.plugin.settings.GeneralButton, nextTabs);
-			this.createSettingEl(databaseIDGeneralEl, i18nConfig.DatabaseID, i18nConfig.NotionAPIDesc, 'password', i18nConfig.DatabaseIDText, this.dataTemp.databaseIDTemp, 'dataTemp', 'databaseIDTemp')
+			this.createSettingEl(nextTabs, i18nConfig.DatabaseID, i18nConfig.NotionAPIDesc, 'password', i18nConfig.DatabaseIDText, this.dataTemp.databaseIDTemp, 'dataTemp', 'databaseIDTemp')
+
+			// add new property button
+			new Setting(nextTabs)
+				.setName(i18nConfig.NotionCustomValues)
+				.setDesc(i18nConfig.NotionCustomValuesDesc)
+				.addButton((button: ButtonComponent) => {
+						return button
+							.setTooltip('Add new property')
+							.setIcon('plus')
+							.onClick(async () => {
+								let customModal = new CustomModal(this.app);
+
+								customModal.onClose = () => {
+
+									this.renderCustomPreview(customModal.properties, nextTabs)
+									this.dataTemp.customPropertiesTemp = customModal.properties;
+								}
+
+								customModal.open();
+							});
+					}
+				);
 		}
 
 	}

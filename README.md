@@ -9,22 +9,47 @@
 
 [中文文档](README-zh.md)
 
-Thanks to the [original author](https://github.com/EasyChris/obsidian-to-notion) for developing such a useful plugin that can synchronize Obsidian to Notion. However, the original repository can only sync Name and Tag information. For those like me who use [NotionNext](https://github.com/tangly1024/NotionNext) to set up their website, this presents some limitations. Every time I import, I need to make a lot of modifications.
+**Now, support both NotionNext and General databases with customised properties.**
 
-Thus, based on the [original author's work](https://github.com/EasyChris/obsidian-to-notion), I've added a feature to match the [NotionNext](https://github.com/tangly1024/NotionNext) template. This way, you can edit directly in Obsidian and publish with a single click after organizing.
-
-**Now, support both NotionNext and General databases.**
-
-**现在支持NotionNext和普通Notion数据库。**
+**现在支持NotionNext和普通Notion数据库，可自定义数据库列表。**
 
 ## TODO List
 
-- [ ] Support custom properties for Notion General database. 支持自定义属性
+- [x] Support custom properties for Notion General database. 支持自定义属性
+- [ ] Support group upload with one click 支持一键多数据库上传
 - [x] Support preview for database details in plugin settings. 支持预览数据库详情
 - [x] Support edit for database details in plugin settings. 支持编辑数据库详情
 
 ## Update
 
+### 2.2.0 (Big Update)
+
+- add the support for custom properties in the Notion General database. 支持自定义属性
+	- [x] `title`, which is the first column of the database
+	- [x] 'Text'
+	- [x] 'Number'
+	- [x] 'Date'
+	- [x] 'Checkbox'
+	- [x] 'Select'
+	- [x] 'Multi-select'
+	- [x] 'URL'
+	- [x] 'Email'
+	- [x] 'Phone'
+	- [x] 'File' (**Only support external embedded files**)
+
+![](https://minioapi.pjx.ac.cn/img1/2024/01/0cd99007409feede77bf5a3291e88af3.png)
+- Once you create the properties, you can preview the database details in the plugin settings.
+![](https://minioapi.pjx.ac.cn/img1/2024/01/665139962cc4cee2a0cb576b508b29f2.png)
+
+---
+
+Thanks to the [original author](https://github.com/EasyChris/obsidian-to-notion) for developing such a useful plugin that can synchronize Obsidian to Notion. However, the original repository can only sync Name and Tag information. For those like me who use [NotionNext](https://github.com/tangly1024/NotionNext) to set up their website, this presents some limitations. Every time I import, I need to make a lot of modifications.
+
+Thus, based on the [original author's work](https://github.com/EasyChris/obsidian-to-notion), I've added a feature to match the [NotionNext](https://github.com/tangly1024/NotionNext) template. This way, you can edit directly in Obsidian and publish with a single click after organizing.
+
+---
+
+## Archive Update
 ### 2.1.0
 
 - add confirmation interface for deleting a database 增加删除数据库的确认界面

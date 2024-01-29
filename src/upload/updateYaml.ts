@@ -1,6 +1,6 @@
 import { App, Notice, TFile } from "obsidian";
 import ObsidianSyncNotionPlugin from "../main";
-import {DatabaseDetails, PluginSettings} from "../ui/settingTabs";
+import {DatabaseDetails} from "../ui/settingTabs";
 
 export async function updateYamlInfo(
     yamlContent: string,

@@ -1,7 +1,7 @@
 import { i18nConfig } from "src/lang/I18n";
 import {Editor, MarkdownView, setTooltip} from "obsidian";
 import { FuzzySuggester, DatabaseList } from "./FuzzySuggester";
-import { uploadCommandGeneral, uploadCommandNext } from "../upload/uploadCommand";
+import {uploadCommandCustom, uploadCommandGeneral, uploadCommandNext} from "../upload/uploadCommand";
 import ObsidianSyncNotionPlugin from "src/main";
 import {DatabaseDetails} from "../ui/settingTabs";
 
@@ -94,11 +94,11 @@ export default class RibbonCommands {
 				await uploadCommandGeneral(this.plugin, this.plugin.settings, dbDetails, this.plugin.app);
 			};
 		}
-		// else if (dbDetails.format === 'custom') {
-		// 	editorCallback = async (editor, view) => {
-		// 		await uploadCommandGeneral(this.plugin, dbDetails, this.plugin.app);
-		// 	};
-		// }
+		else if (dbDetails.format === 'custom') {
+			editorCallback = async (editor, view) => {
+				await uploadCommandCustom(this.plugin, this.plugin.settings, dbDetails, this.plugin.app);
+			};
+		}
 
 		this.Ncommand.push({ id: commandId, name: commandName, editorCallback });
 	}

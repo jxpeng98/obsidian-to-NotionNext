@@ -16,8 +16,8 @@ export interface PluginSettings {
     proxy: string;
     GeneralButton: boolean;
     tagButton: boolean;
-    CustomTitleButton: boolean;
-    CustomTitleName: string;
+    customTitleButton: boolean;
+    customTitleName: string;
     notionAPIGeneral: string;
     databaseIDGeneral: string;
     CustomButton: boolean;
@@ -37,6 +37,7 @@ export interface DatabaseDetails {
 	tagButton: boolean;
 	customTitleButton: boolean;
 	customTitleName: string;
+	customProperties:{ customName: string, customType: string }[];
 	// customValues: string;
 	saved: boolean;
 }
@@ -50,8 +51,8 @@ export const DEFAULT_SETTINGS: PluginSettings = {
     proxy: "",
     GeneralButton: true,
     tagButton: true,
-    CustomTitleButton: false,
-    CustomTitleName: "",
+    customTitleButton: false,
+    customTitleName: "",
     notionAPIGeneral: "",
     databaseIDGeneral: "",
     CustomButton: false,
@@ -107,6 +108,7 @@ export class ObsidianSettingTab extends PluginSettingTab {
 									tagButton: modal.data.tagButton,
 									customTitleButton: modal.data.customTitleButton,
 									customTitleName: modal.data.customTitleName,
+									customProperties: modal.data.customProperties,
 									// customValues: modal.data.customValues,
 									saved: modal.data.saved,
 								}
@@ -271,6 +273,7 @@ export class ObsidianSettingTab extends PluginSettingTab {
 										tagButton: modal.dataTemp.tagButtonTemp,
 										customTitleButton: modal.dataTemp.customTitleButtonTemp,
 										customTitleName: modal.dataTemp.customTitleNameTemp,
+										customProperties: modal.dataTemp.customPropertiesTemp,
 										// customValues: modal.data.customValues,
 										saved: modal.dataTemp.savedTemp,
 									}
@@ -284,6 +287,7 @@ export class ObsidianSettingTab extends PluginSettingTab {
 										tagButton: modal.dataPrev.tagButtonPrev,
 										customTitleButton: modal.dataPrev.customTitleButtonPrev,
 										customTitleName: modal.dataPrev.customTitleNamePrev,
+										customProperties: modal.dataPrev.customPropertiesPrev,
 										// customValues: modal.data.customValues,
 										saved: modal.dataPrev.savedPrev,
 									}
