@@ -23,10 +23,11 @@ export const en = {
 	NotionAPIDesc: "Generate from https://www.notion.so/my-integrations",
 	NotionAPIText: "Enter your Notion API Token",
 	DatabaseID: "Database ID",
+	DatabaseIDDesc: "Collect from the top-right Share --> Publish",
 	DatabaseIDText: "Enter your Database ID",
 	BannerUrl: "Banner url (optional)",
 	BannerUrlDesc:
-"Default is empty, if you want to show a banner, please enter the url (like: https://minioapi.pjx.ac.cn/img1/2023/11/b7b40a0724e93b7d7ab494bb3b8a2da8.png)",
+"Default is empty, if you want to show a banner, please enter the url (like: https://abc.com/b.png)",
 	BannerUrlText: "Enter your banner url",
 	NotionUser: "Notion ID (username, optional)",
 	NotionUserDesc:

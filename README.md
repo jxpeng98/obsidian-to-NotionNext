@@ -21,6 +21,11 @@
 - [x] Support edit for database details in plugin settings. 支持编辑数据库详情
 
 ## Update
+
+### 2.2.2
+
+- Fix the setting description of database. 修复数据库设置的描述错误。
+
 ### 2.2.1
 
 - improve the localisation for the custom properties setting. 改进自定义属性设置的本地化。

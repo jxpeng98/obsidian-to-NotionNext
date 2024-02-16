@@ -178,7 +178,7 @@ export class SettingModal extends Modal {
 			this.createSettingEl(nextTabs, i18nConfig.NotionAPI, i18nConfig.NotionAPIDesc, 'password', i18nConfig.NotionAPIText, this.data.notionAPI, 'data', 'notionAPI')
 
 			// add database id
-			this.createSettingEl(nextTabs, i18nConfig.DatabaseID, i18nConfig.NotionAPIDesc, 'password', i18nConfig.DatabaseIDText, this.data.databaseID, 'data', 'databaseID')
+			this.createSettingEl(nextTabs, i18nConfig.DatabaseID, i18nConfig.DatabaseIDDesc, 'password', i18nConfig.DatabaseIDText, this.data.databaseID, 'data', 'databaseID')
 
 
 		} else if (value === 'next') {
@@ -196,7 +196,7 @@ export class SettingModal extends Modal {
 
 
 			// add database id
-			this.createSettingEl(nextTabs, i18nConfig.DatabaseID, i18nConfig.NotionAPIDesc, 'password', i18nConfig.DatabaseIDText, this.data.databaseID, 'data', 'databaseID')
+			this.createSettingEl(nextTabs, i18nConfig.DatabaseID, i18nConfig.DatabaseIDDesc, 'password', i18nConfig.DatabaseIDText, this.data.databaseID, 'data', 'databaseID')
 
 		} else if (value === 'custom') {
 
@@ -212,7 +212,7 @@ export class SettingModal extends Modal {
 			this.createSettingEl(nextTabs, i18nConfig.NotionAPI, i18nConfig.NotionAPIDesc, 'password', i18nConfig.NotionAPIText, this.data.notionAPI, 'data', 'notionAPI')
 
 			// add database id
-			this.createSettingEl(nextTabs, i18nConfig.DatabaseID, i18nConfig.NotionAPIDesc, 'password', i18nConfig.DatabaseIDText, this.data.databaseID, 'data', 'databaseID')
+			this.createSettingEl(nextTabs, i18nConfig.DatabaseID, i18nConfig.DatabaseIDDesc, 'password', i18nConfig.DatabaseIDText, this.data.databaseID, 'data', 'databaseID')
 
 			// add new property button
 			new Setting(nextTabs)

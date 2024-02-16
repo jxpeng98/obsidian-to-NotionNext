@@ -23,10 +23,11 @@ export const zh = {
 	NotionAPIDesc: "从 https://www.notion.so/my-integrations 生成",
 	NotionAPIText: "输入你的 Notion API 令牌",
 	DatabaseID: "数据库 ID",
+	DatabaseIDDesc: "从右上角的分享 --> 发布中获取",
 	DatabaseIDText: "输入你的数据库 ID",
 	BannerUrl: "封面图片地址（可选）",
 	BannerUrlDesc:
-		"默认为空，如果你想显示封面图片，请输入图片地址（例如：https://minioapi.pjx.ac.cn/img1/2023/11/b7b40a0724e93b7d7ab494bb3b8a2da8.png）",
+		"默认为空，如果你想显示封面图片，请输入图片地址（例如：https://abc.com/b.png）",
 	BannerUrlText: "输入你的封面图片地址",
 	NotionUser: "Notion ID（用户名，可选）",
 	NotionUserDesc:
