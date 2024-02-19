@@ -67,7 +67,7 @@ export class CustomModal extends Modal {
 					.addOption("multi_select", "Multi-Select")
 					.addOption("date", "Date")
 					// .addOption("person", "Person")
-					.addOption("file", "Files & Media")
+					.addOption("files", "Files & Media")
 					.addOption("checkbox", "Checkbox")
 					.addOption("url", "URL")
 					.addOption("email", "Email")
