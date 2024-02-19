@@ -1,5 +1,5 @@
-# Changelog v2.2.2
+# Changelog v2.2.3
 
 ## Bug Fixes
 
-- Fix the setting description of database. 修复数据库设置的描述错误。
+- Fix a bug that 'text' property cannot be synchronized. 修复了一个无法同步'text'属性的bug。

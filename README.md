@@ -7,6 +7,7 @@
 
 [//]: # ([![Github all releases]&#40;https://img.shields.io/github/downloads/jxpeng98/obsidian-to-NotionNext/total.svg&#41;]&#40;https://GitHub.com/jxpeng98/obsidian-to-NotionNext/releases/&#41;)
 
+
 [中文文档](README-zh.md)
 
 **Now, support both NotionNext and General databases with customised properties.**
@@ -15,12 +16,17 @@
 
 ## TODO List
 
-- [x] Support custom properties for Notion General database. 支持自定义属性
+- [ ] Modify the Edit function for the custom properties. 改进自定义属性的编辑功能
 - [ ] Support group upload with one click 支持一键多数据库上传
+- [x] Support custom properties for Notion General database. 支持自定义属性
 - [x] Support preview for database details in plugin settings. 支持预览数据库详情
 - [x] Support edit for database details in plugin settings. 支持编辑数据库详情
 
 ## Update
+
+### 2.2.3
+
+- Fix a bug that 'text' property cannot be synchronized. 修复了一个无法同步'text'属性的bug。
 
 ### 2.2.2
 

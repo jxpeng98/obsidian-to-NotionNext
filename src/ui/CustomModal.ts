@@ -45,7 +45,7 @@ export class CustomModal extends Modal {
 				}
 		)
 		} else {
-		propertyLine
+			propertyLine
 			.setName(i18nConfig.CustomProperty + (propertyIndex))
 
 		propertyLine.addText((text) => {
@@ -60,6 +60,7 @@ export class CustomModal extends Modal {
 
 		propertyLine.addDropdown((dropdown) => {
 				dropdown
+					// .addOption("none", '')
 					.addOption("text", "Text")
 					.addOption("number", "Number")
 					.addOption("select", "Select")
@@ -78,7 +79,7 @@ export class CustomModal extends Modal {
 					// .addOption("created_by", "Created by")
 					// .addOption("last_edited_time", "Last Edited Time")
 					// .addOption("last_edited_by", "Last Edited By")
-					.setValue("text")
+					.setValue("")
 					.onChange(async (value) => {
 						this.properties[propertyIndex].customType = value; // Update the customType of the specific property
 					});
