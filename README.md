@@ -23,7 +23,7 @@
 - [x] Support edit for database details in plugin settings. 支持编辑数据库详情
 
 ## How to use
-You need four steps to use this plugin in your Obsidian.
+You need seven steps to use this plugin in your Obsidian.
 1. Create a database in your Notion workspace.
 Open Notion, clink the `+` button on the left side, and 'Add a page' -> select 'Table' -> 'New database'.
 2. On the right-top corner, click the 'Share' -> 'Publish' -> 'Publish' -> copy the database id from the URL.
