@@ -3,7 +3,7 @@
 [![Test](https://github.com/jxpeng98/obsidian-to-NotionNext/actions/workflows/test.yml/badge.svg)](https://github.com/jxpeng98/obsidian-to-NotionNext/actions/workflows/test.yml)
 [![Release](https://github.com/jxpeng98/obsidian-to-NotionNext/actions/workflows/release.yml/badge.svg)](https://github.com/jxpeng98/obsidian-to-NotionNext/actions/workflows/release.yml)
 [![Obsidian Downloads](https://img.shields.io/badge/dynamic/json?logo=obsidian&color=%23483699&label=downloads&query=%24%5B%22share-to-notionnext%22%5D.downloads&url=https%3A%2F%2Fraw.githubusercontent.com%2Fobsidianmd%2Fobsidian-releases%2Fmaster%2Fcommunity-plugin-stats.json)](https://GitHub.com/jxpeng98/obsidian-to-NotionNext/releases/)
-[![GitHub release (with filter)](https://img.shields.io/github/v/release/jxpeng98/obsidian-to-NotionNext)](https://github.com/jxpeng98/obsidian-to-NotionNext/releases/)
+[![GitHub release (with filter)](https://img.shields.io/github/package-json/v/jxpeng98/obsidian-to-NotionNext)](https://github.com/jxpeng98/obsidian-to-NotionNext/releases/)
 
 [//]: # ([![Github all releases]&#40;https://img.shields.io/github/downloads/jxpeng98/obsidian-to-NotionNext/total.svg&#41;]&#40;https://GitHub.com/jxpeng98/obsidian-to-NotionNext/releases/&#41;)
 
@@ -21,6 +21,18 @@
 - [x] Support custom properties for Notion General database. 支持自定义属性
 - [x] Support preview for database details in plugin settings. 支持预览数据库详情
 - [x] Support edit for database details in plugin settings. 支持编辑数据库详情
+
+## How to use
+You need four steps to use this plugin in your Obsidian.
+1. Create a database in your Notion workspace.
+Open Notion, clink the `+` button on the left side, and 'Add a page' -> select 'Table' -> 'New database'.
+2. On the right-top corner, click the 'Share' -> 'Publish' -> 'Publish' -> copy the database id from the URL.
+3. go to [Notion API](https://www.notion.com/my-integrations) to create a new integration, and copy the token.
+4. Go back to your created Notion database, click the right-top '...' -> connections -> connect to -> find the integration you created and connect it.
+5. Go to obsidian settings -> community plugins -> search 'NotionNext' -> install it.
+6. Create a database in the plugin settings, and fill in the database details and all properties you want to sync (**Note: the name of the properties is case-sensitive.**).
+7. Create a new note in Obsidian, and fill in the frontmatter with the properties you want to sync.
+
 
 ## Update
 
