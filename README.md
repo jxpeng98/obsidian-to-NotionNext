@@ -31,8 +31,53 @@ Open Notion, clink the `+` button on the left side, and 'Add a page' -> select '
 4. Go back to your created Notion database, click the right-top '...' -> connections -> connect to -> find the integration you created and connect it.
 5. Go to obsidian settings -> community plugins -> search 'NotionNext' -> install it.
 6. Create a database in the plugin settings, and fill in the database details and all properties you want to sync (**Note: the name of the properties is case-sensitive.**).
+   - There are three type of database that you can use:
+	 - NotionNext: the database for the NotionNext template.
+	 - General: the database for the general Notion database (Only have title and tags columns)
+	 - Custom: the database for the custom properties (You can customise the properties you want to sync)
 7. Create a new note in Obsidian, and fill in the frontmatter with the properties you want to sync.
 
+## 使用方法
+如果你想使用这个插件，你需要完成下边的七个步骤。
+1. 首先在你的Notion中创建一个数据库。
+2. 点击右上角的'分享' -> '发布' -> '发布' -> 然后复制URL中的数据库ID。(版本不同，可能id的形式也不同。只需要复制在？之前的纯数字部分应该就可以了)
+3. 去[Notion API](https://www.notion.com/my-integrations)创建一个新的API，然后复制token。
+4. 回到你创建的Notion数据库，点击右上角的'...' -> 连接 -> 连接到 -> 把你刚才创建的API绑定到你的数据库
+5. 回到Obsidian的设置 -> 社区插件 -> 搜索'NotionNext' -> 安装
+6. 在插件设置中创建一个数据库，然后填写数据库的详情和你想要同步的属性 (**注意：Notion会识别表头的大小写，一定要和notion中的表头保持大小写一致**)。
+   - 你可以使用三种类型的数据库：
+	 - NotionNext: 用于NotionNext模板的数据库。
+	 - General: 用于普通的Notion数据库（只有title和tags两个属性）
+	 - Custom: 用于自定义属性的数据库（你可以自定义你想要同步的属性）
+7. 在Obsidian中创建一个新的笔记，然后在frontmatter中写入你想要的属性。
+
+## Example
+```plain
+---
+# default value has been set.
+# for any unwanted value, you can delete it or set it to empty.
+# for example, if you donot want to set password, you can delete password: "1234" or set it to password: ""
+# 我已经在插件中设置了默认值，如果有不需要的选项，可以直接删除。
+# 例如你不需要密码选项，你可以将password: "1234"删除，或者将它设置为空。
+# !!!!!!!!!!!!
+# 现在阶段一定不要修改表头的名字， please do not change the name of the header in YAML front matter
+# !!!!!!!!!!!!
+titleicon: 📎 # emoji icon, default is 📜， 默认是📜
+date: 2023-07-23 # default is today， 默认是今天。 Format is YYYY-MM-DD， 格式是YYYY-MM-DD
+coverurl: https://img.jxpeng.dev/2023/08/843e27a210847f05a0f7cfb121fec100.jpg # default is empty， 默认是空
+type: Post # Post or Page, default is Post， 默认是Post
+slug: test # slug for url, default is empty， 默认是空
+stats: Draft # Draft, Invisible, Published, default is Draft， 默认是Draft 
+category: test # default is 'Obsidian'， 默认是'Obsidian'
+summary: this is a summary for test post # default is empty， 默认是空
+icon: fa-solid fa-camera # you can ignore this, default is empty， 默认是空，可直接删除
+password: "1234" # if you donot want to set password, you can delete this line, default is empty， 默认是空，可直接删除
+# 现在必须开启tags选项，否则会报错
+tags:
+  - test  # tags for post
+  - web # add more tags if you want
+---
+```
 
 ## Update
 
@@ -81,7 +126,8 @@ Thus, based on the [original author's work](https://github.com/EasyChris/obsidia
 
 ---
 
-## Archive Update
+<details> <summary> Archive Update </summary>
+
 ### 2.1.0
 
 - add confirmation interface for deleting a database 增加删除数据库的确认界面
@@ -218,7 +264,9 @@ If you turn off the button for the NotionNext database, you won't see the option
 
 - [x] Removed the `convert tag` option. Now, you can directly add tags in the YAML front matter. If you don't want to add tags, you can delete the tags in the YAML front matter or leave the tags blank.
 
-## How to Use
+</details>
+
+<details> <summary> Previous How to Use </summary>
 
 ### Precautions
 
@@ -310,9 +358,11 @@ Usage of the template is as follows:
 **Plugin preview is shown below**
 ![](https://minioapi.pjx.ac.cn/img1/2023/09/d6199619b68fab218fca8ae0cebece78.gif)
 
+</details>
+
 ---
 
-**Original README.md**
+<details> <summary> Original README.md </summary>
 
 Many Thanks for the original author's work. I've only made some changes to the original author's work. If you find this plugin useful, please give the [original author](https://github.com/EasyChris/obsidian-to-notion) a star.
 
@@ -486,10 +536,6 @@ node update-version.js
 ./release.sh
 ```
 
-```
-
-
-
 
 # Thanks
 [Development Process | Obsidian Plugin Development Documentation](https://luhaifeng666.github.io/obsidian-plugin-docs-zh/zh/getting-started/development-workflow.html)
@@ -506,3 +552,6 @@ node update-version.js
 
 # License
 GNU GPLv3
+
+
+</details>
