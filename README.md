@@ -32,8 +32,8 @@ Open Notion, clink the `+` button on the left side, and 'Add a page' -> select '
 5. Go to obsidian settings -> community plugins -> search 'NotionNext' -> install it.
 6. Create a database in the plugin settings, and fill in the database details and all properties you want to sync (**Note: the name of the properties is case-sensitive.**).
    - There are three type of database that you can use:
-	 - NotionNext: the database for the NotionNext template.
-	 - General: the database for the general Notion database (Only have title and tags columns)
+	 - NotionNext: the database for the NotionNext template.(**All the properties are in lowercase**)
+	 - General: the database for the general Notion database (**Only have `title` and `tags` columns**)
 	 - Custom: the database for the custom properties (You can customise the properties you want to sync)
 7. Create a new note in Obsidian, and fill in the frontmatter with the properties you want to sync.
 
@@ -46,8 +46,8 @@ Open Notion, clink the `+` button on the left side, and 'Add a page' -> select '
 5. 回到Obsidian的设置 -> 社区插件 -> 搜索'NotionNext' -> 安装
 6. 在插件设置中创建一个数据库，然后填写数据库的详情和你想要同步的属性 (**注意：Notion会识别表头的大小写，一定要和notion中的表头保持大小写一致**)。
    - 你可以使用三种类型的数据库：
-	 - NotionNext: 用于NotionNext模板的数据库。
-	 - General: 用于普通的Notion数据库（只有title和tags两个属性）
+	 - NotionNext: 用于NotionNext模板的数据库。(**默认全部小写**)
+	 - General: 用于普通的Notion数据库（**只有`title`和`tags`两个属性**）
 	 - Custom: 用于自定义属性的数据库（你可以自定义你想要同步的属性）
 7. 在Obsidian中创建一个新的笔记，然后在frontmatter中写入你想要的属性。
 
@@ -60,14 +60,14 @@ Open Notion, clink the `+` button on the left side, and 'Add a page' -> select '
 # 我已经在插件中设置了默认值，如果有不需要的选项，可以直接删除。
 # 例如你不需要密码选项，你可以将password: "1234"删除，或者将它设置为空。
 # !!!!!!!!!!!!
-# 现在阶段一定不要修改表头的名字， please do not change the name of the header in YAML front matter
+# 现在阶段一定不要修改表头的名字， please do not change the name of the header in YAML front matter 
 # !!!!!!!!!!!!
 titleicon: 📎 # emoji icon, default is 📜， 默认是📜
 date: 2023-07-23 # default is today， 默认是今天。 Format is YYYY-MM-DD， 格式是YYYY-MM-DD
 coverurl: https://img.jxpeng.dev/2023/08/843e27a210847f05a0f7cfb121fec100.jpg # default is empty， 默认是空
 type: Post # Post or Page, default is Post， 默认是Post
 slug: test # slug for url, default is empty， 默认是空
-stats: Draft # Draft, Invisible, Published, default is Draft， 默认是Draft 
+status: Draft # Draft, Invisible, Published, default is Draft， 默认是Draft 
 category: test # default is 'Obsidian'， 默认是'Obsidian'
 summary: this is a summary for test post # default is empty， 默认是空
 icon: fa-solid fa-camera # you can ignore this, default is empty， 默认是空，可直接删除
