@@ -12,7 +12,7 @@ date: 2023-07-23 # default is today， 默认是今天。 Format is YYYY-MM-DD�
 coverurl: https://img.jxpeng.dev/2023/08/843e27a210847f05a0f7cfb121fec100.jpg # default is empty， 默认是空
 type: Post # Post or Page, default is Post， 默认是Post
 slug: test # slug for url, default is empty， 默认是空
-stats: Draft # Draft, Invisible, Published, default is Draft， 默认是Draft
+status: Draft # Draft, Invisible, Published, default is Draft， 默认是Draft
 category: test # default is 'Obsidian'， 默认是'Obsidian'
 summary: this is a summary for test post # default is empty， 默认是空
 icon: fa-solid fa-camera # you can ignore this, default is empty， 默认是空，可直接删除

@@ -78,8 +78,13 @@ tags:
   - web # add more tags if you want
 ---
 ```
+<details> <summary> Update </summary>
 
-## Update
+### 2.2.5
+
+- Update NotionNext function that 
+  - `tags`, `titleicon`, `slug` and `summary` are now optional. You can remove them from the frontmatter if you don't need them.
+
 
 ### 2.2.3
 
@@ -111,6 +116,8 @@ tags:
 	- [x] 'Email'
 	- [x] 'Phone'
 	- [x] 'File' (**Only support external embedded files**)
+
+</details>
 
 ![](https://minioapi.pjx.ac.cn/img1/2024/01/0cd99007409feede77bf5a3291e88af3.png)
 - Once you create the properties, you can preview the database details in the plugin settings.

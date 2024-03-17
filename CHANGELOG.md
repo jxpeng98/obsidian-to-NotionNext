@@ -1,5 +1,5 @@
-# Changelog v2.2.3
+- Update NotionNext function that 
+  - `tags`, `titleicon`, `slug` and `summary` are now optional. You can remove them from the frontmatter if you don't need them.
 
-## Bug Fixes
-
-- Fix a bug that 'text' property cannot be synchronized. 修复了一个无法同步'text'属性的bug。
+- 更新 NotionNext 同步功能
+  - `tags`, `titleicon`, `slug` 和 `summary` 现在不是必选项了。你可以从你的模板中删除这些字段。

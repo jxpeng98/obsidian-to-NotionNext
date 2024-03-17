@@ -233,5 +233,4 @@ export class Upload2NotionCustom extends UploadBaseCustom {
 		};
 	}
 
-
 }

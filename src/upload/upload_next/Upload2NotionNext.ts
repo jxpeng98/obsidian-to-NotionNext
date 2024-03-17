@@ -88,9 +88,6 @@ export class Upload2NotionNext extends UploadBaseNext {
             parent: {
                 database_id: databaseID,
             },
-            icon: {
-                emoji: emoji || '📜'
-            },
             properties: {
                 title: {
                     title: [
@@ -101,24 +98,10 @@ export class Upload2NotionNext extends UploadBaseNext {
                         },
                     ],
                 },
-                tags: {
-                    multi_select: tags && true ? tags.map(tag => {
-                        return { "name": tag }
-                    }) : [],
-                },
                 type: {
                     select: {
                         name: type || 'Post'
                     }
-                },
-                slug: {
-                    rich_text: [
-                        {
-                            text: {
-                                content: slug || ''
-                            }
-                        }
-                    ]
                 },
                 status: {
                     select: {
@@ -130,15 +113,7 @@ export class Upload2NotionNext extends UploadBaseNext {
                         name: category || 'Obsidian'
                     }
                 },
-                summary: {
-                    rich_text: [
-                        {
-                            text: {
-                                content: summary || ''
-                            }
-                        }
-                    ]
-                },
+
                 password: {
                     rich_text: [
                         {
@@ -165,6 +140,52 @@ export class Upload2NotionNext extends UploadBaseNext {
             },
             children: childArr,
         }
+
+		// add tags
+		if (tags) {
+			bodyString.properties.tags = {
+				multi_select: tags.map(tag => {
+					return { "name": tag }
+				})
+			}
+		}
+
+		// add title icon
+		if (emoji) {
+				bodyString.icon = {
+					emoji: emoji
+				}
+		}
+
+		// add slug
+		if (slug) {
+			bodyString.properties.slug = {
+				rich_text: [
+					{
+						text: {
+							content: slug
+						}
+					}
+				]
+			}
+		}
+
+		// check if summary is available
+		if (summary) {
+			bodyString.properties.summary = {
+				rich_text: [
+					{
+						text: {
+							content: summary
+						}
+					}
+				]
+			}
+		}
+
+
+
+
         if (cover) {
             bodyString.cover = {
                 type: "external",
