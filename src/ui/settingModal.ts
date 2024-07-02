@@ -240,89 +240,58 @@ export class SettingModal extends Modal {
 		this.display()
 	}
 
-	renderCustomPreview(properties: any[], nextTabs: HTMLElement) {
-		const previewContainer = nextTabs.createDiv('preview-container');
-
-		properties.forEach((property: { customName: any; customType: any; }) => {
-			const propertyEl = previewContainer.createEl('div', {cls: 'property-preview'});
-			propertyEl.createEl('span', {text: `Property: ${property.customName}, Type: ${property.customType}`});
-		});
-
-	}
 
 	createPropertyLine(containerEl: HTMLElement): void {
 		const propertyIndex = this.properties.length;
 		this.properties.push({customName: "", customType: ""}); // Initialize with empty values
 
 		const propertyLine = new Setting(containerEl)
+			.setName(propertyIndex === 0 ? i18nConfig.CustomPropertyFirstColumn : `${i18nConfig.CustomProperty} ${propertyIndex}`)
+			.setDesc(propertyIndex === 0 ? i18nConfig.CustomPropertyFirstColumnDesc : "");
 
-		if (propertyIndex === 0) {
-			propertyLine
-				.setName(i18nConfig.CustomPropertyFirstColumn)
-				.setDesc(i18nConfig.CustomPropertyFirstColumnDesc)
+		propertyLine.addText(text => {
+			text.setPlaceholder(i18nConfig.CustomPropertyName)
+				.setValue("")
+				.onChange(value => {
+					this.properties[propertyIndex].customName = value;
+				});
+		});
 
-			propertyLine.addText((text) => {
-					text
-						.setPlaceholder("Property name")
-						.setValue("")
-						.onChange(async (value) => {
-							this.properties[propertyIndex].customName = value; // Update the customValue of the specific property
-						});
 
-				}
-			)
+		propertyLine.addDropdown((dropdown) => {
+			const options: Record<string, string> = {
+				'text': 'Text',
+				'number': 'Number',
+				'select': 'Select',
+				'multi_select': 'Multi-Select',
+				'date': 'Date',
+				'files': 'Files & Media',
+				'checkbox': 'Checkbox',
+				'url': 'URL',
+				'email': 'Email',
+				'phone_number': 'Phone Number',
+				'formula': 'Formula',
+				'relation': 'Relation',
+				'rollup': 'Rollup',
+				'created_time': 'Created time',
+				'created_by': 'Created by',
+				'last_edited_time': 'Last Edited Time',
+				'last_edited_by': 'Last Edited By',
+			};
+			if (propertyIndex === 0) {
+				dropdown.addOption("title", "Title");
+			}
+			Object.keys(options).forEach(key => {
+				dropdown.addOption(key, options[key]);
+			});
+			dropdown.setValue("")
+				.onChange(value => {
+					this.properties[propertyIndex].customType = value;
+				});
+		});
 
-			propertyLine.addDropdown((dropdown) => {
-					dropdown
-						.addOption("title", "Title")
-						.setValue("")
-						.onChange(async (value) => {
-							this.properties[propertyIndex].customType = value; // Update the customType of the specific property
-						});
-				}
-			)
-		} else {
-			propertyLine
-				.setName(i18nConfig.CustomProperty + (propertyIndex))
 
-			propertyLine.addText((text) => {
-					text
-						.setPlaceholder(i18nConfig.CustomPropertyName)
-						.setValue("")
-						.onChange(async (value) => {
-							this.properties[propertyIndex].customName = value; // Update the customValue of the specific property
-						});
-				}
-			)
-
-			propertyLine.addDropdown((dropdown) => {
-					dropdown
-						// .addOption("none", '')
-						.addOption("text", "Text")
-						.addOption("number", "Number")
-						.addOption("select", "Select")
-						.addOption("multi_select", "Multi-Select")
-						.addOption("date", "Date")
-						// .addOption("person", "Person")
-						.addOption("files", "Files & Media")
-						.addOption("checkbox", "Checkbox")
-						.addOption("url", "URL")
-						.addOption("email", "Email")
-						.addOption("phone_number", "Phone Number")
-						// .addOption("formula", "Formula")
-						// .addOption("relation", "Relation")
-						// .addOption("rollup", "Rollup")
-						// .addOption("created_time", "Created time")
-						// .addOption("created_by", "Created by")
-						// .addOption("last_edited_time", "Last Edited Time")
-						// .addOption("last_edited_by", "Last Edited By")
-						.setValue("")
-						.onChange(async (value) => {
-							this.properties[propertyIndex].customType = value; // Update the customType of the specific property
-						});
-				}
-			)
-
+		if (propertyIndex > 0) {
 			propertyLine.addButton((button) => {
 					return button
 						.setTooltip("Delete")
@@ -336,6 +305,7 @@ export class SettingModal extends Modal {
 				}
 			);
 		}
+
 		this.propertyLines.push(propertyLine);
 	}
 
