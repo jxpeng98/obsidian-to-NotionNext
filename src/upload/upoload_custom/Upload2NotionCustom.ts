@@ -71,6 +71,8 @@ export class Upload2NotionCustom extends UploadBaseCustom {
 			};
 		}
 
+		console.log(bodyString)
+
 		try {
 			return await requestUrl({
 				url: `https://api.notion.com/v1/pages`,
@@ -218,11 +220,15 @@ export class Upload2NotionCustom extends UploadBaseCustom {
 
 		const properties: { [key: string]: any } = {};
 
+		// Only include custom properties that have values
 		customProperties.forEach(({customName, customType}) => {
+			if (customValues[customName] !== undefined) {
 			properties[customName] = this.buildPropertyObject(customName, customType, customValues);
 			}
+		}
 		);
 
+		console.log(properties)
 
 		return {
 			parent: {
