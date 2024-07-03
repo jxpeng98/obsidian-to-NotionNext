@@ -1,13 +1,11 @@
 import {App, ButtonComponent, Modal, Setting} from "obsidian";
-import {SettingModal} from "./settingModal";
+import {customProperty, SettingModal} from "./settingModal";
 import ObsidianSyncNotionPlugin from "../main";
 import {DatabaseDetails, ObsidianSettingTab} from "./settingTabs";
 import {i18nConfig} from "../lang/I18n";
-import {customProperty} from "./settingModal";
 
 export class EditModal extends SettingModal {
 	propertyLines: Setting[] = []; // Store all property line settings
-	properties: { customName: string, customType: string , index: number}[] = []; // Array to store property values and types
 	[key: string]: any; // Index signature
 	dataTemp: Record<string, any> = {
 		databaseFormatTemp: '',
@@ -100,6 +98,8 @@ export class EditModal extends SettingModal {
 		let {contentEl} = this;
 		contentEl.empty();
 
+		let properties: { customName: string, customType: string , index: number} = this.dataTemp.customPropertiesTemp;
+
 		const editDiv = contentEl.createDiv('edit-div');
 		const nextTabs = contentEl.createDiv('next-tabs');
 
@@ -144,6 +144,8 @@ export class EditModal extends SettingModal {
 					.setIcon('cross')
 					.onClick(() => {
 						this.dataTemp.savedTempInd = false;
+						// reset the properties
+						const properties: any[] = [];
 						this.close();
 					});
 			}
@@ -186,10 +188,6 @@ export class EditModal extends SettingModal {
 
 							this.updateSettingEl(CustomNameEl, value)
 
-							// this.updateSettingEl(CustomValuesEl, value)
-
-							// await this.plugin.saveSettings();
-							// await this.plugin.commands.updateCommand();
 						})
 				);
 
@@ -239,6 +237,9 @@ export class EditModal extends SettingModal {
 			this.createSettingEl(nextTabs, i18nConfig.DatabaseID, i18nConfig.DatabaseIDDesc, 'password', i18nConfig.DatabaseIDText, this.dataTemp.databaseIDTemp, 'dataTemp', 'databaseIDTemp')
 
 			// add new property button
+			const properties = this.dataTemp.customPropertiesTemp;
+			const propertiesContainer = nextTabs.createDiv("properties-container");
+
 			new Setting(nextTabs)
 				.setName(i18nConfig.NotionCustomValues)
 				.setDesc(i18nConfig.NotionCustomValuesDesc)
@@ -247,100 +248,107 @@ export class EditModal extends SettingModal {
 							.setTooltip('Add new property')
 							.setIcon('plus')
 							.onClick(async () => {
-								const customTabs = nextTabs.createDiv("custom-tabs");
-								this.createPropertyLine(customTabs);
-
-								
-								
+								this.createPropertyLine(propertiesContainer, properties);
 							});
 					}
 				);
-			const retrieveTabs = nextTabs.createDiv("retrieve-tabs");
-			this.retrievePropertyLine(retrieveTabs, this.dataTemp.customPropertiesTemp)
+
+			this.initializePropertyLines(propertiesContainer, properties)
 		}
-		
 	}
 
-	retrievePropertyLine(containerEl: HTMLElement, properties: customProperty[]): void {
-		const propertyIndex = properties.length;
-		
-		console.log(propertyIndex, "have been created");
-		
-		this.properties.forEach((property, index) => {
-			const propertyLine = new Setting(containerEl)
-				.setName(propertyIndex === 0 ? i18nConfig.CustomPropertyFirstColumn : `${i18nConfig.CustomProperty} ${propertyIndex}`)
-				.setDesc(propertyIndex === 0 ? i18nConfig.CustomPropertyFirstColumnDesc : "");
-			propertyLine.addText(text => {
-				text.setPlaceholder(i18nConfig.CustomPropertyName)
-					.setValue("")
-					.onChange(value => {
-						let actualIndex = properties.findIndex(p => p.index === propertyIndex);
-						if (actualIndex !== -1) {
-							properties[actualIndex].customName = value;
-						}
-					});
-			});
+	initializePropertyLines(containerEl: HTMLElement, properties: customProperty[]): void {
 
-			propertyLine.addDropdown((dropdown) => {
-				const options: Record<string, string> = {
-					'text': 'Text',
-					'number': 'Number',
-					'select': 'Select',
-					'multi_select': 'Multi-Select',
-					'date': 'Date',
-					'files': 'Files & Media',
-					'checkbox': 'Checkbox',
-					'url': 'URL',
-					'email': 'Email',
-					'phone_number': 'Phone Number',
-					// 'formula': 'Formula',
-					// 'relation': 'Relation',
-					// 'rollup': 'Rollup',
-					// 'created_time': 'Created time',
-					// 'created_by': 'Created by',
-					// 'last_edited_time': 'Last Edited Time',
-					// 'last_edited_by': 'Last Edited By',
-				};
+		console.log(properties.length, "properties have been created");
 
-				// Use a reference to the current property object
-				const currentProperty = properties[propertyIndex];
+		containerEl.innerHTML = '';
 
-				if (propertyIndex === 0) {
-					dropdown.addOption("title", "Title");
-				} else {
-					Object.keys(options).forEach(key => {
-						dropdown.addOption(key, options[key]);
-					});
-				}
-				dropdown.setValue("")
-					.onChange(value => {
-						if (currentProperty) {
-							currentProperty.customType = value;
-							// Retrieve the index of currentProperty from the properties array
-							const updatedIndex = properties.findIndex(p => p === currentProperty);
-							console.log(`Updated value at index ${updatedIndex}: ${value}`);
-						} else {
-							console.log("Property not found, may have been deleted.");
-						}
-					});
-			});
-
-
-			if (propertyIndex > 0) {
-				propertyLine.addButton(button => {
-					return button
-						.setTooltip("Delete")
-						.setIcon("trash")
-						.onClick(() => {
-							this.deleteProperty(propertyIndex);
-						});
-				});
-			}
+		// Retrieve and display existing properties
+		properties.forEach(property => {
+			createOrUpdatePropertyLine(containerEl, property);
 		});
-		
+
+		// Add a button for creating new properties at the end of the container
+		const addButton = document.createElement('button');
+		addButton.textContent = "Add New Property";
+		addButton.onclick = () => {
+			createOrUpdatePropertyLine(containerEl, null, properties);
+		};
+
+		containerEl.appendChild(addButton);
 	}
-	
-	
+
+	createOrUpdatePropertyLine(containerEl: HTMLElement, property: null, properties: customProperty[]) {
+		const isExistingProperty = property !== null;
+		const propertyIndex = isExistingProperty ? property.index : properties.length;
+
+		const propertyLine = new Setting(containerEl)
+			.setName(propertyIndex === 0 ? i18nConfig.CustomPropertyFirstColumn : `${i18nConfig.CustomProperty} ${propertyIndex}`)
+			.setDesc(propertyIndex === 0 ? i18nConfig.CustomPropertyFirstColumnDesc : "");
+
+		propertyLine.addText(text => {
+			text.setPlaceholder(i18nConfig.CustomPropertyName)
+				.setValue(isExistingProperty ? property.customName : "")
+				.onChange(value => {
+					let actualIndex = properties.findIndex(p => p.index === propertyIndex);
+					if (actualIndex !== -1) {
+						properties[actualIndex].customName = value;
+					}
+				});
+		});
+
+		propertyLine.addDropdown((dropdown) => {
+			const options = {
+				'text': 'Text',
+				'number': 'Number',
+				'select': 'Select',
+				'multi_select': 'Multi-Select',
+				'date': 'Date',
+				'files': 'Files & Media',
+				'checkbox': 'Checkbox',
+				'url': 'URL',
+				'email': 'Email',
+				'phone_number': 'Phone Number'
+			};
+			Object.keys(options).forEach(key => {
+				dropdown.addOption(key, options[key]);
+			});
+			dropdown.setValue(isExistingProperty ? property.customType : "")
+				.onChange(value => {
+					if (isExistingProperty) {
+						property.customType = value;
+					} else {
+						const newProperty = { customName: '', customType: value, index: propertyIndex };
+						properties.push(newProperty);
+					}
+				});
+		});
+
+		if (isExistingProperty && propertyIndex > 0) {
+			propertyLine.addButton(button => {
+				return button
+					.setTooltip("Delete")
+					.setIcon("trash")
+					.onClick(() => {
+						deleteProperty(propertyIndex, properties);
+					});
+			});
+		}
+
+		if (!isExistingProperty) {
+			properties.push({ customName: "", customType: "", index: propertyIndex });
+		}
+
+	}
+
+		
+
+	deleteProperty(index: number, properties: customProperty[]): void {
+		const updatedProperties = properties.filter(p => p.index !== index);
+		properties.length = 0; // Clear existing array
+		updatedProperties.forEach(p => properties.push(p)); // Re-add filtered properties
+		initializePropertyLines(document.getElementById('propertiesContainer'), properties); // Reinitialize UI
+	}
 
 
 	createStyleDiv(className: string, commandValue: boolean = false, parentEl: HTMLElement): HTMLDivElement {
