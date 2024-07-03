@@ -3,7 +3,6 @@ import {SettingModal} from "./settingModal";
 import ObsidianSyncNotionPlugin from "../main";
 import {DatabaseDetails, ObsidianSettingTab} from "./settingTabs";
 import {i18nConfig} from "../lang/I18n";
-import {CustomModal} from "./CustomModal";
 
 export class EditModal extends SettingModal {
 	dataTemp: Record<string, any> = {
@@ -244,21 +243,21 @@ export class EditModal extends SettingModal {
 							.setTooltip('Add new property')
 							.setIcon('plus')
 							.onClick(async () => {
-								let customModal = new CustomModal(this.app);
-
-								customModal.onClose = () => {
-
-									this.renderCustomPreview(customModal.properties, nextTabs)
-									this.dataTemp.customPropertiesTemp = customModal.properties;
-								}
-
-								customModal.open();
+								const customTabs = nextTabs.createDiv("custom-tabs");
+								this.createPropertyLine(customTabs);
+								// let customModal = new CustomModal(this.app);
+								// customModal.onClose = () => {
+								// 	this.renderCustomPreview(customModal.properties, nextTabs)
+								// 	this.dataTemp.customPropertiesTemp = customModal.properties;
+								// }
+								// customModal.open();
 							});
 					}
 				);
 		}
 
 	}
+
 
 
 	createStyleDiv(className: string, commandValue: boolean = false, parentEl: HTMLElement): HTMLDivElement {
