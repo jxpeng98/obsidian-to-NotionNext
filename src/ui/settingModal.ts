@@ -240,7 +240,6 @@ export class SettingModal extends Modal {
 		this.display()
 	}
 
-
 	createPropertyLine(containerEl: HTMLElement): void {
 		const propertyIndex = this.properties.length;
 		this.properties.push({customName: "", customType: ""}); // Initialize with empty values
@@ -291,24 +290,61 @@ export class SettingModal extends Modal {
 		});
 
 
+		// TODO: update the index of the property line
 		if (propertyIndex > 0) {
 			propertyLine.addButton((button) => {
-					return button
-						.setTooltip("Delete")
-						.setIcon("trash")
-						.onClick(async () => {
-							// Handle the deletion of this property line
-							this.propertyLines = this.propertyLines.filter(line => line !== propertyLine);
-							this.properties.splice(propertyIndex, 1); // Remove the property from the array
-							propertyLine.settingEl.remove();
-						});
-				}
-			);
+				return button
+					.setTooltip("Delete")
+					.setIcon("trash")
+					.onClick(() => {
+						const currentIndex = this.properties.findIndex((p, idx) => idx === propertyIndex);
+						// Directly use propertyIndex captured in closure
+						if (currentIndex > 0) {
+							this.properties.splice(currentIndex, 1); // Remove the property from the array
+
+							// Update UI components
+							containerEl.querySelectorAll('.setting-line').forEach((line, index) => {
+								if (index > currentIndex) {
+									// Reduce the index in the UI component ID or data attribute if you are using them
+									const settingComponent = this.propertyLines[index];
+									settingComponent.setName(i18nConfig.CustomProperty + (index - 1));
+								}
+							});
+
+							propertyLine.settingEl.remove(); // Remove the UI element
+							this.propertyLines.splice(currentIndex, 1); // Remove the property line from the tracking array
+
+							// Update remaining property lines to reflect new indices
+							this.updatePropertyLines();
+
+						}
+					});
+			});
 		}
 
 		this.propertyLines.push(propertyLine);
 	}
 
+
+	deleteProperty(index: number) {
+		if (index > 0 && index < this.properties.length) {
+			this.properties.splice(index, 1);
+			this.propertyLines[index].dispose(); // Assuming dispose method exists for cleanup
+			this.propertyLines.splice(index, 1);
+			this.updatePropertyLines();
+		}
+	}
+
+	updatePropertyLines() {
+		this.propertyLines.forEach((line, index) => {
+			line.setName(`${i18nConfig.CustomProperty} ${index}`);
+			// Assuming buttons are accessible directly; adjust if needed
+			const deleteButton = line.containerEl.querySelector('.delete-button');
+			if (deleteButton) {
+				deleteButton.setAttribute('data-index', index.toString());
+			}
+		});
+	}
 
 	// create a function to create a div with a style for pop over elements
 	public createStyleDiv(className: string, commandValue: boolean = false, parentEl: HTMLElement) {
