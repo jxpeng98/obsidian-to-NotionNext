@@ -1,6 +1,8 @@
 import {App, ExtraButtonComponent, Modal, Notice, Setting} from "obsidian";
 import ObsidianSyncNotionPlugin from "../main";
 import {DatabaseDetails, ObsidianSettingTab} from "./settingTabs";
+import {customProperty} from "./settingModal";
+import {i18nConfig} from "../lang/I18n";
 
 export class PreviewModal extends Modal {
 	plugin: ObsidianSyncNotionPlugin;
@@ -120,12 +122,10 @@ export class PreviewModal extends Modal {
 
 		if (this.dbDetails.format === 'custom') {
 
-			const customPropertiesEl = new Setting(previewEl)
-			customPropertiesEl
-				.setName('Custom Properties')
-				.addTextArea(text => text
-					.setValue(JSON.stringify(this.dbDetails.customProperties, null, 2))
-					.setDisabled(true));
+			const customPrv = previewEl.createDiv("custom-tabs");
+
+
+			this.previewPropertyLine(previewEl, this.dbDetails.customProperties);
 		}
 
 	}
@@ -135,5 +135,45 @@ export class PreviewModal extends Modal {
 		this.display()
 	}
 
+
+	previewPropertyLine(containerEl: HTMLElement, properties: customProperty[]): void {
+
+		properties.forEach((property, index) => {
+			const propertyLine = new Setting(containerEl)
+				.setName(index === 0 ? i18nConfig.CustomPropertyFirstColumn : `${i18nConfig.CustomProperty} ${index}`)
+				.setDesc(index === 0 ? i18nConfig.CustomPropertyFirstColumnDesc : "");
+
+			propertyLine.addText(text => {
+				text.setPlaceholder(i18nConfig.CustomPropertyName)
+					.setValue(property.customName)
+					.setDisabled(true);
+			});
+
+			propertyLine.addDropdown((dropdown) => {
+				const options: Record<string, string> = {
+					'title': 'Title',
+					'text': 'Text',
+					'number': 'Number',
+					'select': 'Select',
+					'multi_select': 'Multi-Select',
+					'date': 'Date',
+					'files': 'Files & Media',
+					'checkbox': 'Checkbox',
+					'url': 'URL',
+					'email': 'Email',
+					'phone_number': 'Phone Number',
+					// Additional options can be added here
+				};
+
+				// Populate dropdown with options
+				Object.keys(options).forEach(key => {
+					dropdown.addOption(key, options[key]);
+				});
+
+				dropdown.setValue(property.customType)
+					.setDisabled(true); // Disable dropdown to prevent changes
+			});
+		});
+	}
 
 }
