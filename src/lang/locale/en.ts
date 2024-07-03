@@ -33,6 +33,8 @@ export const en = {
 	NotionUserDesc:
 "Collect from share link likes:https://username.notion.site. Your notion id is [username]",
 	NotionUserText: "Enter your notion ID",
+	NotionLinkDisplay: "Notion Link Display",
+	NotionLinkDisplayDesc: "Default is ON, if you want to hide the link in the front matter, please turn it off",
 	NotionGeneralSettingHeader: "General Notion Database Settings",
 	NotionGeneralButton: "Notion General Sync",
 	NotionGeneralButtonDesc: "Open this option, Sync to Notion General Database command will be displayed in the command palette (default: ON)",

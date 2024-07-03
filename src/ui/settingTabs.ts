@@ -13,6 +13,7 @@ export interface PluginSettings {
     databaseIDNext: string;
     bannerUrl: string;
     notionUser: string;
+	NotionLinkDisplay: boolean;
     proxy: string;
     GeneralButton: boolean;
     tagButton: boolean;
@@ -37,7 +38,7 @@ export interface DatabaseDetails {
 	tagButton: boolean;
 	customTitleButton: boolean;
 	customTitleName: string;
-	customProperties:{ customName: string, customType: string }[];
+	customProperties:{ customName: string, customType: string, index: number}[];
 	// customValues: string;
 	saved: boolean;
 }
@@ -48,6 +49,7 @@ export const DEFAULT_SETTINGS: PluginSettings = {
     databaseIDNext: "",
     bannerUrl: "",
     notionUser: "",
+	NotionLinkDisplay: true,
     proxy: "",
     GeneralButton: true,
     tagButton: true,
@@ -83,6 +85,10 @@ export class ObsidianSettingTab extends PluginSettingTab {
         this.createSettingEl(containerEl, i18nConfig.BannerUrl, i18nConfig.BannerUrlDesc, 'text', i18nConfig.BannerUrlText, this.plugin.settings.bannerUrl, 'bannerUrl')
 
         this.createSettingEl(containerEl, i18nConfig.NotionUser, i18nConfig.NotionUserDesc, 'text', i18nConfig.NotionUserText, this.plugin.settings.notionUser, 'notionUser')
+
+		this.createSettingEl(containerEl, i18nConfig.NotionLinkDisplay, i18nConfig.NotionLinkDisplayDesc, 'toggle', i18nConfig.NotionLinkDisplay, this.plugin.settings.NotionLinkDisplay, 'NotionLinkDisplay')
+
+		// TODO: add toggle to enable or disable link display
 
 
 		// add new button
@@ -132,38 +138,6 @@ export class ObsidianSettingTab extends PluginSettingTab {
 		// list all created database
 		this.showDatabase();
 
-
-
-
-
-		// // notion next database settings
-		//
-		// const NextTabs = new SettingNextTabs(this.app, this.plugin, this);
-		//
-		// NextTabs.display();
-		//
-		//
-        // // General Database Settings
-		// const GeneralTabs = new SettingGeneralTabs(this.app, this.plugin, this);
-		//
-		// GeneralTabs.display();
-
-
-        // Custom Database Settings
-
-        // containerEl.createEl('h2', {text: i18nConfig.NotionCustomSettingHeader});
-        //
-        // new Setting(containerEl)
-        // 	.setName(i18nConfig.NotionCustomButton)
-        // 	.setDesc(i18nConfig.NotionCustomButtonDesc)
-        // 	.addToggle((toggle) =>
-        // 		toggle
-        // 			.setValue(this.plugin.settings.CustomButton)
-        // 			.onChange(async (value) => {
-        // 				this.plugin.settings.CustomButton = value;
-        // 				await this.plugin.saveSettings();
-        // 			})
-        // 	);
     }
 
     // create a function to create a div with a style for pop over elements

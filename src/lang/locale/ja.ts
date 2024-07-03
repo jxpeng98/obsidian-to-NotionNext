@@ -31,6 +31,8 @@ export const ja = {
     NotionUser: "Notion ID（ユーザー名、任意）",
     NotionUserDesc: "共有リンクから取得（例：https://username.notion.site）。Notion IDは[username]です",
     NotionUserText: "Notion IDを入力",
+	NotionLinkDisplay: "Notionリンク表示",
+	NotionLinkDisplayDesc: "デフォルトはONです。front matterにリンクを非表示にしたい場合は、オフにしてください",
     NotionGeneralSettingHeader: "一般的なNotionデータベース設定",
     NotionGeneralButton: "一般的なNotion同期",
     NotionGeneralButtonDesc: "このオプションを開くと、一般的なNotionデータベース同期コマンドがコマンドパレットに表示されます（デフォルト：ON）",
