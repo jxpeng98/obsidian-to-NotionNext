@@ -1,15 +1,15 @@
-import {App, ExtraButtonComponent, Modal, Notice, Setting} from "obsidian";
+import { App, ExtraButtonComponent, Modal, Notice, Setting } from "obsidian";
 import ObsidianSyncNotionPlugin from "../main";
-import {DatabaseDetails, ObsidianSettingTab} from "./settingTabs";
-import {customProperty} from "./settingModal";
-import {i18nConfig} from "../lang/I18n";
+import { DatabaseDetails, ObsidianSettingTab } from "./settingTabs";
+import { customProperty } from "./settingModal";
+import { i18nConfig } from "../lang/I18n";
 
 export class PreviewModal extends Modal {
 	plugin: ObsidianSyncNotionPlugin;
 	settingTab: ObsidianSettingTab;
 	dbDetails: DatabaseDetails;
 
-	constructor(app:App, plugin: ObsidianSyncNotionPlugin, settingTab: ObsidianSettingTab, dbDetails: DatabaseDetails) {
+	constructor(app: App, plugin: ObsidianSyncNotionPlugin, settingTab: ObsidianSettingTab, dbDetails: DatabaseDetails) {
 		super(app);
 		this.plugin = plugin;
 		this.settingTab = settingTab;
@@ -26,25 +26,25 @@ export class PreviewModal extends Modal {
 		const previewEl = contentEl.createDiv('preview-content')
 
 		const dbFormatEl = new Setting(previewEl)
-			dbFormatEl
+		dbFormatEl
 			.setName('Database Format')
-				.addText(text => text
-					.setValue(this.dbDetails.format)
-					.setDisabled(true));
+			.addText(text => text
+				.setValue(this.dbDetails.format)
+				.setDisabled(true));
 
 		const dbFullEl = new Setting(previewEl)
-			dbFullEl
+		dbFullEl
 			.setName('Database Full Name')
-				.addText(text => text
-					.setValue(this.dbDetails.fullName)
-					.setDisabled(true));
+			.addText(text => text
+				.setValue(this.dbDetails.fullName)
+				.setDisabled(true));
 
 		const dbAbbrEl = new Setting(previewEl)
-			dbAbbrEl
+		dbAbbrEl
 			.setName('Database Abbreviate Name')
-				.addText(text => text
-					.setValue(this.dbDetails.abName)
-					.setDisabled(true));
+			.addText(text => text
+				.setValue(this.dbDetails.abName)
+				.setDisabled(true));
 		// .controlEl.createEl('p', { text: this.dbDetails.abName })
 
 		// Setting for toggle and copy buttons
@@ -123,7 +123,6 @@ export class PreviewModal extends Modal {
 		if (this.dbDetails.format === 'custom') {
 
 			const customPrv = previewEl.createDiv("custom-tabs");
-
 
 			this.previewPropertyLine(previewEl, this.dbDetails.customProperties);
 		}

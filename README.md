@@ -8,7 +8,7 @@
 [//]: # ([![Github all releases]&#40;https://img.shields.io/github/downloads/jxpeng98/obsidian-to-NotionNext/total.svg&#41;]&#40;https://GitHub.com/jxpeng98/obsidian-to-NotionNext/releases/&#41;)
 
 
-[中文文档](README-zh.md)
+[//]: # ([中文文档]&#40;README-zh.md&#41;)
 
 **Now, support both NotionNext and General databases with customised properties.**
 
@@ -16,11 +16,18 @@
 
 ## TODO List
 
-- [ ] Modify the Edit function for the custom properties. 改进自定义属性的编辑功能
+- [x] ~~Modify the Edit function for the custom properties. 改进自定义属性的编辑功能~~
 - [ ] Support group upload with one click 支持一键多数据库上传
-- [x] Support custom properties for Notion General database. 支持自定义属性
-- [x] Support preview for database details in plugin settings. 支持预览数据库详情
-- [x] Support edit for database details in plugin settings. 支持编辑数据库详情
+- [x] ~~Support custom properties for Notion General database. 支持自定义属性~~
+- [x] ~~Support preview for database details in plugin settings. 支持预览数据库详情~~
+- [x] ~~Support edit for database details in plugin settings. 支持编辑数据库详情~~
+
+## Precautions
+### For customised database users
+**⚠️⚠️⚠️: The exist customised database should be recreated if you want to update to version 2.3.0. The new version has a new database structure, and the old database structure is not compatible with the new version to build the index properly.**
+
+### 自定义数据库用户
+**⚠️⚠️⚠️: 如果你想要更新到2.3.0版本，你需要重新创建自定义数据库。新版本有一个新的数据库结构，旧的数据库结构无法构建索引。**
 
 ## How to use
 You need seven steps to use this plugin in your Obsidian.
@@ -78,50 +85,10 @@ tags:
   - web # add more tags if you want
 ---
 ```
-<details> <summary> Update </summary>
 
-### 2.2.5
-
-- Update NotionNext function that 
-  - `tags`, `titleicon`, `slug` and `summary` are now optional. You can remove them from the frontmatter if you don't need them.
-
-
-### 2.2.3
-
-- Fix a bug that 'text' property cannot be synchronized. 修复了一个无法同步'text'属性的bug。
-
-### 2.2.2
-
-- Fix the setting description of database. 修复数据库设置的描述错误。
-
-### 2.2.1
-
-- improve the localisation for the custom properties setting. 改进自定义属性设置的本地化。
-
-**Warning: the edit function for the custom properties is not perfect for now. You need to re-enter all the properties if you want to edit the properties.**
-
-**注意：自定义属性的编辑功能现在还不完善。如果你想编辑属性，你需要重新输入所有的属性。**
-
-### 2.2.0 (Big Update)
-
-- add the support for custom properties in the Notion General database. 支持自定义属性
-	- [x] `title`, which is the first column of the database
-	- [x] 'Text'
-	- [x] 'Number'
-	- [x] 'Date'
-	- [x] 'Checkbox'
-	- [x] 'Select'
-	- [x] 'Multi-select'
-	- [x] 'URL'
-	- [x] 'Email'
-	- [x] 'Phone'
-	- [x] 'File' (**Only support external embedded files**)
-
-</details>
-
-![](https://minioapi.pjx.ac.cn/img1/2024/01/0cd99007409feede77bf5a3291e88af3.png)
+![](https://minioapi.pjx.ac.cn/img1/2024/07/7a1550aefd71175c981077ce46d03c87.png)
 - Once you create the properties, you can preview the database details in the plugin settings.
-![](https://minioapi.pjx.ac.cn/img1/2024/01/665139962cc4cee2a0cb576b508b29f2.png)
+![](https://minioapi.pjx.ac.cn/img1/2024/07/9599d77116afad065d2e31129942acc7.png)
 
 ---
 
@@ -132,146 +99,6 @@ Thanks to the [original author](https://github.com/EasyChris/obsidian-to-notion)
 Thus, based on the [original author's work](https://github.com/EasyChris/obsidian-to-notion), I've added a feature to match the [NotionNext](https://github.com/tangly1024/NotionNext) template. This way, you can edit directly in Obsidian and publish with a single click after organizing.
 
 ---
-
-<details> <summary> Archive Update </summary>
-
-### 2.1.0
-
-- add confirmation interface for deleting a database 增加删除数据库的确认界面
-- fix the typo in the edit database modal 修复编辑数据库界面的标题错误
-- improve the logic for the database editing 改进数据库编辑界面的逻辑
-
-### 2.0.1
-
-- Add the preview and edit function for database details in the plugin settings. 增加插件设置中数据库详情的预览和编辑功能。
-![](https://minioapi.pjx.ac.cn/img1/2024/01/952f1e579daeac35b257ff7d744b0a3d.png)
-  - Preview:
-  ![](https://minioapi.pjx.ac.cn/img1/2024/01/952f1e579daeac35b257ff7d744b0a3d.png)
-
-  - Edit:
-	![](https://minioapi.pjx.ac.cn/img1/2024/01/ded3d62660f5488c76488304a3fb269e.png)
-  
-### 2.0.0 (Big Update)
-
-- redesign the plugin settings UI. From this version, the settings UI will be separated into two parts: 
-  - one for general settings: bannerUrl and your notion username (ID)
-  - one for database list: You can add new database or delete the database.
-- 重新设计了插件设置界面。从这个版本开始，设置界面将被分成两部分：
-  - 一部分是通用设置：bannerUrl和你的notion用户名（ID）
-  - 一部分是数据库列表：你可以添加新的数据库或者删除数据库。
-
-![](https://minioapi.pjx.ac.cn/img1/2023/12/f7e89241f45cfee6b902ec4b69dd6f63.png)
-
-- You can add more databases in the plugin settings.
-- 你可以在插件设置中添加更多的数据库。
-
-![](https://minioapi.pjx.ac.cn/img1/2023/12/023bf46ebbc92c3991d2c443c575bc80.gif)
-
-- You can sync one note to multiple databases.
-- 你可以将一个笔记同步到多个数据库中。
-
-![](https://minioapi.pjx.ac.cn/img1/2023/12/75f793bad756162e46bf41e54166eb32.png)
-
-**Note: You need to add your previous database in the new template.**
-**注意：你需要将之前的数据库添加到新的模板中。**
-
-### 1.1.2
-- Fix the typo that you cannot sync the markdown file `status` in the frontmatter to NotionNext. You can use `stats` or `status` to sync the status of the post to NotionNext. This update will not affect the function of syncing to General database. 
-- 修复了一个拼写错误，导致无法同步`status`到NotionNext。现在你可以使用`stats`或者`status`来同步文章的状态到NotionNext。这个更新不会影响到同步到General数据库的功能。
-- **Both `stats` and `status` will work, but you can only use one of them.**
-- **`stats`和`status`都可以使用，但是你只能使用其中一个。**
-
-For example, 
-```yaml
-stats: Draft # Draft, Invisible, Published, default is Draft， 默认是Draft
-# or 
-status: Draft # Draft, Invisible, Published, default is Draft， 默认是Draft
-# both of them will work, but you can only use one of them.
-```
-
-### 1.1.1
-- Fix the setting display bug in Japanese.
-- Add Japanese translation.
-
-### 1.1.0
-- Fix the custom name setting tab display bug. 
-- Add a toggle to control whether to sync `tags` since the empty tags may cause the syncing error.
-
-If you switch off the `tags` function in the plugin settings, it will ignore the `tags` in your frontmatter. 
-
-If you prefer to sync tags to Notion database, you can switch on the `tags` function in the plugin settings. **You can only use the following format for tags:**
-
-```yaml
-tags: #empty tags, option 1
-tags: [test,test1,test2] # use the square brackets, option 2
-tags: 
-  - test
-  - test1
-  - test2 # use the dash option 3
-```
-
-### 1.0.1
-
-- Fix the custom name element display bug in the settings.
-
-### 1.0.0 (Big Update)
-
-- From this version, you can **modify the first column name (title column, default: 'title')** as you want. (**Note: You need to have the 'tags' column in your Notion General database, and add `tags:` in your markdown frontmatter. If not, you will receive `network error 400`. But you can leave the `tags:` blank.**)
-
-![](https://minioapi.pjx.ac.cn/img1/2023/11/4a298b9be3990e9d2201bf2f50ca5a0a.png)
-Like this:
-![](https://minioapi.pjx.ac.cn/img1/2023/11/4cd8d79cd9dd9dde299e39c666cb3473.gif)
-
-- Add a switch button to control whether display the setting tabs in the plugin settings for both NotionNext and Notion General databases.
-
-![](https://minioapi.pjx.ac.cn/img1/2023/11/becb60fc44783842da4b3cf4c322f363.gif)
-
-### 0.2.6
-
-- Add a switch button to control whether to show the upload command in the command palette.
-
-<!-- ![](https://minioapi.pjx.ac.cn/img1/2023/11/147c6a4eaa34da41a6f102558ed77106.png)
-If you turn off the button for the General database, you won't see the option for the General database in the upload command list.
-
-If you turn off the button for the NotionNext database, you won't see the option for the NotionNext database in the upload command list.
-
-![](https://minioapi.pjx.ac.cn/img1/2023/11/70b8e4fc2148688ccbd6cfc53ce339a2.png) -->
-
-### 0.2.3
-
-- Fix the bug, now you can update normally.
-
-### 0.2.2
-
-- Support both NotionNext and General Notion database.
-- You can have one NotionNext and one General Notion database.
-- General Notion database can only have `title` and `tags` columns, and `tags` columns should be the multi-selected property. **the name of the columns is case sensitive. You should use small letter.**
-
-![](https://minioapi.pjx.ac.cn/img1/2023/11/712a12081d855aa60f82a7b46913ab7e.gif)
-
-![](https://minioapi.pjx.ac.cn/img1/2023/11/9de76cecceef74c78884ddfc1c221659.gif)
-
-### 0.2.1
-
-- Restructure the code
-
-### 0.2.0
-
-- From this version, the interactive logic has been rewritten. When you click the ribbon icon, it will display the sync command for all presetting NotionNext databases. You can choose the database you want to sync to. **However, only NotionNext database is supported for now.**
-
-### 0.1.10
-
-- Fix the Chinese support in the settings.
-
-### 0.1.8
-
-- Rebuild the uploadCommand function, and add one button to select the different databases. **However, only NotionNext database is supported for now.**  
-
-### 0.1.7
-
-- [x] Removed the `convert tag` option. Now, you can directly add tags in the YAML front matter. If you don't want to add tags, you can delete the tags in the YAML front matter or leave the tags blank.
-
-</details>
 
 <details> <summary> Previous How to Use </summary>
 

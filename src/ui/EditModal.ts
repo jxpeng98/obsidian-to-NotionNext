@@ -1,4 +1,4 @@
-import { App, ButtonComponent, Modal, Setting } from "obsidian";
+import { App, ButtonComponent, Setting } from "obsidian";
 import { customProperty, SettingModal } from "./settingModal";
 import ObsidianSyncNotionPlugin from "../main";
 import { DatabaseDetails, ObsidianSettingTab } from "./settingTabs";
@@ -133,8 +133,8 @@ export class EditModal extends SettingModal {
 				.onClick(async () => {
 					this.dataTemp.savedTempInd = true;
 					this.dataTemp.savedTemp = true;
-					console.log(this.dataTemp);
-					console.log(this.dataPrev);
+					// console.log(this.dataTemp);
+					// console.log(this.dataPrev);
 					this.close();
 				});
 		}
@@ -144,8 +144,8 @@ export class EditModal extends SettingModal {
 				.setTooltip('Cancel')
 				.setIcon('cross')
 				.onClick(() => {
-					console.log(this.dataTemp);
-					console.log(this.dataPrev);
+					// console.log(this.dataTemp);
+					// console.log(this.dataPrev);
 					this.close();
 				});
 		}

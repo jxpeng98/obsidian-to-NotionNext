@@ -4,7 +4,7 @@ import { markdownToBlocks } from "@tryfabric/martian";
 import * as yamlFrontMatter from "yaml-front-matter";
 // import * as yaml from "yaml"
 import MyPlugin from "src/main";
-import {DatabaseDetails, PluginSettings} from "../../ui/settingTabs";
+import { DatabaseDetails, PluginSettings } from "../../ui/settingTabs";
 import { UploadBaseGeneral } from "./BaseUpload2NotionGeneral";
 import { updateYamlInfo } from "../updateYaml";
 
@@ -138,7 +138,7 @@ export class Upload2NotionGeneral extends UploadBaseGeneral {
 		const file2Block = markdownToBlocks(__content, options);
 		const frontmasster =
 			app.metadataCache.getFileCache(nowFile)?.frontmatter;
-		const {abName} = this.dbDetails
+		const { abName } = this.dbDetails
 		const notionIDKey = `NotionID-${abName}`;
 		const notionID = frontmasster ? frontmasster[notionIDKey] : null;
 

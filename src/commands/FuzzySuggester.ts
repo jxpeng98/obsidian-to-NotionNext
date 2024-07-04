@@ -11,7 +11,7 @@ export interface DatabaseList {
 }
 
 
-export class FuzzySuggester extends FuzzySuggestModal<DatabaseList>{
+export class FuzzySuggester extends FuzzySuggestModal<DatabaseList> {
     private plugin: MyPlugin;
     private data: DatabaseList[];
     private callback: any;

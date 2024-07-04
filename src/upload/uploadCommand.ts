@@ -1,13 +1,13 @@
-import {i18nConfig} from "../lang/I18n";
-import {App, Notice} from "obsidian";
-import {Upload2NotionNext} from "./upload_next/Upload2NotionNext";
-import {Upload2NotionGeneral} from "./upload_general/Upload2NotionGeneral";
-import {Upload2NotionCustom} from "./upoload_custom/Upload2NotionCustom";
-import {DatabaseDetails, PluginSettings} from "../ui/settingTabs";
+import { i18nConfig } from "../lang/I18n";
+import { App, Notice } from "obsidian";
+import { Upload2NotionNext } from "./upload_next/Upload2NotionNext";
+import { Upload2NotionGeneral } from "./upload_general/Upload2NotionGeneral";
+import { Upload2NotionCustom } from "./upoload_custom/Upload2NotionCustom";
+import { DatabaseDetails, PluginSettings } from "../ui/settingTabs";
 import ObsidianSyncNotionPlugin from "../main";
-import {getNowFileMarkdownContentNext} from "./upload_next/getMarkdownNext";
-import {getNowFileMarkdownContentGeneral} from "./upload_general/getMarkdownGeneral";
-import {getNowFileMarkdownContentCustom} from "./upoload_custom/getMarkdownCustom";
+import { getNowFileMarkdownContentNext } from "./upload_next/getMarkdownNext";
+import { getNowFileMarkdownContentGeneral } from "./upload_general/getMarkdownGeneral";
+import { getNowFileMarkdownContentCustom } from "./upoload_custom/getMarkdownCustom";
 
 export async function uploadCommandNext(
 	plugin: ObsidianSyncNotionPlugin,
@@ -16,7 +16,7 @@ export async function uploadCommandNext(
 	app: App,
 ) {
 
-	const {notionAPI, databaseID} = dbDetails;
+	const { notionAPI, databaseID } = dbDetails;
 
 	// Check if NNon exists
 	// if (NNon === undefined) {
@@ -49,7 +49,7 @@ export async function uploadCommandNext(
 	} = await getNowFileMarkdownContentNext(app, settings)
 
 	if (markDownData) {
-		const {basename} = nowFile;
+		const { basename } = nowFile;
 		const upload = new Upload2NotionNext(plugin, dbDetails);
 		const res = await upload.syncMarkdownToNotionNext(basename, emoji, cover, tags, type, slug, stats, category, summary, paword, favicon, datetime, markDownData, nowFile, this.app);
 
@@ -70,7 +70,7 @@ export async function uploadCommandGeneral(
 	app: App,
 ) {
 
-	const {notionAPI, databaseID} = dbDetails;
+	const { notionAPI, databaseID } = dbDetails;
 
 	// Check if the user has set up the Notion API and database ID
 	if (notionAPI === "" || databaseID === "") {
@@ -79,10 +79,10 @@ export async function uploadCommandGeneral(
 		return;
 	}
 
-	const {markDownData, nowFile, cover, tags} = await getNowFileMarkdownContentGeneral(app, settings)
+	const { markDownData, nowFile, cover, tags } = await getNowFileMarkdownContentGeneral(app, settings)
 
 	if (markDownData) {
-		const {basename} = nowFile;
+		const { basename } = nowFile;
 
 		const upload = new Upload2NotionGeneral(plugin, dbDetails);
 		const res = await upload.syncMarkdownToNotionGeneral(basename, cover, tags, markDownData, nowFile, this.app);
@@ -104,7 +104,7 @@ export async function uploadCommandCustom(
 	app: App,
 ) {
 
-	const {notionAPI, databaseID} = settings;
+	const { notionAPI, databaseID } = settings;
 
 	// Check if the user has set up the Notion API and database ID
 	if (notionAPI === "" || databaseID === "") {
@@ -113,10 +113,10 @@ export async function uploadCommandCustom(
 		return;
 	}
 
-	const {markDownData, nowFile, cover, customValues} = await getNowFileMarkdownContentCustom(app, dbDetails)
+	const { markDownData, nowFile, cover, customValues } = await getNowFileMarkdownContentCustom(app, dbDetails)
 
 	if (markDownData) {
-		const { basename} = nowFile;
+		const { basename } = nowFile;
 
 		const upload = new Upload2NotionCustom(plugin, dbDetails);
 		const res = await upload.syncMarkdownToNotionCustom(cover, customValues, markDownData, nowFile, this.app);
