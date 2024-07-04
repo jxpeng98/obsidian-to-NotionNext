@@ -70,7 +70,7 @@ export class EditModal extends SettingModal {
 			this.dataTemp.tagButtonTemp = dbDetails.tagButton;
 			this.dataTemp.customTitleButtonTemp = dbDetails.customTitleButton;
 			this.dataTemp.customTitleNameTemp = dbDetails.customTitleName;
-			this.dataTemp.customPropertiesTemp = dbDetails.customProperties;
+			this.dataTemp.customPropertiesTemp = dbDetails.customProperties.map(prop => ({ ...prop })); // Ensure deep copy
 			// this.dataTemp.customValues = dbDetails.customValues;
 			this.dataTemp.savedTemp = dbDetails.saved;
 
@@ -83,7 +83,7 @@ export class EditModal extends SettingModal {
 			this.dataPrev.tagButtonPrev = dbDetails.tagButton;
 			this.dataPrev.customTitleButtonPrev = dbDetails.customTitleButton;
 			this.dataPrev.customTitleNamePrev = dbDetails.customTitleName;
-			this.dataPrev.customPropertiesPrev = dbDetails.customProperties;
+			this.dataPrev.customPropertiesPrev = dbDetails.customProperties.map(prop => ({ ...prop })); // Ensure deep copy
 			// this.dataTemp.customValues = dbDetails.customValues;
 			this.dataPrev.savedPrev = dbDetails.saved;
 		}
@@ -132,8 +132,6 @@ export class EditModal extends SettingModal {
 				.onClick(async () => {
 					this.dataTemp.savedTempInd = true;
 					this.dataTemp.savedTemp = true;
-					this.dataPrev = { ...this.dataTemp };
-					this.dataPrev.customPropertiesPrev = this.dataTemp.customPropertiesTemp.slice();
 					this.close();
 				});
 		}
@@ -143,10 +141,8 @@ export class EditModal extends SettingModal {
 				.setTooltip('Cancel')
 				.setIcon('cross')
 				.onClick(() => {
-					this.dataTemp = { ...this.dataPrev };
-					this.dataTemp.customPropertiesTemp = this.dataPrev.customPropertiesPrev.slice();
-					nextTabs.empty();
-					this.updateContentBasedOnSelection(this.dataTemp.databaseFormatTemp, nextTabs);
+					console.log(this.dataTemp);
+					console.log(this.dataPrev);
 					this.close();
 				});
 		}
@@ -154,11 +150,8 @@ export class EditModal extends SettingModal {
 	}
 
 	onOpen(): void {
-		// Backup initial state when the modal is opened
-		this.dataPrev.customPropertiesPrev = this.dataTemp.customPropertiesTemp.slice();
 		this.display()
 	}
-
 
 	updateContentBasedOnSelection(value: string, nextTabs: HTMLElement): void {
 		// Clear existing content
