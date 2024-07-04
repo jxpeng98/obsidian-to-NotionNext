@@ -1,6 +1,6 @@
-import {App, Notice} from "obsidian";
-import {i18nConfig} from "../../lang/I18n";
-import {DatabaseDetails} from "../../ui/settingTabs";
+import { App, Notice } from "obsidian";
+import { i18nConfig } from "../../lang/I18n";
+import { DatabaseDetails } from "../../ui/settingTabs";
 
 export async function getNowFileMarkdownContentCustom(
 	app: App,

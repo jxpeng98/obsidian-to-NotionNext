@@ -1,11 +1,11 @@
-import {App, Notice, requestUrl, TFile} from "obsidian";
-import {markdownToBlocks} from "@tryfabric/martian";
+import { App, Notice, requestUrl, TFile } from "obsidian";
+import { markdownToBlocks } from "@tryfabric/martian";
 import * as yamlFrontMatter from "yaml-front-matter";
 // import * as yaml from "yaml"
 import MyPlugin from "src/main";
-import {DatabaseDetails, PluginSettings} from "../../ui/settingTabs";
-import {updateYamlInfo} from "../updateYaml";
-import {UploadBaseCustom} from "./BaseUpload2NotionCustom";
+import { DatabaseDetails, PluginSettings } from "../../ui/settingTabs";
+import { updateYamlInfo } from "../updateYaml";
+import { UploadBaseCustom } from "./BaseUpload2NotionCustom";
 
 export class Upload2NotionCustom extends UploadBaseCustom {
 	settings: PluginSettings;
@@ -26,7 +26,7 @@ export class Upload2NotionCustom extends UploadBaseCustom {
 	) {
 		await this.deletePage(notionID);
 
-		const {databaseID} = this.dbDetails;
+		const { databaseID } = this.dbDetails;
 
 		const databaseCover = await this.getDataBase(
 			databaseID
@@ -71,6 +71,8 @@ export class Upload2NotionCustom extends UploadBaseCustom {
 			};
 		}
 
+		console.log(bodyString)
+
 		try {
 			return await requestUrl({
 				url: `https://api.notion.com/v1/pages`,
@@ -107,7 +109,7 @@ export class Upload2NotionCustom extends UploadBaseCustom {
 		const file2Block = markdownToBlocks(__content, options);
 		const frontmasster =
 			app.metadataCache.getFileCache(nowFile)?.frontmatter;
-		const {abName} = this.dbDetails
+		const { abName } = this.dbDetails
 		const notionIDKey = `NotionID-${abName}`;
 		const notionID = frontmasster ? frontmasster[notionIDKey] : null;
 
@@ -205,7 +207,7 @@ export class Upload2NotionCustom extends UploadBaseCustom {
 				};
 			case "multi_select":
 				return {
-					multi_select: Array.isArray(value) ? value.map(item => ({name: item})) : [{name: value}],
+					multi_select: Array.isArray(value) ? value.map(item => ({ name: item })) : [{ name: value }],
 				};
 		}
 	}
@@ -218,11 +220,15 @@ export class Upload2NotionCustom extends UploadBaseCustom {
 
 		const properties: { [key: string]: any } = {};
 
-		customProperties.forEach(({customName, customType}) => {
-			properties[customName] = this.buildPropertyObject(customName, customType, customValues);
+		// Only include custom properties that have values
+		customProperties.forEach(({ customName, customType }) => {
+			if (customValues[customName] !== undefined) {
+				properties[customName] = this.buildPropertyObject(customName, customType, customValues);
 			}
+		}
 		);
 
+		console.log(properties)
 
 		return {
 			parent: {

@@ -1,5 +1,5 @@
-import {App, ButtonComponent, Modal, Setting} from "obsidian";
-import {DatabaseDetails, ObsidianSettingTab} from "./settingTabs";
+import { App, ButtonComponent, Modal, Setting } from "obsidian";
+import { DatabaseDetails, ObsidianSettingTab } from "./settingTabs";
 import ObsidianSyncNotionPlugin from "../main";
 
 export class DeleteModal extends Modal {
@@ -21,12 +21,12 @@ export class DeleteModal extends Modal {
 		this.containerEl.addClass("delete-modal");
 		this.titleEl.setText('Delete Database');
 
-		let {contentEl} = this;
+		let { contentEl } = this;
 		contentEl.empty();
 
 		const deleteDiv = contentEl.createDiv('delete-div');
-		deleteDiv.createEl('h4', {text: 'Are you sure you want to delete the following database?'});
-		deleteDiv.createEl('h2', {text: this.dbDetails.fullName + ' (' + this.dbDetails.abName + ', ' + this.dbDetails.format +')'});
+		deleteDiv.createEl('h4', { text: 'Are you sure you want to delete the following database?' });
+		deleteDiv.createEl('h2', { text: this.dbDetails.fullName + ' (' + this.dbDetails.abName + ', ' + this.dbDetails.format + ')' });
 
 
 		// add delete button

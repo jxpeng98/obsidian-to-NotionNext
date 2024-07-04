@@ -13,7 +13,7 @@ export async function getNowFileMarkdownContentNext(
     let type = '';
     let slug = '';
     let stats = '';
-	let status = '';
+    let status = '';
     let category = '';
     let summary = '';
     let paword = '';

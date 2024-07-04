@@ -5,17 +5,17 @@ import { markdownToBlocks, } from "@tryfabric/martian";
 import * as yamlFrontMatter from "yaml-front-matter";
 // import * as yaml from "yaml"
 import MyPlugin from "src/main";
-import {DatabaseDetails, PluginSettings} from "../../ui/settingTabs";
+import { DatabaseDetails, PluginSettings } from "../../ui/settingTabs";
 import { updateYamlInfo } from "../updateYaml";
-import {LIMITS, paragraph} from "@tryfabric/martian/src/notion";
+import { LIMITS, paragraph } from "@tryfabric/martian/src/notion";
 
 export class Upload2NotionNext extends UploadBaseNext {
     settings: PluginSettings;
-	dbDetails: DatabaseDetails
+    dbDetails: DatabaseDetails
 
     constructor(plugin: MyPlugin, dbDetails: DatabaseDetails) {
         super(plugin, dbDetails);
-		this.dbDetails = dbDetails
+        this.dbDetails = dbDetails
     }
 
     // 因为需要解析notion的block进行对比，非常的麻烦，
@@ -38,7 +38,7 @@ export class Upload2NotionNext extends UploadBaseNext {
     ) {
         await this.deletePage(notionID)
 
-		const { databaseID} = this.dbDetails
+        const { databaseID } = this.dbDetails
 
         const databaseCover = await this.getDataBase(databaseID)
 
@@ -78,10 +78,10 @@ export class Upload2NotionNext extends UploadBaseNext {
         childArr: any
     ) {
 
-		const {
-			databaseID,
-			notionAPI
-		} = this.dbDetails
+        const {
+            databaseID,
+            notionAPI
+        } = this.dbDetails
 
 
         const bodyString: any = {
@@ -141,47 +141,47 @@ export class Upload2NotionNext extends UploadBaseNext {
             children: childArr,
         }
 
-		// add tags
-		if (tags) {
-			bodyString.properties.tags = {
-				multi_select: tags.map(tag => {
-					return { "name": tag }
-				})
-			}
-		}
+        // add tags
+        if (tags) {
+            bodyString.properties.tags = {
+                multi_select: tags.map(tag => {
+                    return { "name": tag }
+                })
+            }
+        }
 
-		// add title icon
-		if (emoji) {
-				bodyString.icon = {
-					emoji: emoji
-				}
-		}
+        // add title icon
+        if (emoji) {
+            bodyString.icon = {
+                emoji: emoji
+            }
+        }
 
-		// add slug
-		if (slug) {
-			bodyString.properties.slug = {
-				rich_text: [
-					{
-						text: {
-							content: slug
-						}
-					}
-				]
-			}
-		}
+        // add slug
+        if (slug) {
+            bodyString.properties.slug = {
+                rich_text: [
+                    {
+                        text: {
+                            content: slug
+                        }
+                    }
+                ]
+            }
+        }
 
-		// check if summary is available
-		if (summary) {
-			bodyString.properties.summary = {
-				rich_text: [
-					{
-						text: {
-							content: summary
-						}
-					}
-				]
-			}
-		}
+        // check if summary is available
+        if (summary) {
+            bodyString.properties.summary = {
+                rich_text: [
+                    {
+                        text: {
+                            content: summary
+                        }
+                    }
+                ]
+            }
+        }
 
 
 
@@ -238,41 +238,41 @@ export class Upload2NotionNext extends UploadBaseNext {
         nowFile: TFile,
         app: App,
     ): Promise<any> {
-		const options = {
-			notionLimits: {
-				truncate: false,
-			}
-		}
+        const options = {
+            notionLimits: {
+                truncate: false,
+            }
+        }
         let res: any
         const yamlContent: any = yamlFrontMatter.loadFront(markdown);
         const __content = yamlContent.__content
         const file2Block = markdownToBlocks(__content, options);
         const frontmasster = app.metadataCache.getFileCache(nowFile)?.frontmatter
-		const {abName} = this.dbDetails
-		const notionIDKey = `NotionID-${abName}`;
-		const notionID = frontmasster ? frontmasster[notionIDKey] : null;
+        const { abName } = this.dbDetails
+        const notionIDKey = `NotionID-${abName}`;
+        const notionID = frontmasster ? frontmasster[notionIDKey] : null;
 
 
-		// increase the limits
-		// Motivated by https://github.com/tryfabric/martian/issues/51
-		file2Block.forEach((block,index) => {
-			if (
-				block.type === 'paragraph' &&
-				block.paragraph.rich_text.length > LIMITS.RICH_TEXT_ARRAYS
-			) {
+        // increase the limits
+        // Motivated by https://github.com/tryfabric/martian/issues/51
+        file2Block.forEach((block, index) => {
+            if (
+                block.type === 'paragraph' &&
+                block.paragraph.rich_text.length > LIMITS.RICH_TEXT_ARRAYS
+            ) {
 
-				const newParagraphBlocks: any[] = []
-				const chunk:any = []
-				const richTextChunks = chunk(block.paragraph.rich_text, 100)
+                const newParagraphBlocks: any[] = []
+                const chunk: any = []
+                const richTextChunks = chunk(block.paragraph.rich_text, 100)
 
-				richTextChunks.forEach((chunk: any) => {
-					newParagraphBlocks.push(paragraph(chunk))
-				})
+                richTextChunks.forEach((chunk: any) => {
+                    newParagraphBlocks.push(paragraph(chunk))
+                })
 
-				file2Block.splice(index, 1, ...newParagraphBlocks)
+                file2Block.splice(index, 1, ...newParagraphBlocks)
 
-			}
-		})
+            }
+        })
 
         if (notionID) {
             res = await this.updatePage(

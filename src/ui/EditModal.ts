@@ -1,11 +1,12 @@
-import {App, ButtonComponent, Modal, Setting} from "obsidian";
-import {SettingModal} from "./settingModal";
+import { App, ButtonComponent, Setting } from "obsidian";
+import { customProperty, SettingModal } from "./settingModal";
 import ObsidianSyncNotionPlugin from "../main";
-import {DatabaseDetails, ObsidianSettingTab} from "./settingTabs";
-import {i18nConfig} from "../lang/I18n";
-import {CustomModal} from "./CustomModal";
+import { DatabaseDetails, ObsidianSettingTab } from "./settingTabs";
+import { i18nConfig } from "../lang/I18n";
 
 export class EditModal extends SettingModal {
+	propertyLines: Setting[] = []; // Store all property line settings
+	[key: string]: any; // Index signature
 	dataTemp: Record<string, any> = {
 		databaseFormatTemp: '',
 		// databaseFormatTempInd: false,
@@ -70,7 +71,7 @@ export class EditModal extends SettingModal {
 			this.dataTemp.tagButtonTemp = dbDetails.tagButton;
 			this.dataTemp.customTitleButtonTemp = dbDetails.customTitleButton;
 			this.dataTemp.customTitleNameTemp = dbDetails.customTitleName;
-			this.dataTemp.customPropertiesTemp = dbDetails.customProperties;
+			this.dataTemp.customPropertiesTemp = dbDetails.customProperties.map(prop => ({ ...prop })); // Ensure deep copy
 			// this.dataTemp.customValues = dbDetails.customValues;
 			this.dataTemp.savedTemp = dbDetails.saved;
 
@@ -83,7 +84,7 @@ export class EditModal extends SettingModal {
 			this.dataPrev.tagButtonPrev = dbDetails.tagButton;
 			this.dataPrev.customTitleButtonPrev = dbDetails.customTitleButton;
 			this.dataPrev.customTitleNamePrev = dbDetails.customTitleName;
-			this.dataPrev.customPropertiesPrev = dbDetails.customProperties;
+			this.dataPrev.customPropertiesPrev = dbDetails.customProperties.map(prop => ({ ...prop })); // Ensure deep copy
 			// this.dataTemp.customValues = dbDetails.customValues;
 			this.dataPrev.savedPrev = dbDetails.saved;
 		}
@@ -94,64 +95,66 @@ export class EditModal extends SettingModal {
 		this.containerEl.addClass("edit-modal");
 		this.titleEl.setText('Edit Database');
 
-		let {contentEl} = this;
+		let { contentEl } = this;
 		contentEl.empty();
 
 		const editDiv = contentEl.createDiv('edit-div');
 		const nextTabs = contentEl.createDiv('next-tabs');
 
-			new Setting(editDiv)
-				.setName(i18nConfig.databaseFormat)
-				.setDesc(i18nConfig.databaseFormatDesc)
-				.addDropdown((component) => {
-					component
-						.addOption('none', '')
-						.addOption('general', i18nConfig.databaseGeneral)
-						.addOption('next', i18nConfig.databaseNext)
-						.addOption('custom', i18nConfig.databaseCustom)
-						.setValue(this.dataTemp.databaseFormatTemp)
-						.onChange(async (value) => {
-							this.dataTemp.databaseFormatTemp = value;
-							nextTabs.empty();
-							this.updateContentBasedOnSelection(value, nextTabs);
-						});
 
-					// Initialize content based on the current dropdown value
-					this.updateContentBasedOnSelection(this.dataTemp.databaseFormatTemp, nextTabs);
-				});
+		new Setting(editDiv)
+			.setName(i18nConfig.databaseFormat)
+			.setDesc(i18nConfig.databaseFormatDesc)
+			.addDropdown((component) => {
+				component
+					.addOption('none', '')
+					.addOption('general', i18nConfig.databaseGeneral)
+					.addOption('next', i18nConfig.databaseNext)
+					.addOption('custom', i18nConfig.databaseCustom)
+					.setValue(this.dataTemp.databaseFormatTemp)
+					.onChange(async (value) => {
+						this.dataTemp.databaseFormatTemp = value;
+						nextTabs.empty();
+						this.updateContentBasedOnSelection(value, nextTabs);
+					});
+
+				// Initialize content based on the current dropdown value
+				this.updateContentBasedOnSelection(this.dataTemp.databaseFormatTemp, nextTabs);
+			});
 
 
 		// add save button
 		let footerEl = contentEl.createDiv('save-button');
 		let saveButton = new Setting(footerEl)
 		saveButton.addButton((button: ButtonComponent) => {
-				return button
-					.setTooltip('Save')
-					.setIcon('checkmark')
-					.onClick(async () => {
-						this.dataTemp.savedTempInd = true;
-						this.dataTemp.savedTemp = true;
-						this.close();
-					});
-			}
+			return button
+				.setTooltip('Save')
+				.setIcon('checkmark')
+				.onClick(async () => {
+					this.dataTemp.savedTempInd = true;
+					this.dataTemp.savedTemp = true;
+					// console.log(this.dataTemp);
+					// console.log(this.dataPrev);
+					this.close();
+				});
+		}
 		);
 		saveButton.addExtraButton((button) => {
-				return button
-					.setTooltip('Cancel')
-					.setIcon('cross')
-					.onClick(() => {
-						this.dataTemp.savedTempInd = false;
-						this.close();
-					});
-			}
+			return button
+				.setTooltip('Cancel')
+				.setIcon('cross')
+				.onClick(() => {
+					// console.log(this.dataTemp);
+					// console.log(this.dataPrev);
+					this.close();
+				});
+		}
 		);
-
 	}
 
 	onOpen(): void {
 		this.display()
 	}
-
 
 	updateContentBasedOnSelection(value: string, nextTabs: HTMLElement): void {
 		// Clear existing content
@@ -162,13 +165,13 @@ export class EditModal extends SettingModal {
 			nextTabs.createEl('h3', { text: i18nConfig.NotionGeneralSettingHeader });
 
 			// add full name
-			this.createSettingEl(nextTabs, i18nConfig.databaseFullName, i18nConfig.databaseFullNameDesc, 'text', i18nConfig.databaseFullNameText, this.dataTemp.databaseFullNameTemp,'dataTemp', 'databaseFullNameTemp')
+			this.createSettingEl(nextTabs, i18nConfig.databaseFullName, i18nConfig.databaseFullNameDesc, 'text', i18nConfig.databaseFullNameText, this.dataTemp.databaseFullNameTemp, 'dataTemp', 'databaseFullNameTemp')
 
 			// add abbreviate name
-			this.createSettingEl(nextTabs, i18nConfig.databaseAbbreviateName, i18nConfig.databaseAbbreviateNameDesc, 'text', i18nConfig.databaseAbbreviateNameText, this.dataTemp.databaseAbbreviateNameTemp, 'dataTemp','databaseAbbreviateNameTemp')
+			this.createSettingEl(nextTabs, i18nConfig.databaseAbbreviateName, i18nConfig.databaseAbbreviateNameDesc, 'text', i18nConfig.databaseAbbreviateNameText, this.dataTemp.databaseAbbreviateNameTemp, 'dataTemp', 'databaseAbbreviateNameTemp')
 
 			// tag button
-			this.createSettingEl(nextTabs, i18nConfig.NotionTagButton, i18nConfig.NotionTagButtonDesc, 'toggle', i18nConfig.NotionCustomTitleText, this.dataTemp.tagButtonTemp, 'dataTemp','tagButtonTemp')
+			this.createSettingEl(nextTabs, i18nConfig.NotionTagButton, i18nConfig.NotionTagButtonDesc, 'toggle', i18nConfig.NotionCustomTitleText, this.dataTemp.tagButtonTemp, 'dataTemp', 'tagButtonTemp')
 
 			// add custom title button
 
@@ -180,48 +183,27 @@ export class EditModal extends SettingModal {
 						.setValue(this.dataTemp.customTitleButtonTemp)
 						.onChange(async (value) => {
 							this.dataTemp.customTitleButtonTemp = value;
-
 							this.updateSettingEl(CustomNameEl, value)
 
-							// this.updateSettingEl(CustomValuesEl, value)
-
-							// await this.plugin.saveSettings();
-							// await this.plugin.commands.updateCommand();
 						})
 				);
 
 
 			// add custom title name
 			const CustomNameEl = this.createStyleDiv('custom-name', (this.dataTemp.customTitleButtonTemp), nextTabs);
-			this.createSettingEl(CustomNameEl, i18nConfig.NotionCustomTitleName, i18nConfig.NotionCustomTitleNameDesc, 'text', i18nConfig.NotionCustomTitleText, this.dataTemp.customTitleNameTemp,'dataTemp', 'customTitleNameTemp')
+			this.createSettingEl(CustomNameEl, i18nConfig.NotionCustomTitleName, i18nConfig.NotionCustomTitleNameDesc, 'text', i18nConfig.NotionCustomTitleText, this.dataTemp.customTitleNameTemp, 'dataTemp', 'customTitleNameTemp')
 
 
 			// add api key
-			this.createSettingEl(nextTabs, i18nConfig.NotionAPI, i18nConfig.NotionAPIDesc, 'password', i18nConfig.NotionAPIText, this.dataTemp.notionAPITemp, 'dataTemp','notionAPITemp')
+			this.createSettingEl(nextTabs, i18nConfig.NotionAPI, i18nConfig.NotionAPIDesc, 'password', i18nConfig.NotionAPIText, this.dataTemp.notionAPITemp, 'dataTemp', 'notionAPITemp')
 
 			// add database id
-			this.createSettingEl(nextTabs, i18nConfig.DatabaseID, i18nConfig.DatabaseIDDesc, 'password', i18nConfig.DatabaseIDText, this.dataTemp.databaseIDTemp, 'dataTemp','databaseIDTemp')
+			this.createSettingEl(nextTabs, i18nConfig.DatabaseID, i18nConfig.DatabaseIDDesc, 'password', i18nConfig.DatabaseIDText, this.dataTemp.databaseIDTemp, 'dataTemp', 'databaseIDTemp')
 
 
 		} else if (value === 'next') {
 
 			nextTabs.createEl('h3', { text: i18nConfig.NotionNextSettingHeader });
-
-			// add full name
-			this.createSettingEl(nextTabs, i18nConfig.databaseFullName, i18nConfig.databaseFullNameDesc, 'text', i18nConfig.databaseFullNameText, this.dataTemp.databaseFullNameTemp, 'dataTemp','databaseFullNameTemp')
-
-			// add abbreviate name
-			this.createSettingEl(nextTabs, i18nConfig.databaseAbbreviateName, i18nConfig.databaseAbbreviateNameDesc, 'text', i18nConfig.databaseAbbreviateNameText, this.dataTemp.databaseAbbreviateNameTemp, 'dataTemp','databaseAbbreviateNameTemp')
-
-			// add api key
-			this.createSettingEl(nextTabs, i18nConfig.NotionAPI, i18nConfig.NotionAPIDesc, 'password', i18nConfig.NotionAPIText, this.dataTemp.notionAPITemp, 'dataTemp','notionAPITemp')
-
-			// add database id
-			this.createSettingEl(nextTabs, i18nConfig.DatabaseID, i18nConfig.DatabaseIDDesc, 'password', i18nConfig.DatabaseIDText, this.dataTemp.databaseIDTemp, 'dataTemp','databaseIDTemp')
-
-		} else if (value === 'custom') {
-
-			nextTabs.createEl('h3', {text: i18nConfig.NotionCustomSettingHeader});
 
 			// add full name
 			this.createSettingEl(nextTabs, i18nConfig.databaseFullName, i18nConfig.databaseFullNameDesc, 'text', i18nConfig.databaseFullNameText, this.dataTemp.databaseFullNameTemp, 'dataTemp', 'databaseFullNameTemp')
@@ -235,31 +217,123 @@ export class EditModal extends SettingModal {
 			// add database id
 			this.createSettingEl(nextTabs, i18nConfig.DatabaseID, i18nConfig.DatabaseIDDesc, 'password', i18nConfig.DatabaseIDText, this.dataTemp.databaseIDTemp, 'dataTemp', 'databaseIDTemp')
 
-			// add new property button
-			new Setting(nextTabs)
-				.setName(i18nConfig.NotionCustomValues)
-				.setDesc(i18nConfig.NotionCustomValuesDesc)
-				.addButton((button: ButtonComponent) => {
-						return button
-							.setTooltip('Add new property')
-							.setIcon('plus')
-							.onClick(async () => {
-								let customModal = new CustomModal(this.app);
+		} else if (value === 'custom') {
 
-								customModal.onClose = () => {
+			nextTabs.createEl('h3', { text: i18nConfig.NotionCustomSettingHeader });
 
-									this.renderCustomPreview(customModal.properties, nextTabs)
-									this.dataTemp.customPropertiesTemp = customModal.properties;
-								}
+			// add full name
+			this.createSettingEl(nextTabs, i18nConfig.databaseFullName, i18nConfig.databaseFullNameDesc, 'text', i18nConfig.databaseFullNameText, this.dataTemp.databaseFullNameTemp, 'dataTemp', 'databaseFullNameTemp')
 
-								customModal.open();
-							});
-					}
-				);
+			// add abbreviate name
+			this.createSettingEl(nextTabs, i18nConfig.databaseAbbreviateName, i18nConfig.databaseAbbreviateNameDesc, 'text', i18nConfig.databaseAbbreviateNameText, this.dataTemp.databaseAbbreviateNameTemp, 'dataTemp', 'databaseAbbreviateNameTemp')
+
+			// add api key
+			this.createSettingEl(nextTabs, i18nConfig.NotionAPI, i18nConfig.NotionAPIDesc, 'password', i18nConfig.NotionAPIText, this.dataTemp.notionAPITemp, 'dataTemp', 'notionAPITemp')
+
+			// add database id
+			this.createSettingEl(nextTabs, i18nConfig.DatabaseID, i18nConfig.DatabaseIDDesc, 'password', i18nConfig.DatabaseIDText, this.dataTemp.databaseIDTemp, 'dataTemp', 'databaseIDTemp')
+
+			// add custom properties
+			this.initializePropertyLines(nextTabs, this.dataTemp.customPropertiesTemp);
 		}
-
 	}
 
+	initializePropertyLines(containerEl: HTMLElement, properties: customProperty[]): void {
+		if (!containerEl) {
+			console.error('Failed to initialize property lines: containerEl is null');
+			return;
+		}
+
+		new Setting(containerEl)
+			.setName("Add New Property")
+			.setDesc("Click to add a new property")
+			.addButton(button => {
+				return button
+					.setButtonText('Add')
+					.setTooltip('Add one more property')
+					.onClick(() => {
+						this.createPropertyLine(containerEl, properties);
+					});
+			});
+
+		properties.forEach(property => {
+			this.updatePropertyLine(containerEl, property, properties);
+		});
+	}
+
+
+	updatePropertyLine(containerEl: HTMLElement, property: customProperty, properties: customProperty[]) {
+		let isExistingProperty = property !== null;
+		const propertyIndex = isExistingProperty ? property.index : properties.length;
+
+		const propertyLine = new Setting(containerEl)
+			.setName(propertyIndex === 0 ? i18nConfig.CustomPropertyFirstColumn : `${i18nConfig.CustomProperty} ${propertyIndex}`)
+			.setDesc(propertyIndex === 0 ? i18nConfig.CustomPropertyFirstColumnDesc : "");
+
+		propertyLine.addText(text => {
+			text.setPlaceholder(i18nConfig.CustomPropertyName)
+				.setValue(isExistingProperty ? property.customName : "")
+				.onChange(value => {
+					const actualIndex = properties.findIndex(p => p.index === propertyIndex);
+					if (actualIndex !== -1) {
+						properties[actualIndex].customName = value;
+					} else {
+						properties.push({ customName: value, customType: '', index: propertyIndex });
+						isExistingProperty = true;
+					}
+				});
+		});
+
+		propertyLine.addDropdown((dropdown) => {
+			const options: Record<string, string> = {
+				'text': 'Text',
+				'number': 'Number',
+				'select': 'Select',
+				'multi_select': 'Multi-Select',
+				'date': 'Date',
+				'files': 'Files & Media',
+				'checkbox': 'Checkbox',
+				'url': 'URL',
+				'email': 'Email',
+				'phone_number': 'Phone Number'
+			};
+
+			if (propertyIndex === 0) {
+				dropdown.addOption('title', 'Title');
+			} else {
+				Object.keys(options).forEach(key => {
+					dropdown.addOption(key, options[key]);
+				});
+			}
+
+			dropdown.setValue(isExistingProperty ? property.customType : "")
+				.onChange(value => {
+					const actualIndex = properties.findIndex(p => p.index === propertyIndex);
+					if (actualIndex !== -1) {
+						properties[actualIndex].customType = value;
+					} else if (!isExistingProperty) {
+						properties.push({ customName: '', customType: value, index: propertyIndex });
+						isExistingProperty = true; // Update the flag to prevent re-adding
+					}
+				});
+		});
+
+		if (propertyIndex > 0) {
+			propertyLine.addButton(button => {
+				return button
+					.setTooltip("Delete")
+					.setIcon("trash")
+					.onClick(() => {
+						console.log('Deleting property', properties[propertyIndex]);
+						this.deleteProperty(propertyIndex, properties);
+					});
+			});
+		}
+
+		this.propertyLines.push(propertyLine);
+		this.updatePropertyLines();
+
+	}
 
 	createStyleDiv(className: string, commandValue: boolean = false, parentEl: HTMLElement): HTMLDivElement {
 		return super.createStyleDiv(className, commandValue, parentEl);

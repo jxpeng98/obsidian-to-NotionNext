@@ -1,6 +1,6 @@
 import { App, Notice, TFile } from "obsidian";
 import ObsidianSyncNotionPlugin from "../main";
-import {DatabaseDetails} from "../ui/settingTabs";
+import { DatabaseDetails } from "../ui/settingTabs";
 
 export async function updateYamlInfo(
     yamlContent: string,
@@ -8,14 +8,14 @@ export async function updateYamlInfo(
     res: any,
     app: App,
     plugin: ObsidianSyncNotionPlugin,
-	dbDetails: DatabaseDetails,
+    dbDetails: DatabaseDetails,
 ) {
     let { url, id } = res.json
     // replace www to notionID
     const { notionUser } = plugin.settings;
-	const { abName } = dbDetails
-	const notionIDKey = `NotionID-${abName}`;
-	const linkKey = `link-${abName}`;
+    const { abName } = dbDetails
+    const notionIDKey = `NotionID-${abName}`;
+    const linkKey = `link-${abName}`;
 
     if (notionUser !== "") {
         // replace url str "www" to notionID

@@ -33,6 +33,8 @@ export const zh = {
 	NotionUserDesc:
 		"数据库分享链接类似：https://username.notion.site/。你的 Notion ID 是 [username]",
 	NotionUserText: "输入你的 Notion ID",
+	NotionLinkDisplay: "Notion 链接显示",
+	NotionLinkDisplayDesc: "默认开启，如果你不想在front matter中显示链接，请关闭",
 	NotionGeneralSettingHeader: "普通 Notion 数据库设置",
 	NotionGeneralButton: "普通数据库同步",
 	NotionGeneralButtonDesc: "打开此选项，同步到普通数据库命令将显示在命令面板中（默认：开）",
