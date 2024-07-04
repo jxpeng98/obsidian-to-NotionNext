@@ -1,19 +1,22 @@
 import {
 	Modal,
 	Setting,
-	PluginSettingTab,
 	ButtonComponent, App
 } from 'obsidian';
 
-import {i18nConfig} from "../lang/I18n";
+import { i18nConfig } from "../lang/I18n";
 import ObsidianSyncNotionPlugin from "../main";
-import {DatabaseDetails, ObsidianSettingTab} from "./settingTabs";
-// import {CustomModal} from "./CustomModal";
+import { DatabaseDetails, ObsidianSettingTab } from "./settingTabs";
 
+export interface customProperty {
+	customName: string;
+	customType: string;
+	index: number;
+}
 
 export class SettingModal extends Modal {
 	propertyLines: Setting[] = []; // Store all property line settings
-	properties: { customName: string, customType: string , index: number}[] = []; // Array to store property values and types
+	properties: customProperty[] = []; // Array to store property values and types
 	[key: string]: any; // Index signature
 	data: Record<string, any> = {
 		databaseFormat: 'none',
@@ -56,7 +59,7 @@ export class SettingModal extends Modal {
 		this.titleEl.setText('Add new database');
 
 		// create the dropdown button to select the database format
-		let {contentEl} = this;
+		let { contentEl } = this;
 		contentEl.empty();
 
 		const settingDiv = contentEl.createDiv('setting-div');
@@ -80,7 +83,7 @@ export class SettingModal extends Modal {
 					});
 
 				// Initialize content based on the current dropdown value
-				(this.data.saved) ? this.updateContentBasedOnSelection(this.data.databaseFormat, nextTabs) : this.updateContentBasedOnSelection(this.data.databaseFormat, nextTabs);
+				(this.data.saved) ? this.updateContentBasedOnSelection(this.data.databaseFormat, nextTabs) : this.updateContentBasedOnSelection(this.plugin.settings.databaseFormat, nextTabs);
 
 			});
 
@@ -89,26 +92,26 @@ export class SettingModal extends Modal {
 		let footerEl = contentEl.createDiv('save-button');
 		let saveButton = new Setting(footerEl)
 		saveButton.addButton((button: ButtonComponent) => {
-				return button
-					.setTooltip('Save')
-					.setIcon('checkmark')
-					.onClick(async () => {
-						this.data.saved = true;
-						this.data.customProperties = this.properties;
-						this.close();
-					});
-			}
+			return button
+				.setTooltip('Save')
+				.setIcon('checkmark')
+				.onClick(async () => {
+					this.data.saved = true;
+					this.data.customProperties = this.properties;
+					this.close();
+				});
+		}
 		);
 		saveButton.addExtraButton((button) => {
-				return button
-					.setTooltip('Cancel')
-					.setIcon('cross')
-					.onClick(() => {
-						this.data.saved = false;
-						this.data.customProperties = this.properties;
-						this.close();
-					});
-			}
+			return button
+				.setTooltip('Cancel')
+				.setIcon('cross')
+				.onClick(() => {
+					this.data.saved = false;
+					// this.data.customProperties = this.properties;
+					this.close();
+				});
+		}
 		);
 	}
 
@@ -118,7 +121,7 @@ export class SettingModal extends Modal {
 
 		// Generate content based on the selected value
 		if (value === 'general') {
-			nextTabs.createEl('h3', {text: i18nConfig.NotionGeneralSettingHeader});
+			nextTabs.createEl('h3', { text: i18nConfig.NotionGeneralSettingHeader });
 
 			// add full name
 			this.createSettingEl(nextTabs, i18nConfig.databaseFullName, i18nConfig.databaseFullNameDesc, 'text', i18nConfig.databaseFullNameText, this.data.databaseFullName, 'data', 'databaseFullName')
@@ -139,7 +142,6 @@ export class SettingModal extends Modal {
 						.setValue(this.data.customTitleButton)
 						.onChange(async (value) => {
 							this.data.customTitleButton = value;
-
 							this.updateSettingEl(CustomNameEl, value)
 
 						})
@@ -160,7 +162,7 @@ export class SettingModal extends Modal {
 
 		} else if (value === 'next') {
 
-			nextTabs.createEl('h3', {text: i18nConfig.NotionNextSettingHeader});
+			nextTabs.createEl('h3', { text: i18nConfig.NotionNextSettingHeader });
 
 			// add full name
 			this.createSettingEl(nextTabs, i18nConfig.databaseFullName, i18nConfig.databaseFullNameDesc, 'text', i18nConfig.databaseFullNameText, this.data.databaseFullName, 'data', 'databaseFullName')
@@ -177,7 +179,7 @@ export class SettingModal extends Modal {
 
 		} else if (value === 'custom') {
 
-			nextTabs.createEl('h3', {text: i18nConfig.NotionCustomSettingHeader});
+			nextTabs.createEl('h3', { text: i18nConfig.NotionCustomSettingHeader });
 
 			// add full name
 			this.createSettingEl(nextTabs, i18nConfig.databaseFullName, i18nConfig.databaseFullNameDesc, 'text', i18nConfig.databaseFullNameText, this.data.databaseFullName, 'data', 'databaseFullName')
@@ -196,17 +198,16 @@ export class SettingModal extends Modal {
 				.setName(i18nConfig.NotionCustomValues)
 				.setDesc(i18nConfig.NotionCustomValuesDesc)
 				.addButton((button: ButtonComponent) => {
-						return button
-							.setTooltip('Add new property')
-							.setIcon('plus')
-							.onClick(async () => {
-								const customTabs = nextTabs.createDiv("custom-tabs");
-								this.createPropertyLine(customTabs);
-							});
-					}
+					return button
+						.setTooltip('Add one more property')
+						.setButtonText('Add New Property')
+						.onClick(async () => {
+							const customTabs = nextTabs.createDiv("custom-tabs");
+							this.createPropertyLine(customTabs, this.properties);
+						});
+				}
 				);
 		}
-
 	}
 
 
@@ -215,23 +216,22 @@ export class SettingModal extends Modal {
 		this.display()
 	}
 
-	createPropertyLine(containerEl: HTMLElement): void {
-		const propertyIndex = this.properties.length;
+	createPropertyLine(containerEl: HTMLElement, properties: customProperty[]): void {
+		const propertyIndex = properties.length;
 
-		this.properties.push({customName: "", customType: "", index: propertyIndex});
-
-		console.log(this.properties[propertyIndex].index);
+		properties.push({ customName: "", customType: "", index: propertyIndex });
 
 		const propertyLine = new Setting(containerEl)
 			.setName(propertyIndex === 0 ? i18nConfig.CustomPropertyFirstColumn : `${i18nConfig.CustomProperty} ${propertyIndex}`)
 			.setDesc(propertyIndex === 0 ? i18nConfig.CustomPropertyFirstColumnDesc : "");
+
 		propertyLine.addText(text => {
 			text.setPlaceholder(i18nConfig.CustomPropertyName)
 				.setValue("")
 				.onChange(value => {
-					let actualIndex = this.properties.findIndex(p => p.index === propertyIndex);
+					let actualIndex = properties.findIndex(p => p.index === propertyIndex);
 					if (actualIndex !== -1) {
-						this.properties[actualIndex].customName = value;
+						properties[actualIndex].customName = value;
 					}
 				});
 		});
@@ -258,8 +258,7 @@ export class SettingModal extends Modal {
 				// 'last_edited_by': 'Last Edited By',
 			};
 
-			// Use a reference to the current property object
-			const currentProperty = this.properties[propertyIndex];
+			const currentProperty = properties[propertyIndex];
 
 			if (propertyIndex === 0) {
 				dropdown.addOption("title", "Title");
@@ -273,7 +272,7 @@ export class SettingModal extends Modal {
 					if (currentProperty) {
 						currentProperty.customType = value;
 						// Retrieve the index of currentProperty from the properties array
-						const updatedIndex = this.properties.findIndex(p => p === currentProperty);
+						const updatedIndex = properties.findIndex(p => p === currentProperty);
 						console.log(`Updated value at index ${updatedIndex}: ${value}`);
 					} else {
 						console.log("Property not found, may have been deleted.");
@@ -288,32 +287,29 @@ export class SettingModal extends Modal {
 					.setTooltip("Delete")
 					.setIcon("trash")
 					.onClick(() => {
-						this.deleteProperty(propertyIndex);
+						this.deleteProperty(propertyIndex, properties);
 					});
 			});
 		}
 
 		this.propertyLines.push(propertyLine);
+		this.updatePropertyLines(); // Ensure property lines are updated after creation
 	}
 
-	deleteProperty(propertyIndex: number) {
-		let actualIndex = this.properties.findIndex(p => p.index === propertyIndex);
+	deleteProperty(propertyIndex: number, properties: customProperty[]): void {
+		let actualIndex = properties.findIndex(p => p.index === propertyIndex);
 		if (actualIndex !== -1) {
-			this.properties.splice(actualIndex, 1);
-			this.propertyLines[actualIndex].settingEl.remove();
-			this.propertyLines.splice(actualIndex, 1);
-
+			properties.splice(actualIndex, 1);
+			if (this.propertyLines[actualIndex]) {
+				this.propertyLines[actualIndex].settingEl.remove();
+				this.propertyLines.splice(actualIndex, 1);
+			}
 			// Update indices in the properties array
-			this.properties.forEach((prop, idx) => {
+			properties.forEach((prop, idx) => {
 				prop.index = idx;
 			});
 
 			this.updatePropertyLines();
-
-			console.log("Updated indices after deletion:");
-			this.properties.forEach((prop, idx) => {
-				console.log(`Index ${idx}: ${prop.index}`);
-			});
 		}
 	}
 

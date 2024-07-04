@@ -88,9 +88,6 @@ export class ObsidianSettingTab extends PluginSettingTab {
 
 		this.createSettingEl(containerEl, i18nConfig.NotionLinkDisplay, i18nConfig.NotionLinkDisplayDesc, 'toggle', i18nConfig.NotionLinkDisplay, this.plugin.settings.NotionLinkDisplay, 'NotionLinkDisplay')
 
-		// TODO: add toggle to enable or disable link display
-
-
 		// add new button
 
 		new Setting(containerEl)
@@ -275,7 +272,7 @@ export class ObsidianSettingTab extends PluginSettingTab {
 								}
 							}
 
-							modal.open();
+							modal.open ();
 						});
 				});
 
@@ -290,6 +287,8 @@ export class ObsidianSettingTab extends PluginSettingTab {
 							modal.onClose = () => {
 								if (modal.data.deleted) {
 									this.plugin.deleteDatabaseDetails(dbDetails);
+
+									console.log(dbDetails.fullName + " deleted");
 
 									this.plugin.commands.updateCommand();
 

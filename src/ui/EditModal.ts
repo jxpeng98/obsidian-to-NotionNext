@@ -5,6 +5,7 @@ import { DatabaseDetails, ObsidianSettingTab } from "./settingTabs";
 import { i18nConfig } from "../lang/I18n";
 
 export class EditModal extends SettingModal {
+	propertyLines: Setting[] = []; // Store all property line settings
 	[key: string]: any; // Index signature
 	dataTemp: Record<string, any> = {
 		databaseFormatTemp: '',
@@ -132,6 +133,8 @@ export class EditModal extends SettingModal {
 				.onClick(async () => {
 					this.dataTemp.savedTempInd = true;
 					this.dataTemp.savedTemp = true;
+					console.log(this.dataTemp);
+					console.log(this.dataPrev);
 					this.close();
 				});
 		}
@@ -321,37 +324,16 @@ export class EditModal extends SettingModal {
 					.setTooltip("Delete")
 					.setIcon("trash")
 					.onClick(() => {
+						console.log('Deleting property', properties[propertyIndex]);
 						this.deleteProperty(propertyIndex, properties);
 					});
 			});
 		}
+
+		this.propertyLines.push(propertyLine);
+		this.updatePropertyLines();
+
 	}
-
-	createPropertyLine(containerEl: HTMLElement, properties: customProperty[]) {
-		super.createPropertyLine(containerEl, properties);
-	}
-
-	deleteProperty(propertyIndex: number, properties: customProperty[]) {
-		let actualIndex = properties.findIndex(p => p.index === propertyIndex);
-		if (actualIndex > 0) {
-			properties.splice(actualIndex, 1);
-			this.propertyLines[actualIndex].settingEl.remove();
-			this.propertyLines.splice(actualIndex, 1);
-
-			properties.forEach((prop, idx) => {
-				prop.index = idx;
-			});
-
-			this.updatePropertyLines();
-		}
-	}
-
-	updatePropertyLines() {
-		this.propertyLines.forEach((line, idx) => {
-			line.setName(idx === 0 ? i18nConfig.CustomPropertyFirstColumn : `${i18nConfig.CustomProperty} ${idx}`);
-		});
-	}
-
 
 	createStyleDiv(className: string, commandValue: boolean = false, parentEl: HTMLElement): HTMLDivElement {
 		return super.createStyleDiv(className, commandValue, parentEl);
