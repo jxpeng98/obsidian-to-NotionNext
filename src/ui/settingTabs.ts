@@ -12,6 +12,7 @@ export interface PluginSettings {
 	databaseIDNext: string;
 	bannerUrl: string;
 	notionUser: string;
+	NotionLinkDisplay: boolean;
 	proxy: string;
 	GeneralButton: boolean;
 	tagButton: boolean;
@@ -47,6 +48,7 @@ export const DEFAULT_SETTINGS: PluginSettings = {
 	databaseIDNext: "",
 	bannerUrl: "",
 	notionUser: "",
+	NotionLinkDisplay: true,
 	proxy: "",
 	GeneralButton: true,
 	tagButton: true,
@@ -82,6 +84,9 @@ export class ObsidianSettingTab extends PluginSettingTab {
 		this.createSettingEl(containerEl, i18nConfig.BannerUrl, i18nConfig.BannerUrlDesc, 'text', i18nConfig.BannerUrlText, this.plugin.settings.bannerUrl, 'bannerUrl')
 
 		this.createSettingEl(containerEl, i18nConfig.NotionUser, i18nConfig.NotionUserDesc, 'text', i18nConfig.NotionUserText, this.plugin.settings.notionUser, 'notionUser')
+
+		this.createSettingEl(containerEl, i18nConfig.NotionLinkDisplay, i18nConfig.NotionLinkDisplayDesc, 'toggle', i18nConfig.NotionLinkDisplay, this.plugin.settings.NotionLinkDisplay, 'NotionLinkDisplay')
+
 
 		// add new button
 		new Setting(containerEl)
