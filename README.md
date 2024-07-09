@@ -14,6 +14,13 @@
 
 **现在支持NotionNext和普通Notion数据库，可自定义数据库列表。**
 
+## Precautions
+### For customised database users
+**⚠️⚠️⚠️: The exist customised database should be recreated if you want to update to version 2.3.0. The new version has a new database structure, and the old database structure is not compatible with the new version to build the index properly.**
+
+### 自定义数据库用户
+**⚠️⚠️⚠️: 如果你想要更新到2.3.0版本，你需要重新创建自定义数据库。新版本有一个新的数据库结构，旧的数据库结构无法构建索引。**
+
 ## TODO List
 
 - [x] ~~Modify the Edit function for the custom properties. 改进自定义属性的编辑功能~~
@@ -21,13 +28,6 @@
 - [x] ~~Support custom properties for Notion General database. 支持自定义属性~~
 - [x] ~~Support preview for database details in plugin settings. 支持预览数据库详情~~
 - [x] ~~Support edit for database details in plugin settings. 支持编辑数据库详情~~
-
-## Precautions
-### For customised database users
-**⚠️⚠️⚠️: The exist customised database should be recreated if you want to update to version 2.3.0. The new version has a new database structure, and the old database structure is not compatible with the new version to build the index properly.**
-
-### 自定义数据库用户
-**⚠️⚠️⚠️: 如果你想要更新到2.3.0版本，你需要重新创建自定义数据库。新版本有一个新的数据库结构，旧的数据库结构无法构建索引。**
 
 ## How to use
 You need seven steps to use this plugin in your Obsidian.
