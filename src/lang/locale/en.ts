@@ -27,11 +27,11 @@ export const en = {
 	DatabaseIDText: "Enter your Database ID",
 	BannerUrl: "Banner url (optional)",
 	BannerUrlDesc:
-"Default is empty, if you want to show a banner, please enter the url (like: https://abc.com/b.png)",
+		"Default is empty, if you want to show a banner, please enter the url (like: https://abc.com/b.png)",
 	BannerUrlText: "Enter your banner url",
 	NotionUser: "Notion ID (username, optional)",
 	NotionUserDesc:
-"Collect from share link likes:https://username.notion.site. Your notion id is [username]",
+		"Collect from share link likes:https://username.notion.site. Your notion id is [username]",
 	NotionUserText: "Enter your notion ID",
 	NotionLinkDisplay: "Notion Link Display",
 	NotionLinkDisplayDesc: "Default is ON, if you want to hide the link in the front matter, please turn it off",
@@ -48,23 +48,23 @@ export const en = {
 	NotionCustomValues: "Customise values property",
 	NotionCustomValuesDesc: "Modify the column name of the Notion database，one per line",
 	NotionCustomValuesText: "Enter all properties that you want to sync",
-	NotYetFinish:
-"Not finished. This function will be available in the next version",
+	NotYetFinish: "Not finished. This function will be available in the next version",
 	PlaceHolder: "Enter database Name",
 	"notion-logo": "Share to NotionNext",
-	"sync-success": "Sync to NotionNext success: \n",
-	"sync-fail": "Sync to NotionNext fail: \n",
+	"sync-preffix": "Sync to ",
+	"sync-success": "success",
+	"sync-fail": "failed",
 	"open-notion": "Please open the file that needs to be synchronized",
 	"config-secrets-notion-api":
-"Please set up the notion API in the settings tab.",
+		"Please set up the notion API in the settings tab.",
 	"config-secrets-database-id":
-"Please set up the database id in the settings tab.",
+		"Please set up the database id in the settings tab.",
 	"set-tags-fail":
-"Set tags fail,please check the frontmatter of the file or close the tag switch in the settings tab.",
+		"Set tags fail,please check the frontmatter of the file or close the tag switch in the settings tab.",
 	NNonMissing:
-"The 'NNon' property is missing in the settings. Please set it up.",
+		"The 'NNon' property is missing in the settings. Please set it up.",
 	"set-api-id":
-"Please set up the notion API and database ID in the settings tab.",
+		"Please set up the notion API and database ID in the settings tab.",
 	NotionCustomSettingHeader: "Notion Custom Database Settings",
 	NotionCustomButton: "Notion Customised command switch",
 	NotionCustomButtonDesc: "Open this option, Sync to Notion Customised Database command will be displayed in the command palette",
@@ -75,4 +75,5 @@ export const en = {
 	AddCustomProperty: "Add Custom Property",
 	AddNewProperty: "Add New Property",
 	AddNewPropertyDesc: "Add new property match with your notion database",
+	CopyErrorMessage: "Auto copy failed, please copy it manually",
 }

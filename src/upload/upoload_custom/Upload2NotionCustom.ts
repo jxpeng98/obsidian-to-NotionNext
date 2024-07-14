@@ -99,6 +99,7 @@ export class Upload2NotionCustom extends UploadBaseCustom {
 		app: App,
 	): Promise<any> {
 		const options = {
+			strictImageUrls: true,
 			notionLimits: {
 				truncate: false,
 			}
@@ -123,7 +124,7 @@ export class Upload2NotionCustom extends UploadBaseCustom {
 		} else {
 			res = await this.createPage(cover, customValues, file2Block);
 		}
-		if (res.status === 200) {
+		if (res && res.status === 200) {
 			await updateYamlInfo(markdown, nowFile, res, app, this.plugin, this.dbDetails);
 		} else {
 			new Notice(`${res.text}`);
@@ -228,7 +229,7 @@ export class Upload2NotionCustom extends UploadBaseCustom {
 		}
 		);
 
-		console.log(properties)
+		// console.log(properties)
 
 		return {
 			parent: {
