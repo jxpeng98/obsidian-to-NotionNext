@@ -151,7 +151,7 @@ export class PreviewModal extends Modal {
 			propertyLine.addDropdown((dropdown) => {
 				const options: Record<string, string> = {
 					'title': 'Title',
-					'text': 'Text',
+					'rich_text': 'Text',
 					'number': 'Number',
 					'select': 'Select',
 					'multi_select': 'Multi-Select',

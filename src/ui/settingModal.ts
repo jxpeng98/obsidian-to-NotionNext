@@ -239,7 +239,7 @@ export class SettingModal extends Modal {
 
 		propertyLine.addDropdown((dropdown) => {
 			const options: Record<string, string> = {
-				'text': 'Text',
+				'rich_text': 'Text',
 				'number': 'Number',
 				'select': 'Select',
 				'multi_select': 'Multi-Select',
