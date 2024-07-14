@@ -37,31 +37,31 @@ If you want to use this plugin, you need to follow the following steps to set up
 
 ### 1. Setting up the Notion API
 
-1). go to [Notion API](https://www.notion.com/my-integrations) to create a new integration, and **copy the token**.
+1). Go to [Notion API](https://www.notion.com/my-integrations) to create a new integration, and **copy the token**.
 
-<video src="https://minioapi.pjx.ac.cn/img1/2024/07/e48fb26f7311d08429683e8e8f8b993e.mp4" controls="controls" width="100%" height="100%"></video>
+![create-api](https://minioapi.pjx.ac.cn/img1/2024/07/4ffbcb9c531e889f35151333913beec7.gif)
 
 2). Create a database in your Notion workspace.
 
 Open Notion, click top-left `Create` a new page` -> You can give a title for the page and press "/" Select 'Database - Full page'.
 
-<video src="https://minioapi.pjx.ac.cn/img1/2024/07/25e9512e92c733a29b432b8b821833c0.mp4" controls="controls" width="100%" height="100%"></video>
+![create-database](https://minioapi.pjx.ac.cn/img1/2024/07/f1bd993ed667bcc980a45194eb647c34.gif)
 
-Rename the database properties to `title` and `tags`. 
+Rename the database properties to `title` and `tags`.
 **⚠️⚠️`title` is the title column! `tags` is lower case⚠️⚠️**
 
-<video src="https://minioapi.pjx.ac.cn/img1/2024/07/03e7d7de23bd5a7fbf26cd600c14f5ce.mp4" controls="controls" width="100%" height="100%"></video>
+![rename-title-tags](https://minioapi.pjx.ac.cn/img1/2024/07/20c7b81761195706dde6e7dae69edbc4.gif)
 
 3). Add the Notion API integration.
 
 Click the right-top '...' -> connections -> connect to -> find the integration you created and connect it.
 
-<video src="https://minioapi.pjx.ac.cn/img1/2024/07/16279782787c7d41a90b72cc4d1c1a32.mp4" controls="controls" width="100%" height="100%"></video>
+![add-integration](https://minioapi.pjx.ac.cn/img1/2024/07/bf59397146d96727c96dac06515c6c22.gif)
 
 4). Publish the database to the public.
 Click the 'Share' -> 'Publish' -> 'Publish' -> **copy the database id from the URL**.
 
-<video src="https://minioapi.pjx.ac.cn/img1/2024/07/f584810dcff5344f8e02354e10429b75.mp4" controls="controls" width="100%" height="100%"></video>
+![share-publish](https://minioapi.pjx.ac.cn/img1/2024/07/5e5b9585cfa4a9086ef6704c3b48eacf.gif)
 
 ### 2. Setting up the plugin in Obsidian
 
@@ -127,11 +127,11 @@ The basic information is identical to the general database and NotionNext databa
 
 After adding the information, You can click `Add New Property` to add the properties you want to sync. There is no limit to the number of properties you can add.
 
-![customise-add-property](https://minioapi.pjx.ac.cn/img1/2024/07/26c0d4548acb3d9ca0a4dda1c08e6a43.png)
+![customise-add-property](https://minioapi.pjx.ac.cn/img1/2024/07/17cfbfa93d92404ff70d920302f15981.png)
 
 **⚠️⚠️⚠️**: **`Title column` is the main property in the Notion database, which has the open button to open the underlying page.** You can select the type of all other properties. **⚠️⚠️⚠️**
 
-![title-column](https://minioapi.pjx.ac.cn/img1/2024/07/00b379c95c43dadc4b3e63086f0121fc.png)
+![title-column](https://minioapi.pjx.ac.cn/img1/2024/07/0521b0aa6cedbe67bca4966bf79041ea.png)
 
 According to the previously shown database, you can use `title` as the `Title column`, and `Tags` as the property 1.
 
@@ -157,7 +157,9 @@ This is a test file.
 
 ```
 
-<video src="https://minioapi.pjx.ac.cn/img1/2024/07/b6e8befaf06a21b9606d8a145987111c.mp4" controls="controls" width="100%" height="100%"></video>
+After creating the note, you can click the `Share to NotionNext` button on the left sidebar to sync the note to Notion.
+
+![general-sync](https://minioapi.pjx.ac.cn/img1/2024/07/6a690dc4b04d6b74134e9d3d76636c1b.gif)
 
 #### 2️⃣ note for NotionNext database
 
@@ -182,10 +184,10 @@ tags:
 NotionID-pengjiaxin: 8ba573de-8fdf-4681-b063-c39d26e7860e
 ---
 
-this is a test file 
+this is a test file
 ```
 
-<video src="https://minioapi.pjx.ac.cn/img1/2024/07/d9fe6143d36e2d837c5e8f5e56cc19d7.mp4" controls="controls" width="100%" height="100%"></video>
+![notionnext-sync](https://minioapi.pjx.ac.cn/img1/2024/07/5539ec534e7a855ad87aa7949e5e836f.gif)
 
 #### 3️⃣ note for custom database
 
@@ -193,7 +195,7 @@ this is a test file
 
 Use the previously created general database and rename `title` to `Name` and `tags` to `Tags` in Notion.
 
-<video src="https://minioapi.pjx.ac.cn/img1/2024/07/388d62eec3457ff5d5e82257adabbbdc.mp4" controls="controls" width="100%" height="100%"></video>
+![rename-notion](https://minioapi.pjx.ac.cn/img1/2024/07/e4d1c988be22353537998db897c7a471.gif)
 
 The front matter for the custom database is as follows:
 
@@ -208,7 +210,7 @@ Tags:
 This is a test file. 
 ```
 
-<video src="https://minioapi.pjx.ac.cn/img1/2024/07/6881f569c7752d86899084531eb679d7.mp4" controls="controls" width="100%" height="100%"></video>
+![sync-custom](https://minioapi.pjx.ac.cn/img1/2024/07/973f17955cd921cca6b5007f0990eea4.gif)
 
 ##### sync more properties
 
@@ -217,26 +219,33 @@ Add more property to the custom database. For example, we can add a `summary` an
   1). Click `Edit` in the plugin settings.
   ![edit](https://minioapi.pjx.ac.cn/img1/2024/07/f50639d8118b1f106d7bb29be5d3527b.png)
   2). Click `Add` and add the `summary` and `date` property.
-  <video src="https://minioapi.pjx.ac.cn/img1/2024/07/972af360c07dd2a0a94ead4bab1c0a70.mp4" controls="controls" width="100%" height="100%"></video>
+
+![add-property](https://minioapi.pjx.ac.cn/img1/2024/07/49716657adf0255a37fa214abf4716dc.gif)
+
   3). After adding the properties, you can see the properties in the plugin settings.
   ![four properties](https://minioapi.pjx.ac.cn/img1/2024/07/63a0a0e09d537b1cf55cfdc49de4db1a.png)
   4). Add the `summary` and `date` in Notion
-  <video src="https://minioapi.pjx.ac.cn/img1/2024/07/b6291a5122e5714e699608535394de98.mp4" controls="controls" width="100%" height="100%"></video>
-  5). Create a new note with the `summary` and `date` property.
-    ```markdown
-    ---
-    Name: test-custom-more
-    Tags:
-      - test
-      - web
-    summary: this is a summary for test custom
-    date: 2022-05-03
-    ---
 
-    This is a test file.
-    ```
+  ![add-in-notion](https://minioapi.pjx.ac.cn/img1/2024/07/d193fe72ce3676bf643b0d1eb92dd4b7.gif)
+
+  5). Create a new note with the `summary` and `date` property.
+    
+  ```markdown
+  ---
+  Name: test-custom-more
+  Tags:
+    - test
+    - web
+  summary: this is a summary for test custom
+  date: 2022-05-03
+  ---
+
+  This is a test file.
+  ```
+
   6). Sync the note to Notion.
-  <video src="https://minioapi.pjx.ac.cn/img1/2024/07/342c32a30232afb4504e356d3f47148f.mp4" controls="controls" width="100%" height="100%"></video>
+
+  ![sync-custom](https://minioapi.pjx.ac.cn/img1/2024/07/0e4cfbd61acdaf813fd81ee6d046e067.gif)
   
 ---
 
