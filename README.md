@@ -32,6 +32,7 @@
 - [x] ~~Support edit for database details in plugin settings. 支持编辑数据库详情~~
 
 ## How to use
+
 If you want to use this plugin, you need to follow the following steps to set up the plugin. The steps can be divided into two parts: setting up the Notion API and setting up the plugin in Obsidian. 
 
 ### setting up the Notion API
@@ -41,17 +42,19 @@ If you want to use this plugin, you need to follow the following steps to set up
 
 2. Create a database in your Notion workspace.
 
-Open Notion, clink top-left `Create a new page` -> You can give a title for the page and press "/" Select 'Database - Full page'.
+Open Notion, click top-left `Create` a new page` -> You can give a title for the page and press "/" Select 'Database - Full page'.
 
 ![add-a-page](https://minioapi.pjx.ac.cn/img1/2024/07/25e9512e92c733a29b432b8b821833c0.mp4)
 
 Rename the database properties to `title` and `tags`. 
 **⚠️⚠️`title` is the title column! `tags` is lower case⚠️⚠️**
+
 ![](https://minioapi.pjx.ac.cn/img1/2024/07/03e7d7de23bd5a7fbf26cd600c14f5ce.mp4)
 
 3. Add the Notion API integration.
 
 Click the right-top '...' -> connections -> connect to -> find the integration you created and connect it.
+
 ![api-integration](https://minioapi.pjx.ac.cn/img1/2024/07/16279782787c7d41a90b72cc4d1c1a32.mp4)
 
 4. Publish the database to the public.
@@ -62,34 +65,46 @@ Click the 'Share' -> 'Publish' -> 'Publish' -> **copy the database id from the U
 ### Setting up the plugin in Obsidian
 
 1. Go to Obsidian settings -> community plugins -> search 'NotionNext' -> install it.
+2. 
 ![plugin](https://minioapi.pjx.ac.cn/img1/2024/07/1bf82618e943ec5eb68d89d4556bc3fc.png)
 
-2. Open the plugin settings and create a new database.
+1. Open the plugin settings and create a new database.
+
 ![add-database](https://minioapi.pjx.ac.cn/img1/2024/07/115f47b4180d04fb362b931f8092b5fb.png)
 
 ### Create a database
+
 **You can create three types of databases:**
 
 #### General database
-General database is the default database, which only has the `title` and `tags` columns. **⚠️⚠️`title` and `tags` are lower case⚠️⚠️**
+
+General database is the default database, which only has the `title` and `tags` columns. **⚠️⚠️`title` and `tags` are lowercase⚠️⚠️**
+
 ![general](https://minioapi.pjx.ac.cn/img1/2024/07/b2d0d0259afae7a542bd9f62256cd2c2.png)
 
 The general is as follows:
+
 - Full Name: the full name that you would like to give to the database.
 - Abbreviate Name: the abbreviation that you would like to give to the database.
 - Notion tags sync: whether you want to sync the tags column to Notion.
 - Customise title property: whether you want to change the `title` to another name (e.g., `name`).
 - Notion API token: the token you copied from the Notion API page.
-- Notion Database ID: the database ID you copied from the Notion database URL. (e.g., only copy `7158cd3f70ce4f60afd9da5bdf74fd0c` between `site/` and `?` **https://jxpeng.notion.site/7158cd3f70ce4f60afd9da5bdf74fd0c?v=380317ac53734fc0b2471243c13e618f&pvs=4**)
+- Notion Database ID: the database ID you copied from the Notion database URL. (e.g., only copy `7158cd3f70ce4f60afd9da5bdf74fd0c` between `site/` and `?`.
+
+**https://jxpeng.notion.site/7158cd3f70ce4f60afd9da5bdf74fd0c?v=380317ac53734fc0b2471243c13e618f&pvs=4**)
 
 After setting, it should look like this:
+
 ![](https://minioapi.pjx.ac.cn/img1/2024/07/3fc630171f6e8ae1011271b2b37d5d48.png)
 
-Once you click `save`, the new database will be created in the plugin settings and display in the detabase list. 
+Once you click `save`, the new database will be created in the plugin settings and display in the detabase list.
+
 ![](https://minioapi.pjx.ac.cn/img1/2024/07/3dff23b1c13a31f7696dc794fb78eba5.png)
 
 #### NotionNext database
+
 If you use [NotionNext](https://github.com/tangly1024/NotionNext) to set up your website, you can use the NotionNext database. (**All the properties are in lowercase, and you do not need to change the properties**)
+
 ![notionnext](https://minioapi.pjx.ac.cn/img1/2024/07/b164160ccfaf4fb23aa7ac1ce467e235.png)
 
 Like the general database, you need to fill in the following information:
@@ -100,6 +115,7 @@ Like the general database, you need to fill in the following information:
 - Notion Database ID: the database ID you copied from the Notion database URL.
 
 #### Custom database
+
 The custom database is purely customised, and you can customise the properties you want to sync. (**All the properties are in lowercase, and you do not need to change the properties**)
 
 ![customise](https://minioapi.pjx.ac.cn/img1/2024/07/612b1377ec94d452abec7dc3fbe6cefb.png)
@@ -112,12 +128,15 @@ The basic information is identical to the general database and NotionNext databa
 - Notion Database ID: the database ID you copied from the Notion database URL.
 
 After adding the information, You can click `Add New Property` to add the properties you want to sync. There is no limit to the number of properties you can add.
+
 ![](https://minioapi.pjx.ac.cn/img1/2024/07/26c0d4548acb3d9ca0a4dda1c08e6a43.png)
 
 **⚠️⚠️⚠️**: **`Title column` is the main property in the Notion database, which has the open button to open the underlying page.** You can select the type of all other properties. **⚠️⚠️⚠️**
+
 ![](https://minioapi.pjx.ac.cn/img1/2024/07/00b379c95c43dadc4b3e63086f0121fc.png)
 
 According to the previous shown database, you can use `title` as the `Title column`, and `Tags` as the property 1.
+
 ![](https://minioapi.pjx.ac.cn/img1/2024/07/87529214008147d3aa1bbe5868849f31.png)
 
 **Until now, you have set up the plugin in Obsidian. You can start syncing your notes to Notion.**
@@ -168,10 +187,10 @@ this is a test file
 
 ![notionnext-sync](https://minioapi.pjx.ac.cn/img1/2024/07/d9fe6143d36e2d837c5e8f5e56cc19d7.mp4)
 
-
 #### note for custom database
 
 1. Use the previous created general database and rename `title` to `Name` and `tags` to `Tags` in Notion. The front matter for the custom database is as follows:
+2. 
 ![rename-notion](https://minioapi.pjx.ac.cn/img1/2024/07/388d62eec3457ff5d5e82257adabbbdc.mp4)
 
 ```markdown
@@ -209,25 +228,8 @@ This is a test file.
 
   This is a test file.
   ```
+
   ![custom-more-sync](https://minioapi.pjx.ac.cn/img1/2024/07/342c32a30232afb4504e356d3f47148f.mp4)
-
-
-
-## 使用方法
-如果你想使用这个插件，你需要完成下边的七个步骤。
-1. 首先在你的Notion中创建一个数据库。
-2. 点击右上角的'分享' -> '发布' -> '发布' -> 然后复制URL中的数据库ID。(版本不同，可能id的形式也不同。只需要复制在？之前的纯数字部分应该就可以了)
-3. 去[Notion API](https://www.notion.com/my-integrations)创建一个新的API，然后复制token。
-4. 回到你创建的Notion数据库，点击右上角的'...' -> 连接 -> 连接到 -> 把你刚才创建的API绑定到你的数据库
-5. 回到Obsidian的设置 -> 社区插件 -> 搜索'NotionNext' -> 安装
-6. 在插件设置中创建一个数据库，然后填写数据库的详情和你想要同步的属性 (**注意：Notion会识别表头的大小写，一定要和notion中的表头保持大小写一致**)。
-   - 你可以使用三种类型的数据库：
-	 - NotionNext: 用于NotionNext模板的数据库。(**默认全部小写**)
-	 - General: 用于普通的Notion数据库（**只有`title`和`tags`两个属性**）
-	 - Custom: 用于自定义属性的数据库（你可以自定义你想要同步的属性）
-7. 在Obsidian中创建一个新的笔记，然后在frontmatter中写入你想要的属性。
-
-
 ---
 
 ## Acknowledgement
