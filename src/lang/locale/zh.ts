@@ -70,4 +70,5 @@ export const zh = {
 	AddCustomProperty: "添加自定义属性",
 	AddNewProperty: "添加新属性",
 	AddNewPropertyDesc: "添加一个和Notion数据库匹配的新属性",
+	CopyErrorMessage: "复制链接失败，请手动复制",
 }

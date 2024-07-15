@@ -1,6 +1,7 @@
 import { App, Notice, TFile } from "obsidian";
 import ObsidianSyncNotionPlugin from "../main";
 import { DatabaseDetails } from "../ui/settingTabs";
+import { i18nConfig } from "src/lang/I18n";
 
 export async function updateYamlInfo(
     yamlContent: string,
@@ -37,6 +38,7 @@ export async function updateYamlInfo(
     try {
         await navigator.clipboard.writeText(url)
     } catch (error) {
-        new Notice(`复制链接失败，请手动复制${error}`)
+        console.log(error)
+        new Notice(`${i18nConfig.CopyErrorMessage}`);
     }
 }

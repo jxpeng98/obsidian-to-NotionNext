@@ -67,4 +67,5 @@ export const ja = {
 	AddCustomProperty: "カスタムプロパティを追加",
 	AddNewProperty: "新しいプロパティを追加",
 	AddNewPropertyDesc: "新しいプロパティを追加してください",
+    CopyErrorMessage: "自動コピーに失敗しました",
 };

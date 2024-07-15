@@ -39,7 +39,7 @@ If you want to use this plugin, you need to follow the following steps to set up
 
 1). Go to [Notion API](https://www.notion.com/my-integrations) to create a new integration, and **copy the token**.
 
-![create-api](https://minioapi.pjx.ac.cn/img1/2024/07/4ffbcb9c531e889f35151333913beec7.gif)
+![create-api](https://minioapi.pjx.ac.cn/img1/2024/07/28526e416571f8b1fe70d90bd9975b81.gif)
 
 2). Create a database in your Notion workspace.
 

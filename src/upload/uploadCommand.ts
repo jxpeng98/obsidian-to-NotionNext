@@ -18,13 +18,6 @@ export async function uploadCommandNext(
 
 	const { notionAPI, databaseID } = dbDetails;
 
-	// Check if NNon exists
-	// if (NNon === undefined) {
-	//     const NNonmessage = i18nConfig.NNonMissing;
-	//     new Notice(NNonmessage);
-	//     return;
-	// }
-
 	// Check if the user has set up the Notion API and database ID
 	if (notionAPI === "" || databaseID === "") {
 		const setAPIMessage = i18nConfig["set-api-id"];
@@ -54,7 +47,7 @@ export async function uploadCommandNext(
 		const res = await upload.syncMarkdownToNotionNext(basename, emoji, cover, tags, type, slug, stats, category, summary, paword, favicon, datetime, markDownData, nowFile, this.app);
 
 		if (res.status === 200) {
-			new Notice(`${i18nConfig["sync-success"]}${basename}`);
+			new Notice(`${i18nConfig["sync-preffix"]} ${basename} ${i18nConfig["sync-success"]}`).noticeEl.style.color = "green";
 		} else {
 			new Notice(`${i18nConfig["sync-fail"]}${basename}`, 5000);
 		}
@@ -88,7 +81,7 @@ export async function uploadCommandGeneral(
 		const res = await upload.syncMarkdownToNotionGeneral(basename, cover, tags, markDownData, nowFile, this.app);
 
 		if (res.status === 200) {
-			new Notice(`${i18nConfig["sync-success"]}${basename}`);
+			new Notice(`${i18nConfig["sync-success"]}${basename}`).noticeEl.style.color = "green";
 		} else {
 			new Notice(`${i18nConfig["sync-fail"]}${basename}`, 5000);
 		}
@@ -122,7 +115,7 @@ export async function uploadCommandCustom(
 		const res = await upload.syncMarkdownToNotionCustom(cover, customValues, markDownData, nowFile, this.app);
 
 		if (res.status === 200) {
-			new Notice(`${i18nConfig["sync-success"]}${basename}`);
+			new Notice(`${i18nConfig["sync-success"]}${basename}`).noticeEl.style.color = "green";
 		} else {
 			new Notice(`${i18nConfig["sync-fail"]}${basename}`, 5000);
 		}
