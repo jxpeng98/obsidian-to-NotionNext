@@ -1,4 +1,4 @@
-import { App, Notice, requestUrl, TFile } from "obsidian";
+import {App, Notice, requestUrl, TFile} from "obsidian";
 import { markdownToBlocks } from "@tryfabric/martian";
 import * as yamlFrontMatter from "yaml-front-matter";
 // import * as yaml from "yaml"
@@ -6,6 +6,7 @@ import MyPlugin from "src/main";
 import { DatabaseDetails, PluginSettings } from "../../ui/settingTabs";
 import { updateYamlInfo } from "../updateYaml";
 import { UploadBaseCustom } from "./BaseUpload2NotionCustom";
+import axios from 'axios';
 
 export class Upload2NotionCustom extends UploadBaseCustom {
 	settings: PluginSettings;
@@ -74,21 +75,19 @@ export class Upload2NotionCustom extends UploadBaseCustom {
 		console.log(bodyString)
 
 		try {
-			return await requestUrl({
-				url: `https://api.notion.com/v1/pages`,
+			await fetch("https://api.notion.com/v1/pages", {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
-					// 'User-Agent': 'obsidian.md',
-					Authorization:
-						"Bearer " + notionAPI,
+					"Authorization": "Bearer " + notionAPI,
 					"Notion-Version": "2022-06-28",
 				},
 				body: JSON.stringify(bodyString),
-			});
-		} catch (error) {
-			new Notice(`network error ${error}`);
+			})
+		} catch (e) {
+			console.log(JSON.stringify(e))
 		}
+
 	}
 
 	async syncMarkdownToNotionCustom(
@@ -124,6 +123,7 @@ export class Upload2NotionCustom extends UploadBaseCustom {
 		} else {
 			res = await this.createPage(cover, customValues, file2Block);
 		}
+
 		if (res && res.status === 200) {
 			await updateYamlInfo(markdown, nowFile, res, app, this.plugin, this.dbDetails);
 		} else {
