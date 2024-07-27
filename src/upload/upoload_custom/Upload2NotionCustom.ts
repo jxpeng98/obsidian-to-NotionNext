@@ -1,4 +1,4 @@
-import {App, Notice, requestUrl, TFile} from "obsidian";
+import {App, Notice, TFile} from "obsidian";
 import {markdownToBlocks} from "@tryfabric/martian";
 import * as yamlFrontMatter from "yaml-front-matter";
 // import * as yaml from "yaml"
@@ -88,7 +88,7 @@ export class Upload2NotionCustom extends UploadBaseCustom {
 		const data: any = await response.json();
 		if (!response.ok) {
 			new Notice(`Error ${data.status}: ${data.code} \n Check the console for more information \n opt+cmd+i/ctrl+shift+i`, 5000);
-			console.log(data.message);
+			console.log(`Error message: \n ${data.message}`);
 		} else {
 			console.log(`Page created: ${data.url}`);
 			console.log(`Page ID: ${data.id}`);
@@ -140,8 +140,6 @@ export class Upload2NotionCustom extends UploadBaseCustom {
 
 		if (response && response.status === 200) {
 			await updateYamlInfo(markdown, nowFile, data, app, this.plugin, this.dbDetails);
-		} else {
-			new Notice(`${res.text}`);
 		}
 
 		return res;
