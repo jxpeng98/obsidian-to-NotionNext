@@ -85,12 +85,18 @@ export class Upload2NotionCustom extends UploadBaseCustom {
 			body: JSON.stringify(bodyString),
 		});
 
+		const data: any = await response.json();
 		if (!response.ok) {
-			const data: any = await response.json();
 			new Notice(`Error ${data.status}: ${data.code} \n Check the console for more information \n opt+cmd+i/ctrl+shift+i`, 5000);
 			console.log(data.message);
 		} else {
-			return response;
+			console.log(`Page created: ${data.url}`);
+			console.log(`Page ID: ${data.id}`);
+		}
+
+		return {
+			response, // for status code
+			data // for id and url
 		}
 	}
 
@@ -128,11 +134,16 @@ export class Upload2NotionCustom extends UploadBaseCustom {
 			res = await this.createPage(cover, customValues, file2Block);
 		}
 
-		if (res && res.status === 200) {
-			await updateYamlInfo(markdown, nowFile, res, app, this.plugin, this.dbDetails);
+		let {response, data} = res;
+
+		// console.log(response)
+
+		if (response && response.status === 200) {
+			await updateYamlInfo(markdown, nowFile, data, app, this.plugin, this.dbDetails);
 		} else {
 			new Notice(`${res.text}`);
 		}
+
 		return res;
 	}
 
