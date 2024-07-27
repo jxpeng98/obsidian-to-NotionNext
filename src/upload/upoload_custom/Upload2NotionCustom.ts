@@ -1,12 +1,13 @@
 import {App, Notice, requestUrl, TFile} from "obsidian";
-import { markdownToBlocks } from "@tryfabric/martian";
+import {markdownToBlocks} from "@tryfabric/martian";
 import * as yamlFrontMatter from "yaml-front-matter";
 // import * as yaml from "yaml"
 import MyPlugin from "src/main";
-import { DatabaseDetails, PluginSettings } from "../../ui/settingTabs";
-import { updateYamlInfo } from "../updateYaml";
-import { UploadBaseCustom } from "./BaseUpload2NotionCustom";
-import axios from 'axios';
+import {DatabaseDetails, PluginSettings} from "../../ui/settingTabs";
+import {updateYamlInfo} from "../updateYaml";
+import {UploadBaseCustom} from "./BaseUpload2NotionCustom";
+import fetch from 'node-fetch';
+
 
 export class Upload2NotionCustom extends UploadBaseCustom {
 	settings: PluginSettings;
@@ -27,7 +28,7 @@ export class Upload2NotionCustom extends UploadBaseCustom {
 	) {
 		await this.deletePage(notionID);
 
-		const { databaseID } = this.dbDetails;
+		const {databaseID} = this.dbDetails;
 
 		const databaseCover = await this.getDataBase(
 			databaseID
@@ -74,20 +75,23 @@ export class Upload2NotionCustom extends UploadBaseCustom {
 
 		console.log(bodyString)
 
-		try {
-			await fetch("https://api.notion.com/v1/pages", {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-					"Authorization": "Bearer " + notionAPI,
-					"Notion-Version": "2022-06-28",
-				},
-				body: JSON.stringify(bodyString),
-			})
-		} catch (e) {
-			console.log(JSON.stringify(e))
-		}
+		const response = await fetch("https://api.notion.com/v1/pages", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+				"Authorization": "Bearer " + notionAPI,
+				"Notion-Version": "2022-06-28",
+			},
+			body: JSON.stringify(bodyString),
+		});
 
+		if (!response.ok) {
+			const data: any = await response.json();
+			new Notice(`Error ${data.status}: ${data.code} \n Check the console for more information \n opt+cmd+i/ctrl+shift+i`, 5000);
+			console.log(data.message);
+		} else {
+			return response;
+		}
 	}
 
 	async syncMarkdownToNotionCustom(
@@ -109,7 +113,7 @@ export class Upload2NotionCustom extends UploadBaseCustom {
 		const file2Block = markdownToBlocks(__content, options);
 		const frontmasster =
 			app.metadataCache.getFileCache(nowFile)?.frontmatter;
-		const { abName } = this.dbDetails
+		const {abName} = this.dbDetails
 		const notionIDKey = `NotionID-${abName}`;
 		const notionID = frontmasster ? frontmasster[notionIDKey] : null;
 
@@ -208,7 +212,7 @@ export class Upload2NotionCustom extends UploadBaseCustom {
 				};
 			case "multi_select":
 				return {
-					multi_select: Array.isArray(value) ? value.map(item => ({ name: item })) : [{ name: value }],
+					multi_select: Array.isArray(value) ? value.map(item => ({name: item})) : [{name: value}],
 				};
 		}
 	}
@@ -222,11 +226,11 @@ export class Upload2NotionCustom extends UploadBaseCustom {
 		const properties: { [key: string]: any } = {};
 
 		// Only include custom properties that have values
-		customProperties.forEach(({ customName, customType }) => {
-			if (customValues[customName] !== undefined) {
-				properties[customName] = this.buildPropertyObject(customName, customType, customValues);
+		customProperties.forEach(({customName, customType}) => {
+				if (customValues[customName] !== undefined) {
+					properties[customName] = this.buildPropertyObject(customName, customType, customValues);
+				}
 			}
-		}
 		);
 
 		// console.log(properties)
