@@ -1,5 +1,5 @@
 import { UploadBaseNext } from "./BaseUpload2NotionNext";
-import { App, Notice, requestUrl, TFile } from "obsidian";
+import { App, Notice, TFile } from "obsidian";
 import { Client } from '@notionhq/client';
 import { markdownToBlocks, } from "@tryfabric/martian";
 import * as yamlFrontMatter from "yaml-front-matter";
@@ -8,6 +8,7 @@ import MyPlugin from "src/main";
 import { DatabaseDetails, PluginSettings } from "../../ui/settingTabs";
 import { updateYamlInfo } from "../updateYaml";
 import { LIMITS, paragraph } from "@tryfabric/martian/src/notion";
+import fetch from 'node-fetch';
 
 export class Upload2NotionNext extends UploadBaseNext {
     settings: PluginSettings;
@@ -204,21 +205,33 @@ export class Upload2NotionNext extends UploadBaseNext {
             }
         }
 
-        try {
-            return await requestUrl({
-                url: `https://api.notion.com/v1/pages`,
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    // 'User-Agent': 'obsidian.md',
-                    'Authorization': 'Bearer ' + notionAPI,
-                    'Notion-Version': '2022-06-28',
-                },
-                body: JSON.stringify(bodyString),
-            })
-        } catch (error) {
-            new Notice(`network error ${error}`)
-        }
+		console.log(bodyString)
+
+		const response = await fetch("https://api.notion.com/v1/pages", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+				"Authorization": "Bearer " + notionAPI,
+				"Notion-Version": "2022-06-28",
+			},
+			body: JSON.stringify(bodyString),
+		});
+
+		const data: any = await response.json();
+
+		// can use response.ok or response.status === 200
+		if (!response.ok) {
+			new Notice(`Error ${data.status}: ${data.code} \n Check the console for more information \n opt+cmd+i/ctrl+shift+i`, 5000);
+			console.log(`Error message: \n ${data.message}`);
+		} else {
+			console.log(`Page created: ${data.url}`);
+			console.log(`Page ID: ${data.id}`);
+		}
+
+		return {
+			response, // for status code
+			data // for id and url
+		}
     }
 
     async syncMarkdownToNotionNext(
@@ -309,12 +322,13 @@ export class Upload2NotionNext extends UploadBaseNext {
             );
         }
 
-        if (res.status === 200) {
-            await updateYamlInfo(markdown, nowFile, res, app, this.plugin, this.dbDetails)
-        } else {
-            new Notice(`${res.text}`)
-        }
-        return res
+		let {response, data} = res;
+
+		if (response && response.status === 200) {
+			await updateYamlInfo(markdown, nowFile, data, app, this.plugin, this.dbDetails);
+		}
+
+		return res;
     }
 }
 
