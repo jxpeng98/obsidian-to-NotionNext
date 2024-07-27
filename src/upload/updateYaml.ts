@@ -11,7 +11,7 @@ export async function updateYamlInfo(
     plugin: ObsidianSyncNotionPlugin,
     dbDetails: DatabaseDetails,
 ) {
-    let { url, id } = res.json
+    let { url, id } = res;
     // replace www to notionID
     const { notionUser, NotionLinkDisplay } = plugin.settings;
     const { abName } = dbDetails

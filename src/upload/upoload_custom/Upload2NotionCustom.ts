@@ -1,11 +1,13 @@
-import { App, Notice, requestUrl, TFile } from "obsidian";
-import { markdownToBlocks } from "@tryfabric/martian";
+import {App, Notice, requestUrl, TFile} from "obsidian";
+import {markdownToBlocks} from "@tryfabric/martian";
 import * as yamlFrontMatter from "yaml-front-matter";
 // import * as yaml from "yaml"
 import MyPlugin from "src/main";
-import { DatabaseDetails, PluginSettings } from "../../ui/settingTabs";
-import { updateYamlInfo } from "../updateYaml";
-import { UploadBaseCustom } from "./BaseUpload2NotionCustom";
+import {DatabaseDetails, PluginSettings} from "../../ui/settingTabs";
+import {updateYamlInfo} from "../updateYaml";
+import {UploadBaseCustom} from "./BaseUpload2NotionCustom";
+import fetch from 'node-fetch';
+
 
 export class Upload2NotionCustom extends UploadBaseCustom {
 	settings: PluginSettings;
@@ -26,7 +28,7 @@ export class Upload2NotionCustom extends UploadBaseCustom {
 	) {
 		await this.deletePage(notionID);
 
-		const { databaseID } = this.dbDetails;
+		const {databaseID} = this.dbDetails;
 
 		const databaseCover = await this.getDataBase(
 			databaseID
@@ -73,21 +75,28 @@ export class Upload2NotionCustom extends UploadBaseCustom {
 
 		console.log(bodyString)
 
-		try {
-			return await requestUrl({
-				url: `https://api.notion.com/v1/pages`,
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-					// 'User-Agent': 'obsidian.md',
-					Authorization:
-						"Bearer " + notionAPI,
-					"Notion-Version": "2022-06-28",
-				},
-				body: JSON.stringify(bodyString),
-			});
-		} catch (error) {
-			new Notice(`network error ${error}`);
+		const response = await fetch("https://api.notion.com/v1/pages", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+				"Authorization": "Bearer " + notionAPI,
+				"Notion-Version": "2022-06-28",
+			},
+			body: JSON.stringify(bodyString),
+		});
+
+		const data: any = await response.json();
+		if (!response.ok) {
+			new Notice(`Error ${data.status}: ${data.code} \n Check the console for more information \n opt+cmd+i/ctrl+shift+i`, 5000);
+			console.log(data.message);
+		} else {
+			console.log(`Page created: ${data.url}`);
+			console.log(`Page ID: ${data.id}`);
+		}
+
+		return {
+			response, // for status code
+			data // for id and url
 		}
 	}
 
@@ -110,7 +119,7 @@ export class Upload2NotionCustom extends UploadBaseCustom {
 		const file2Block = markdownToBlocks(__content, options);
 		const frontmasster =
 			app.metadataCache.getFileCache(nowFile)?.frontmatter;
-		const { abName } = this.dbDetails
+		const {abName} = this.dbDetails
 		const notionIDKey = `NotionID-${abName}`;
 		const notionID = frontmasster ? frontmasster[notionIDKey] : null;
 
@@ -124,11 +133,17 @@ export class Upload2NotionCustom extends UploadBaseCustom {
 		} else {
 			res = await this.createPage(cover, customValues, file2Block);
 		}
-		if (res && res.status === 200) {
-			await updateYamlInfo(markdown, nowFile, res, app, this.plugin, this.dbDetails);
+
+		let {response, data} = res;
+
+		// console.log(response)
+
+		if (response && response.status === 200) {
+			await updateYamlInfo(markdown, nowFile, data, app, this.plugin, this.dbDetails);
 		} else {
 			new Notice(`${res.text}`);
 		}
+
 		return res;
 	}
 
@@ -208,7 +223,7 @@ export class Upload2NotionCustom extends UploadBaseCustom {
 				};
 			case "multi_select":
 				return {
-					multi_select: Array.isArray(value) ? value.map(item => ({ name: item })) : [{ name: value }],
+					multi_select: Array.isArray(value) ? value.map(item => ({name: item})) : [{name: value}],
 				};
 		}
 	}
@@ -222,11 +237,11 @@ export class Upload2NotionCustom extends UploadBaseCustom {
 		const properties: { [key: string]: any } = {};
 
 		// Only include custom properties that have values
-		customProperties.forEach(({ customName, customType }) => {
-			if (customValues[customName] !== undefined) {
-				properties[customName] = this.buildPropertyObject(customName, customType, customValues);
+		customProperties.forEach(({customName, customType}) => {
+				if (customValues[customName] !== undefined) {
+					properties[customName] = this.buildPropertyObject(customName, customType, customValues);
+				}
 			}
-		}
 		);
 
 		// console.log(properties)
