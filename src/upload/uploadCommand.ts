@@ -82,7 +82,8 @@ export async function uploadCommandGeneral(
 		const upload = new Upload2NotionGeneral(plugin, dbDetails);
 		const res = await upload.syncMarkdownToNotionGeneral(basename, cover, tags, markDownData, nowFile, this.app);
 
-		if (res.status === 200) {
+		const { response } = res;
+		if (response.status === 200) {
 			new Notice(`${i18nConfig["sync-preffix"]} ${basename} ${i18nConfig["sync-success"]}`).noticeEl.style.color = "green";
 		} else {
 			new Notice(`${i18nConfig["sync-fail"]} ${basename}`, 5000);
@@ -120,7 +121,7 @@ export async function uploadCommandCustom(
 		if (response.status === 200) {
 			new Notice(`${i18nConfig["sync-preffix"]} ${basename} ${i18nConfig["sync-success"]}`).noticeEl.style.color = "green";
 		} else {
-			new Notice(`${i18nConfig["sync-fail"]}${basename}`, 5000);
+			new Notice(`${i18nConfig["sync-fail"]} ${basename}`, 5000);
 		}
 
 	}

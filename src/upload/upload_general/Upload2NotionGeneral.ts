@@ -1,4 +1,4 @@
-import { App, Notice, requestUrl, TFile } from "obsidian";
+import { App, Notice, TFile } from "obsidian";
 import { Client } from "@notionhq/client";
 import { markdownToBlocks } from "@tryfabric/martian";
 import * as yamlFrontMatter from "yaml-front-matter";
@@ -7,6 +7,7 @@ import MyPlugin from "src/main";
 import { DatabaseDetails, PluginSettings } from "../../ui/settingTabs";
 import { UploadBaseGeneral } from "./BaseUpload2NotionGeneral";
 import { updateYamlInfo } from "../updateYaml";
+import fetch from 'node-fetch';
 
 export class Upload2NotionGeneral extends UploadBaseGeneral {
 	settings: PluginSettings;
@@ -101,21 +102,30 @@ export class Upload2NotionGeneral extends UploadBaseGeneral {
 			};
 		}
 
-		try {
-			return await requestUrl({
-				url: `https://api.notion.com/v1/pages`,
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-					// 'User-Agent': 'obsidian.md',
-					Authorization:
-						"Bearer " + notionAPI,
-					"Notion-Version": "2022-06-28",
-				},
-				body: JSON.stringify(bodyString),
-			});
-		} catch (error) {
-			new Notice(`network error ${error}`);
+		console.log(bodyString)
+
+		const response = await fetch("https://api.notion.com/v1/pages", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+				"Authorization": "Bearer " + notionAPI,
+				"Notion-Version": "2022-06-28",
+			},
+			body: JSON.stringify(bodyString),
+		});
+
+		const data: any = await response.json();
+		if (!response.ok) {
+			new Notice(`Error ${data.status}: ${data.code} \n Check the console for more information \n opt+cmd+i/ctrl+shift+i`, 5000);
+			console.log(`Error message: \n ${data.message}`);
+		} else {
+			console.log(`Page created: ${data.url}`);
+			console.log(`Page ID: ${data.id}`);
+		}
+
+		return {
+			response, // for status code
+			data // for id and url
 		}
 	}
 
@@ -154,11 +164,15 @@ export class Upload2NotionGeneral extends UploadBaseGeneral {
 		} else {
 			res = await this.createPage(title, cover, tags, file2Block);
 		}
-		if (res.status === 200) {
-			await updateYamlInfo(markdown, nowFile, res, app, this.plugin, this.dbDetails);
-		} else {
-			new Notice(`${res.text}`);
+
+		let {response, data} = res;
+
+		// console.log(response)
+
+		if (response && response.status === 200) {
+			await updateYamlInfo(markdown, nowFile, data, app, this.plugin, this.dbDetails);
 		}
+
 		return res;
 	}
 }
