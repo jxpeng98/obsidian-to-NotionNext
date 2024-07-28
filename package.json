@@ -1,35 +1,35 @@
 {
-	"name": "share-to-notionnext",
-	"version": "2.3.3",
-	"type": "module",
-	"description": "Shares obsidian md file to notion with notion api for NotionNext web deploy, originally created by EasyChris/obsidian-to-notion.",
-	"main": "main.js",
-	"scripts": {
-		"dev": "node esbuild.config.mjs",
-		"build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production",
-		"version": "node version-bump.mjs && git add manifest.json versions.json"
-	},
-	"keywords": [],
-	"author": "",
-	"license": "GNU GPLv3",
-	"devDependencies": {
-		"@types/node": "^20.5.7",
-		"@types/yaml-front-matter": "^4.1.3",
-		"@typescript-eslint/eslint-plugin": "^6.16.0",
-		"@typescript-eslint/parser": "^6.16.0",
-		"builtin-modules": "^3.3.0",
-		"esbuild": "0.19.5",
-		"obsidian": "^1.6.6",
-		"tslib": "2.6.2",
-		"typescript": "5.2.2"
-	},
-	"dependencies": {
-		"@tryfabric/martian": "^1.2.4",
-		"https-proxy-agent": "^7.0.2",
-		"node-fetch": "^3.3.2",
-		"process": "^0.11.10",
-		"remark-math": "^6.0.0",
-		"yaml": "^2.3.4",
-		"yaml-front-matter": "^4.1.1"
-	}
+  "name": "share-to-notionnext",
+  "version": "2.3.4",
+  "type": "module",
+  "description": "Shares obsidian md file to notion with notion api for NotionNext web deploy, originally created by EasyChris/obsidian-to-notion.",
+  "main": "main.js",
+  "scripts": {
+    "dev": "node esbuild.config.mjs",
+    "build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production",
+    "version": "node version-bump.mjs && git add manifest.json versions.json"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "GNU GPLv3",
+  "devDependencies": {
+    "@types/node": "^20.5.7",
+    "@types/yaml-front-matter": "^4.1.3",
+    "@typescript-eslint/eslint-plugin": "^6.16.0",
+    "@typescript-eslint/parser": "^6.16.0",
+    "builtin-modules": "^3.3.0",
+    "esbuild": "0.19.5",
+    "obsidian": "^1.6.6",
+    "tslib": "2.6.2",
+    "typescript": "5.2.2"
+  },
+  "dependencies": {
+    "@tryfabric/martian": "^1.2.4",
+    "https-proxy-agent": "^7.0.2",
+    "node-fetch": "^3.3.2",
+    "process": "^0.11.10",
+    "remark-math": "^6.0.0",
+    "yaml": "^2.3.4",
+    "yaml-front-matter": "^4.1.1"
+  }
 }
