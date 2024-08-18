@@ -68,4 +68,7 @@ export const ja = {
 	AddNewProperty: "新しいプロパティを追加",
 	AddNewPropertyDesc: "新しいプロパティを追加してください",
     CopyErrorMessage: "自動コピーに失敗しました",
+	BlockUploaded: "ブロックがアップロードされました",
+	ExtraBlockUploaded: "追加ブロックがアップロードされました",
+	CheckConsole: "詳細情報を確認するには、コンソールを開いてください \n opt+cmd+i/ctrl+shift+i",
 };

@@ -76,4 +76,7 @@ export const en = {
 	AddNewProperty: "Add New Property",
 	AddNewPropertyDesc: "Add new property match with your notion database",
 	CopyErrorMessage: "Auto copy failed, please copy it manually",
+	BlockUploaded: "All blocks uploaded",
+	ExtraBlockUploaded: "Extra blocks uploaded",
+	CheckConsole: "Check the console for more information \n opt+cmd+i/ctrl+shift+i",
 }

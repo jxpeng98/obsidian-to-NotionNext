@@ -1,13 +1,14 @@
-import { App, Notice, TFile } from "obsidian";
-import { Client } from "@notionhq/client";
-import { markdownToBlocks } from "@jxpeng98/martian";
+import {App, Notice, TFile} from "obsidian";
+import {Client} from "@notionhq/client";
+import {markdownToBlocks} from "@jxpeng98/martian";
 import * as yamlFrontMatter from "yaml-front-matter";
 // import * as yaml from "yaml"
 import MyPlugin from "src/main";
-import { DatabaseDetails, PluginSettings } from "../../ui/settingTabs";
-import { UploadBaseGeneral } from "./BaseUpload2NotionGeneral";
-import { updateYamlInfo } from "../updateYaml";
+import {DatabaseDetails, PluginSettings} from "../../ui/settingTabs";
+import {UploadBaseGeneral} from "./BaseUpload2NotionGeneral";
+import {updateYamlInfo} from "../updateYaml";
 import fetch from 'node-fetch';
+import {i18nConfig} from "../../lang/I18n";
 
 export class Upload2NotionGeneral extends UploadBaseGeneral {
 	settings: PluginSettings;
@@ -29,7 +30,7 @@ export class Upload2NotionGeneral extends UploadBaseGeneral {
 	) {
 		await this.deletePage(notionID);
 
-		const { databaseID } = this.dbDetails;
+		const {databaseID} = this.dbDetails;
 
 		const databaseCover = await this.getDataBase(
 			databaseID,
@@ -57,6 +58,28 @@ export class Upload2NotionGeneral extends UploadBaseGeneral {
 			notionAPI
 		} = this.dbDetails;
 
+		// check the length of the childArr and split it into chunks of 100
+		const childArrLength = childArr.length;
+		let extraArr: any[] = [];
+		let firstArr: any;
+		let pushCount = 0;
+
+		console.log(`Page includes ${childArrLength} blocks`)
+
+		if (childArrLength > 100) {
+			for (let i = 0; i < childArr.length; i += 100) {
+				if (i == 0) {
+					firstArr = childArr.slice(0, 100);
+				} else {
+					const chunk = childArr.slice(i, i + 100);
+					extraArr.push(chunk);
+					pushCount++;
+				}
+			}
+		} else {
+			firstArr = childArr;
+		}
+
 		const bodyString: any = {
 			parent: {
 				database_id: databaseID,
@@ -76,12 +99,12 @@ export class Upload2NotionGeneral extends UploadBaseGeneral {
 				...(tagButton
 					? {
 						tags: {
-							multi_select: tags && true ? tags.map((tag) => ({ name: tag })) : [],
+							multi_select: tags && true ? tags.map((tag) => ({name: tag})) : [],
 						},
 					}
 					: {}),
 			},
-			children: childArr,
+			children: firstArr,
 		};
 
 		if (cover) {
@@ -115,12 +138,46 @@ export class Upload2NotionGeneral extends UploadBaseGeneral {
 		});
 
 		const data: any = await response.json();
+
 		if (!response.ok) {
-			new Notice(`Error ${data.status}: ${data.code} \n Check the console for more information \n opt+cmd+i/ctrl+shift+i`, 5000);
-			console.log(`Error message: \n ${data.message}`);
+			new Notice(`Error ${data.status}: ${data.code} \n ${i18nConfig["CheckConsole"]}`, 5000);
 		} else {
 			console.log(`Page created: ${data.url}`);
 			console.log(`Page ID: ${data.id}`);
+		}
+
+		// upload the rest of the blocks
+		if (pushCount > 0) {
+			for (let i = 0; i < pushCount; i++) {
+				const extraBlocks = {
+					children: extraArr[i],
+				};
+
+				console.log(extraBlocks)
+
+				const extraResponse = await fetch(`https://api.notion.com/v1/blocks/${data.id}/children`, {
+					method: "PATCH",
+					headers: {
+						"Content-Type": "application/json",
+						"Authorization": "Bearer " + notionAPI,
+						"Notion-Version": "2022-06-28",
+					},
+					body: JSON.stringify(extraBlocks),
+				});
+
+				const extraData: any = await extraResponse.json();
+
+				if (!extraResponse.ok) {
+					new Notice(`Error ${extraData.status}: ${extraData.code} \n ${i18nConfig["CheckConsole"]}`, 5000);
+					console.log(`Error message: \n ${extraData.message}`);
+				} else {
+					console.log(`${i18nConfig["ExtraBlockUploaded"]} to page: ${data.id}`);
+					if (i === pushCount - 1) {
+						console.log(`${i18nConfig["BlockUploaded"]} to page: ${data.id}`);
+						new Notice(`${i18nConfig["BlockUploaded"]} page: ${data.id}`, 5000);
+					}
+				}
+			}
 		}
 
 		return {
@@ -148,7 +205,7 @@ export class Upload2NotionGeneral extends UploadBaseGeneral {
 		const file2Block = markdownToBlocks(__content, options);
 		const frontmasster =
 			app.metadataCache.getFileCache(nowFile)?.frontmatter;
-		const { abName } = this.dbDetails
+		const {abName} = this.dbDetails
 		const notionIDKey = `NotionID-${abName}`;
 		const notionID = frontmasster ? frontmasster[notionIDKey] : null;
 
