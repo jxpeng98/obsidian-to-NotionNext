@@ -105,7 +105,7 @@ export class Upload2NotionNext extends UploadBaseNext {
 			firstArr = childArr;
 		}
 
-		const pageProperties = {
+		const pageProperties: any = {
 			parent: {
 				database_id: databaseID,
 			},
