@@ -1,5 +1,5 @@
 import {App, Notice, TFile} from "obsidian";
-import {markdownToBlocks} from "@tryfabric/martian";
+import {markdownToBlocks} from "@jxpeng98/martian";
 import * as yamlFrontMatter from "yaml-front-matter";
 // import * as yaml from "yaml"
 import MyPlugin from "src/main";

@@ -1,13 +1,13 @@
 import { UploadBaseNext } from "./BaseUpload2NotionNext";
 import { App, Notice, TFile } from "obsidian";
 import { Client } from '@notionhq/client';
-import { markdownToBlocks, } from "@tryfabric/martian";
+import { markdownToBlocks, } from "@jxpeng98/martian";
 import * as yamlFrontMatter from "yaml-front-matter";
 // import * as yaml from "yaml"
 import MyPlugin from "src/main";
 import { DatabaseDetails, PluginSettings } from "../../ui/settingTabs";
 import { updateYamlInfo } from "../updateYaml";
-import { LIMITS, paragraph } from "@tryfabric/martian/src/notion";
+import { LIMITS, paragraph } from "@jxpeng98/martian/src/notion";
 import fetch from 'node-fetch';
 
 export class Upload2NotionNext extends UploadBaseNext {
