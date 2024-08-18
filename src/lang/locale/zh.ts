@@ -71,4 +71,7 @@ export const zh = {
 	AddNewProperty: "添加新属性",
 	AddNewPropertyDesc: "添加一个和Notion数据库匹配的新属性",
 	CopyErrorMessage: "复制链接失败，请手动复制",
+	BlockUploaded: "所有内容已成功上传",
+	ExtraBlockUploaded: "额外内容已成功上传",
+	CheckConsole: "opt+cmd+i/ctrl+shift+i，\n打开控制台查看更多信息",
 }

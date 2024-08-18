@@ -25,11 +25,12 @@
 
 ## TODO List
 
-- [x] ~~Modify the Edit function for the custom properties. 改进自定义属性的编辑功能~~
+- [x] Modify the Edit function for the custom properties. 改进自定义属性的编辑功能
+- [x] Support sync with long notes. 支持长文章同步
+- [x] Support custom properties for Notion General database. 支持自定义属性
+- [x] Support preview for database details in plugin settings. 支持预览数据库详情
+- [x] Support edit for database details in plugin settings. 支持编辑数据库详情
 - [ ] Support group upload with one click 支持一键多数据库上传
-- [x] ~~Support custom properties for Notion General database. 支持自定义属性~~
-- [x] ~~Support preview for database details in plugin settings. 支持预览数据库详情~~
-- [x] ~~Support edit for database details in plugin settings. 支持编辑数据库详情~~
 
 ## How to use
 
