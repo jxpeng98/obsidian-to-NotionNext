@@ -9,24 +9,24 @@
 
 [//]: # ([中文文档]&#40;README-zh.md&#41;)
 
-**Now, support both NotionNext and General databases with customised properties.**
+**Now, support All Notion databases, including NotionNext and General Notion databases, and customise the database list.**
 
-**现在支持NotionNext和普通Notion数据库，可自定义数据库列表。**
+**现在支持所有Notion数据库，包括NotionNext和一般Notion数据库，以及自定义数据库列表。**
 
 ## Precautions
 
-### For customised database users
+### For customised database users before version 2.3.0
 
 **⚠️⚠️⚠️: The existing customised database should be recreated if you want to update to version 2.3.0. The new version has a new database structure, and the old database structure is not compatible with the new version to build the index properly.**
 
-### 自定义数据库用户
+### 在2.3.0版本之前的自定义数据库用户
 
 **⚠️⚠️⚠️: 如果你想要更新到2.3.0版本，你需要重新创建自定义数据库。新版本有一个新的数据库结构，旧的数据库结构无法构建索引。**
 
 ## TODO List
 
 - [x] Modify the Edit function for the custom properties. 改进自定义属性的编辑功能
-- [x] Support sync with long notes. 支持长文章同步
+- [x] Support sync with long notes (From `v2.4.0`). 从`v2.4.0`开始支持长笔记同步
 - [x] Support custom properties for Notion General database. 支持自定义属性
 - [x] Support preview for database details in plugin settings. 支持预览数据库详情
 - [x] Support edit for database details in plugin settings. 支持编辑数据库详情
