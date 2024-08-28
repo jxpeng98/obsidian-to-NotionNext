@@ -57,11 +57,11 @@ export class Upload2NotionCustom extends UploadBaseCustom {
 		// remove the annotations from the childArr if type is code block
 		childArr.forEach((block: any) => {
 			if (block.type === "code") {
-				block.code.rich_text.forEach(item => {
-					if (item.type === "text" && item.annotations) {
-						delete item.annotations;
+				block.code.rich_text.forEach((item: any) => {
+						if (item.type === "text" && item.annotations) {
+							delete item.annotations;
+						}
 					}
-				}
 				);
 			}
 		}
