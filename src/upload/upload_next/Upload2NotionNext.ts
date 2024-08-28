@@ -82,6 +82,19 @@ export class Upload2NotionNext extends UploadBaseNext {
 	) {
 		const {databaseID, notionAPI} = this.dbDetails;
 
+		// remove the annotations from the childArr if type is code block
+		childArr.forEach((block: any) => {
+				if (block.type === "code") {
+					block.code.rich_text.forEach((item: any) => {
+							if (item.type === "text" && item.annotations) {
+								delete item.annotations;
+							}
+						}
+					);
+				}
+			}
+		);
+
 		// check the length of the childArr
 		// if it is too long, split it into multiple pages
 		const childArrLength = childArr.length;
