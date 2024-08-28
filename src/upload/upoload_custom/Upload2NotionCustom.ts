@@ -54,6 +54,19 @@ export class Upload2NotionCustom extends UploadBaseCustom {
 			notionAPI
 		} = this.dbDetails;
 
+		// remove the annotations from the childArr if type is code block
+		childArr.forEach((block: any) => {
+			if (block.type === "code") {
+				block.code.rich_text.forEach(item => {
+					if (item.type === "text" && item.annotations) {
+						delete item.annotations;
+					}
+				}
+				);
+			}
+		}
+		);
+
 		// check the length of the childArr and split it into chunks of 100
 		const childArrLength = childArr.length;
 		let extraArr: any[] = [];
