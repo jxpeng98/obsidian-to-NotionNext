@@ -111,6 +111,9 @@ export async function uploadCommandCustom(
 
 	const {markDownData, nowFile, cover, customValues} = await getNowFileMarkdownContentCustom(app, dbDetails)
 
+	new Notice(`Start upload ${nowFile.basename}`);
+	console.log(`Start upload ${nowFile.basename}`);
+
 	if (markDownData) {
 		const {basename} = nowFile;
 
