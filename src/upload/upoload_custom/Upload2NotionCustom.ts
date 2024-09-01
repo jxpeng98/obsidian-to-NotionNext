@@ -1,12 +1,11 @@
-import {App, Notice, Platform, TFile} from "obsidian";
+import {App, Notice, Platform, TFile, requestUrl} from "obsidian";
 import {markdownToBlocks} from "@jxpeng98/martian";
 import * as yamlFrontMatter from "yaml-front-matter";
-// import * as yaml from "yaml"
 import MyPlugin from "src/main";
 import {DatabaseDetails, PluginSettings} from "../../ui/settingTabs";
 import {updateYamlInfo} from "../updateYaml";
 import {UploadBaseCustom} from "./BaseUpload2NotionCustom";
-import fetch from 'node-fetch';
+// import fetch from 'node-fetch';
 import {i18nConfig} from "../../lang/I18n";
 
 
@@ -139,61 +138,61 @@ export class Upload2NotionCustom extends UploadBaseCustom {
 			}
 		}
 
-		if (Platform.isDesktopApp) {
-			 response = await fetch("https://api.notion.com/v1/pages", {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-					"Authorization": "Bearer " + notionAPI,
-					"Notion-Version": "2022-06-28",
-				},
-				body: JSON.stringify(bodyString),
-			});
-
-			data = await response.json();
-
-			if (!response.ok) {
-				new Notice(`Error ${data.status}: ${data.code} \n ${i18nConfig["CheckConsole"]}`, 5000);
-				console.log(`Error message: \n ${data.message}`);
-			} else {
-				console.log(`Page created: ${data.url}`);
-				console.log(`Page ID: ${data.id}`);
-			}
-
-			// upload the rest of the blocks
-			if (pushCount > 0) {
-				for (let i = 0; i < pushCount; i++) {
-					const extraBlocks = {
-						children: extraArr[i],
-					};
-
-					console.log(extraBlocks)
-
-					const extraResponse = await fetch(`https://api.notion.com/v1/blocks/${data.id}/children`, {
-						method: "PATCH",
-						headers: {
-							"Content-Type": "application/json",
-							"Authorization": "Bearer " + notionAPI,
-							"Notion-Version": "2022-06-28",
-						},
-						body: JSON.stringify(extraBlocks),
-					});
-
-					const extraData: any = await extraResponse.json();
-
-					if (!extraResponse.ok) {
-						new Notice(`Error ${extraData.status}: ${extraData.code} \n ${i18nConfig["CheckConsole"]}`, 5000);
-						console.log(`Error message: \n ${extraData.message}`);
-					} else {
-						console.log(`${i18nConfig["ExtraBlockUploaded"]} to page: ${data.id}`);
-						if (i === pushCount - 1) {
-							console.log(`${i18nConfig["BlockUploaded"]} to page: ${data.id}`);
-							new Notice(`${i18nConfig["BlockUploaded"]} page: ${data.id}`, 5000);
-						}
-					}
-				}
-			}
-		}
+		// if (Platform.isDesktopApp) {
+		// 	 response = await fetch("https://api.notion.com/v1/pages", {
+		// 		method: "POST",
+		// 		headers: {
+		// 			"Content-Type": "application/json",
+		// 			"Authorization": "Bearer " + notionAPI,
+		// 			"Notion-Version": "2022-06-28",
+		// 		},
+		// 		body: JSON.stringify(bodyString),
+		// 	});
+		//
+		// 	data = await response.json();
+		//
+		// 	if (!response.ok) {
+		// 		new Notice(`Error ${data.status}: ${data.code} \n ${i18nConfig["CheckConsole"]}`, 5000);
+		// 		console.log(`Error message: \n ${data.message}`);
+		// 	} else {
+		// 		console.log(`Page created: ${data.url}`);
+		// 		console.log(`Page ID: ${data.id}`);
+		// 	}
+		//
+		// 	// upload the rest of the blocks
+		// 	if (pushCount > 0) {
+		// 		for (let i = 0; i < pushCount; i++) {
+		// 			const extraBlocks = {
+		// 				children: extraArr[i],
+		// 			};
+		//
+		// 			console.log(extraBlocks)
+		//
+		// 			const extraResponse = await fetch(`https://api.notion.com/v1/blocks/${data.id}/children`, {
+		// 				method: "PATCH",
+		// 				headers: {
+		// 					"Content-Type": "application/json",
+		// 					"Authorization": "Bearer " + notionAPI,
+		// 					"Notion-Version": "2022-06-28",
+		// 				},
+		// 				body: JSON.stringify(extraBlocks),
+		// 			});
+		//
+		// 			const extraData: any = await extraResponse.json();
+		//
+		// 			if (!extraResponse.ok) {
+		// 				new Notice(`Error ${extraData.status}: ${extraData.code} \n ${i18nConfig["CheckConsole"]}`, 5000);
+		// 				console.log(`Error message: \n ${extraData.message}`);
+		// 			} else {
+		// 				console.log(`${i18nConfig["ExtraBlockUploaded"]} to page: ${data.id}`);
+		// 				if (i === pushCount - 1) {
+		// 					console.log(`${i18nConfig["BlockUploaded"]} to page: ${data.id}`);
+		// 					new Notice(`${i18nConfig["BlockUploaded"]} page: ${data.id}`, 5000);
+		// 				}
+		// 			}
+		// 		}
+		// 	}
+		// }
 
 		return {
 			response, // for status code
@@ -264,7 +263,6 @@ export class Upload2NotionCustom extends UploadBaseCustom {
 				);
 			}
 		}
-
 
 		return res;
 	}
