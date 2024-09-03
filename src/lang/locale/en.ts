@@ -79,4 +79,5 @@ export const en = {
 	BlockUploaded: "All blocks uploaded",
 	ExtraBlockUploaded: "Extra blocks uploaded",
 	CheckConsole: "Check the console for more information \n opt+cmd+i/ctrl+shift+i",
+	"reach-mobile-limit": "The number of blocks exceeds the limit of 100, please use the desktop plugin",
 }
