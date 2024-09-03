@@ -27,7 +27,6 @@
     "@jxpeng98/martian": "^1.2.7",
     "https-proxy-agent": "^7.0.2",
     "node-fetch": "^3.3.2",
-    "process": "^0.11.10",
     "remark-math": "^6.0.0",
     "yaml": "^2.3.4",
     "yaml-front-matter": "^4.1.1"
