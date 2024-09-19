@@ -20,7 +20,7 @@ export default class ObsidianSyncNotionPlugin extends Plugin {
 
         addIcons();
         // This creates an icon in the left ribbon.
-        const ribbonIconEl = this.addRibbonIcon(
+        this.addRibbonIcon(
             "notion-logo",
             i18nConfig.ribbonIcon,
             async (evt: MouseEvent) => {
