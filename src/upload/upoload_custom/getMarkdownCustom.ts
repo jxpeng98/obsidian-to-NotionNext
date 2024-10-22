@@ -35,7 +35,10 @@ export async function getNowFileMarkdownContentCustom(
 
 		// If a 'title' type property exists, use the file's basename as its value
 		if (titleProperty) {
-			customValues[titleProperty.customName] = nowFile.basename; // Use 'basename' for the file name without extension
+			customValues[titleProperty.customName] =
+				(FileCache.frontmatter && FileCache.frontmatter[titleProperty.customName]) ?
+					FileCache.frontmatter[titleProperty.customName] : // use the front matter value if it exists
+					nowFile.basename; // Use 'basename' for the file name without extension
 		}
 
 	} catch (error) {
