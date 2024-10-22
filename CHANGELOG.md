@@ -1,4 +1,4 @@
 ## Fix
 
-- Fix a bug that plugin does not work when Obsidian language is not set to Englisht, Chinese or Japanese.
-- 修复了当 Obsidian 语言设置不是英文、中文或日文时插件无法工作的问题。
+- Fix a bug that the plugin cannot read the title from the markdown front matter if using custom database.
+- 修复当使用自定义数据库时，插件无法从markdown front matter中读取标题的问题。
