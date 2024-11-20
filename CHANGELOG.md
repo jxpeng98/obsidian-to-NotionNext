@@ -1,4 +1,15 @@
 ## Fix
 
-- Fix a bug that the plugin cannot read the title from the markdown front matter if using custom database.
-- 修复当使用自定义数据库时，插件无法从markdown front matter中读取标题的问题。
+- Fix the bug that the plugin does not work in the mobile app.
+- 修复了在移动端应用中插件无法工作的问题。
+
+## Feature
+
+- Both desktop and mobile apps support syncing long markdown files.
+- 桌面端和移动端应用都支持长篇 markdown 文件同步。
+
+## Issue
+- Bullet list over 3 levels is not supported.
+- 无法同步超过三个分支的列表。
+
+
