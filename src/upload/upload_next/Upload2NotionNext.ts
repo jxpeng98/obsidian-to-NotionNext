@@ -1,12 +1,11 @@
 import {UploadBaseNext} from "./BaseUpload2NotionNext";
-import {App, Notice, TFile, Platform, requestUrl} from "obsidian";
+import {App, Notice, TFile, requestUrl} from "obsidian";
 import {markdownToBlocks} from "@jxpeng98/martian";
 import * as yamlFrontMatter from "yaml-front-matter";
 import MyPlugin from "src/main";
 import {DatabaseDetails, PluginSettings} from "../../ui/settingTabs";
 import {updateYamlInfo} from "../updateYaml";
 import {LIMITS, paragraph} from "@jxpeng98/martian/src/notion";
-import fetch from 'node-fetch';
 import {i18nConfig} from "../../lang/I18n";
 
 interface CreatePageResponse {
@@ -247,76 +246,63 @@ export class Upload2NotionNext extends UploadBaseNext {
 		let response: any;
 		let data: any;
 
-		if (Platform.isMobileApp) {
-			if(childArrLength > 100) {
-				new Notice(i18nConfig["reach-mobile-limit"], 5000);
-			} else {
-				response =  await requestUrl({
-					url: `https://api.notion.com/v1/pages`,
-					method: "POST",
+		response = await requestUrl({
+			url: `https://api.notion.com/v1/pages`,
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+				// 'User-Agent': 'obsidian.md',
+				Authorization:
+					"Bearer " + notionAPI,
+				"Notion-Version": "2022-06-28",
+			},
+			body: JSON.stringify(bodyString),
+			throw: false
+		});
+
+		data = await response.json;
+
+		// console.log(data)
+		// console.log(response.status)
+
+		if (response.status !== 200) {
+			new Notice(`Error ${data.status}: ${data.code} \n ${i18nConfig["CheckConsole"]}`, 5000);
+			console.log(`Error message: \n ${data.message}`);
+		} else {
+			console.log(`Page created: ${data.url}`);
+			console.log(`Page ID: ${data.id}`);
+		}
+		//
+		// upload the rest of the blocks
+		if (pushCount > 0) {
+			for (let i = 0; i < pushCount; i++) {
+				const extraBlocks = {
+					children: extraArr[i],
+				};
+
+				console.log(extraBlocks)
+
+				const extraResponse = await requestUrl({
+					url: `https://api.notion.com/v1/blocks/${data.id}/children`,
+					method: "PATCH",
 					headers: {
 						"Content-Type": "application/json",
-						// 'User-Agent': 'obsidian.md',
-						Authorization:
-							"Bearer " + notionAPI,
+						"Authorization": "Bearer " + notionAPI,
 						"Notion-Version": "2022-06-28",
 					},
-					body: JSON.stringify(bodyString),
+					body: JSON.stringify(extraBlocks),
 				});
-			}
-		}
 
-		if (Platform.isDesktopApp) {
-			response = await fetch("https://api.notion.com/v1/pages", {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-					"Authorization": "Bearer " + notionAPI,
-					"Notion-Version": "2022-06-28",
-				},
-				body: JSON.stringify(bodyString),
-			});
+				const extraData: any = await extraResponse.json;
 
-			data = await response.json();
-
-			if (!response.ok) {
-				new Notice(`Error ${data.status}: ${data.code} \n ${i18nConfig["CheckConsole"]}`, 5000);
-				console.log(`Error message: \n ${data.message}`);
-			} else {
-				console.log(`Page created: ${data.url}`);
-				console.log(`Page ID: ${data.id}`);
-			}
-
-			// upload the rest of the blocks
-			if (pushCount > 0) {
-				for (let i = 0; i < pushCount; i++) {
-					const extraBlocks = {
-						children: extraArr[i],
-					};
-
-					console.log(extraBlocks)
-
-					const extraResponse = await fetch(`https://api.notion.com/v1/blocks/${data.id}/children`, {
-						method: "PATCH",
-						headers: {
-							"Content-Type": "application/json",
-							"Authorization": "Bearer " + notionAPI,
-							"Notion-Version": "2022-06-28",
-						},
-						body: JSON.stringify(extraBlocks),
-					});
-
-					const extraData: any = await extraResponse.json();
-
-					if (!extraResponse.ok) {
-						new Notice(`Error ${extraData.status}: ${extraData.code} \n ${i18nConfig["CheckConsole"]}`, 5000);
-						console.log(`Error message: \n ${extraData.message}`);
-					} else {
-						console.log(`${i18nConfig["ExtraBlockUploaded"]} to page: ${data.id}`);
-						if (i === pushCount - 1) {
-							console.log(`${i18nConfig["BlockUploaded"]} to page: ${data.id}`);
-							new Notice(`${i18nConfig["BlockUploaded"]} page: ${data.id}`, 5000);
-						}
+				if (extraResponse.status !== 200) {
+					new Notice(`Error ${extraData.status}: ${extraData.code} \n ${i18nConfig["CheckConsole"]}`, 5000);
+					console.log(`Error message: \n ${extraData.message}`);
+				} else {
+					console.log(`${i18nConfig["ExtraBlockUploaded"]} to page: ${data.id}`);
+					if (i === pushCount - 1) {
+						console.log(`${i18nConfig["BlockUploaded"]} to page: ${data.id}`);
+						new Notice(`${i18nConfig["BlockUploaded"]} page: ${data.id}`, 5000);
 					}
 				}
 			}
@@ -416,30 +402,17 @@ export class Upload2NotionNext extends UploadBaseNext {
 
 		let {response, data} = res;
 
-		if (Platform.isDesktopApp) {
-			if (response && response.status === 200) {
-				await updateYamlInfo(
-					markdown,
-					nowFile,
-					data,
-					app,
-					this.plugin,
-					this.dbDetails
-				);
-			}
-		}
+		// console.log(response)
 
-		if (Platform.isMobileApp) {
-			if (response && response.status === 200) {
-				await updateYamlInfo(
-					markdown,
-					nowFile,
-					response,
-					app,
-					this.plugin,
-					this.dbDetails,
-				);
-			}
+		if (response && response.status === 200) {
+			await updateYamlInfo(
+				markdown,
+				nowFile,
+				data,
+				app,
+				this.plugin,
+				this.dbDetails,
+			);
 		}
 
 		return res;

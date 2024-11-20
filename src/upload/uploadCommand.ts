@@ -50,8 +50,10 @@ export async function uploadCommandNext(
 		const {response} = res;
 		if (response.status === 200) {
 			new Notice(`${i18nConfig["sync-preffix"]} ${basename} ${i18nConfig["sync-success"]}`).noticeEl.style.color = "green";
+			console.log(`${i18nConfig["sync-preffix"]} ${basename} ${i18nConfig["sync-success"]}`);
 		} else {
 			new Notice(`${i18nConfig["sync-fail"]} ${basename}`, 5000);
+			console.log(`${i18nConfig["sync-fail"]} ${basename}`);
 		}
 
 	}
@@ -88,8 +90,10 @@ export async function uploadCommandGeneral(
 		const {response} = res;
 		if (response.status === 200) {
 			new Notice(`${i18nConfig["sync-preffix"]} ${basename} ${i18nConfig["sync-success"]}`).noticeEl.style.color = "green";
+			console.log(`${i18nConfig["sync-preffix"]} ${basename} ${i18nConfig["sync-success"]}`);
 		} else {
 			new Notice(`${i18nConfig["sync-fail"]} ${basename}`, 5000);
+			console.log(`${i18nConfig["sync-fail"]} ${basename}`);
 		}
 
 	}
@@ -124,10 +128,13 @@ export async function uploadCommandCustom(
 		const res = await upload.syncMarkdownToNotionCustom(cover, customValues, markDownData, nowFile, this.app);
 
 		const {response} = res;
+
 		if (response.status === 200) {
 			new Notice(`${i18nConfig["sync-preffix"]} ${basename} ${i18nConfig["sync-success"]}`).noticeEl.style.color = "green";
+			console.log(`${i18nConfig["sync-preffix"]} ${basename} ${i18nConfig["sync-success"]}`);
 		} else {
 			new Notice(`${i18nConfig["sync-fail"]} ${basename}`, 5000);
+			console.log(`${i18nConfig["sync-fail"]} ${basename}`);
 		}
 
 	}
