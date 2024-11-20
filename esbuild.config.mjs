@@ -41,7 +41,6 @@ const ctx = await esbuild.context({
 		"@codemirror/view",
 		...builtins,
 	],
-	platform: "node",
 	format: "cjs",
 	target: "es2016",
 	logLevel: "info",
