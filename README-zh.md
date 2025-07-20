@@ -44,21 +44,21 @@ tags:
 
 - 这个版本开始，你可以**任意修改第一列表头的名字 (标题列，默认：'title')**。 （**注意：你必须保证你的Notion数据库中有'tags‘这一列的存在，并且在markdown文件中把`tags:`添加到你的YAML表头中。否则会返回`400 错误`。但是你可以`tags:`设置为空。**）
 
-  ![](https://minioapi.pjx.ac.cn/img1/2023/11/4a298b9be3990e9d2201bf2f50ca5a0a.png)
+  ![](https://r2img.jxpeng.dev/2023/11/4a298b9be3990e9d2201bf2f50ca5a0a.png)
 例如这样：
-  ![](https://minioapi.pjx.ac.cn/img1/2023/11/4cd8d79cd9dd9dde299e39c666cb3473.gif)
+  ![](https://r2img.jxpeng.dev/2023/11/4cd8d79cd9dd9dde299e39c666cb3473.gif)
 - 增加了一个控制按钮来控制是否开启当前数据库同步命令的功能。如果你关闭了这个按钮，你在上传命令列表中就不会出现当前数据库的选项。
 
-![](https://minioapi.pjx.ac.cn/img1/2023/11/becb60fc44783842da4b3cf4c322f363.gif)
+![](https://r2img.jxpeng.dev/2023/11/becb60fc44783842da4b3cf4c322f363.gif)
 
 ### 0.2.6
 
 - 增加一个按钮用来控制是否在名列列表中显示如下数据库。
 
-![](https://minioapi.pjx.ac.cn/img1/2023/11/147c6a4eaa34da41a6f102558ed77106.png)
+![](https://r2img.jxpeng.dev/2023/11/147c6a4eaa34da41a6f102558ed77106.png)
 如果你关闭普通数据库的按钮，你在上传命令列表中就不会出现普通数据库的选项。如果你关闭NotionNext数据库的按钮，你在上传命令列表中就不会出现NotionNext数据库的选项。
 
-![](https://minioapi.pjx.ac.cn/img1/2023/11/70b8e4fc2148688ccbd6cfc53ce339a2.png)
+![](https://r2img.jxpeng.dev/2023/11/70b8e4fc2148688ccbd6cfc53ce339a2.png)
 
 ### 0.2.3
 
@@ -70,9 +70,9 @@ tags:
 - 你可以有一个NotionNext和一个普通Notion数据库。
 - 普通Notion数据库的同步方式和原作者的一样，只同步`title`和`tags`。**如果使用普通数据库功能，你需要保证你的数据库中有`title`和`tags`这两个表头。必须使用小写。**
 
-![](https://minioapi.pjx.ac.cn/img1/2023/11/712a12081d855aa60f82a7b46913ab7e.gif)
+![](https://r2img.jxpeng.dev/2023/11/712a12081d855aa60f82a7b46913ab7e.gif)
 
-![](https://minioapi.pjx.ac.cn/img1/2023/11/9de76cecceef74c78884ddfc1c221659.gif)
+![](https://r2img.jxpeng.dev/2023/11/9de76cecceef74c78884ddfc1c221659.gif)
 
 ### 0.2.1
 
@@ -181,10 +181,10 @@ Contents Below
 ```
 
 模板使用如下：
-![](https://minioapi.pjx.ac.cn/img1/2023/09/354b950e5777b48832c2475e4a31f2cc.gif)
+![](https://r2img.jxpeng.dev/2023/09/354b950e5777b48832c2475e4a31f2cc.gif)
 
 **插件预览如下**
-![](https://minioapi.pjx.ac.cn/img1/2023/09/d6199619b68fab218fca8ae0cebece78.gif)
+![](https://r2img.jxpeng.dev/2023/09/d6199619b68fab218fca8ae0cebece78.gif)
 
 ---
 
