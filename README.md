@@ -40,38 +40,38 @@ If you want to use this plugin, you need to follow the following steps to set up
 
 1). Go to [Notion API](https://www.notion.com/my-integrations) to create a new integration, and **copy the token**.
 
-![create-api](https://minioapi.pjx.ac.cn/img1/2024/07/28526e416571f8b1fe70d90bd9975b81.gif)
+![create-api](https://r2img.jxpeng.dev/2024/07/28526e416571f8b1fe70d90bd9975b81.gif)
 
 2). Create a database in your Notion workspace.
 
 Open Notion, click top-left `Create` a new page` -> You can give a title for the page and press "/" Select 'Database - Full page'.
 
-![create-database](https://minioapi.pjx.ac.cn/img1/2024/07/f1bd993ed667bcc980a45194eb647c34.gif)
+![create-database](https://r2img.jxpeng.dev/2024/07/f1bd993ed667bcc980a45194eb647c34.gif)
 
 Rename the database properties to `title` and `tags`.
 **⚠️⚠️`title` is the title column! `tags` is lower case⚠️⚠️**
 
-![rename-title-tags](https://minioapi.pjx.ac.cn/img1/2024/07/20c7b81761195706dde6e7dae69edbc4.gif)
+![rename-title-tags](https://r2img.jxpeng.dev/2024/07/20c7b81761195706dde6e7dae69edbc4.gif)
 
 3). Add the Notion API integration.
 
 Click the right-top '...' -> connections -> connect to -> find the integration you created and connect it.
 
-![add-integration](https://minioapi.pjx.ac.cn/img1/2024/07/bf59397146d96727c96dac06515c6c22.gif)
+![add-integration](https://r2img.jxpeng.dev/2024/07/bf59397146d96727c96dac06515c6c22.gif)
 
 4). Publish the database to the public.
 Click the 'Share' -> 'Publish' -> 'Publish' -> **copy the database id from the URL**.
 
-![share-publish](https://minioapi.pjx.ac.cn/img1/2024/07/5e5b9585cfa4a9086ef6704c3b48eacf.gif)
+![share-publish](https://r2img.jxpeng.dev/2024/07/5e5b9585cfa4a9086ef6704c3b48eacf.gif)
 
 ### 2. Setting up the plugin in Obsidian
 
 1). Go to Obsidian settings -> community plugins -> search 'NotionNext' -> install it.
-  ![plugin](https://minioapi.pjx.ac.cn/img1/2024/07/1bf82618e943ec5eb68d89d4556bc3fc.png)
+  ![plugin](https://r2img.jxpeng.dev/2024/07/1bf82618e943ec5eb68d89d4556bc3fc.png)
 
 2). Open the plugin settings and create a new database.
 
-![add-database](https://minioapi.pjx.ac.cn/img1/2024/07/115f47b4180d04fb362b931f8092b5fb.png)
+![add-database](https://r2img.jxpeng.dev/2024/07/115f47b4180d04fb362b931f8092b5fb.png)
 
 ### 3. Create a database
 
@@ -81,7 +81,7 @@ Click the 'Share' -> 'Publish' -> 'Publish' -> **copy the database id from the U
 
 General database is the default database, which only has the `title` and `tags` columns. **⚠️⚠️`title` and `tags` are lowercase⚠️⚠️**
 
-![general](https://minioapi.pjx.ac.cn/img1/2024/07/b2d0d0259afae7a542bd9f62256cd2c2.png)
+![general](https://r2img.jxpeng.dev/2024/07/b2d0d0259afae7a542bd9f62256cd2c2.png)
 
 The general is as follows:
 
@@ -94,17 +94,17 @@ The general is as follows:
 
 After setting, it should look like this:
 
-![general-setting](https://minioapi.pjx.ac.cn/img1/2024/07/3fc630171f6e8ae1011271b2b37d5d48.png)
+![general-setting](https://r2img.jxpeng.dev/2024/07/3fc630171f6e8ae1011271b2b37d5d48.png)
 
 Once you click `save`, the new database will be created in the plugin settings and display in the detabase list.
 
-![database-list](https://minioapi.pjx.ac.cn/img1/2024/07/3dff23b1c13a31f7696dc794fb78eba5.png)
+![database-list](https://r2img.jxpeng.dev/2024/07/3dff23b1c13a31f7696dc794fb78eba5.png)
 
 #### 2️⃣ NotionNext database
 
 If you use [NotionNext](https://github.com/tangly1024/NotionNext) to set up your website, you can use the NotionNext database. (**All the properties are in lowercase, and you do not need to change the properties**)
 
-![notionnext](https://minioapi.pjx.ac.cn/img1/2024/07/b164160ccfaf4fb23aa7ac1ce467e235.png)
+![notionnext](https://r2img.jxpeng.dev/2024/07/b164160ccfaf4fb23aa7ac1ce467e235.png)
 
 Like the general database, you need to fill in the following information:
 
@@ -117,7 +117,7 @@ Like the general database, you need to fill in the following information:
 
 The custom database is purely customised, and you can customise the properties you want to sync. (**All the properties are in lowercase, and you do not need to change the properties**)
 
-![customise](https://minioapi.pjx.ac.cn/img1/2024/07/612b1377ec94d452abec7dc3fbe6cefb.png)
+![customise](https://r2img.jxpeng.dev/2024/07/612b1377ec94d452abec7dc3fbe6cefb.png)
 
 The basic information is identical to the general database and NotionNext database. You need to fill in the following information:
 
@@ -128,15 +128,15 @@ The basic information is identical to the general database and NotionNext databa
 
 After adding the information, You can click `Add New Property` to add the properties you want to sync. There is no limit to the number of properties you can add.
 
-![customise-add-property](https://minioapi.pjx.ac.cn/img1/2024/07/17cfbfa93d92404ff70d920302f15981.png)
+![customise-add-property](https://r2img.jxpeng.dev/2024/07/17cfbfa93d92404ff70d920302f15981.png)
 
 **⚠️⚠️⚠️**: **`Title column` is the main property in the Notion database, which has the open button to open the underlying page.** You can select the type of all other properties. **⚠️⚠️⚠️**
 
-![title-column](https://minioapi.pjx.ac.cn/img1/2024/07/0521b0aa6cedbe67bca4966bf79041ea.png)
+![title-column](https://r2img.jxpeng.dev/2024/07/0521b0aa6cedbe67bca4966bf79041ea.png)
 
 According to the previously shown database, you can use `title` as the `Title column`, and `Tags` as the property 1.
 
-![title-and-tags](https://minioapi.pjx.ac.cn/img1/2024/07/87529214008147d3aa1bbe5868849f31.png)
+![title-and-tags](https://r2img.jxpeng.dev/2024/07/87529214008147d3aa1bbe5868849f31.png)
 
 **Until now, you have set up the plugin in Obsidian. You can start syncing your notes to Notion.**
 
@@ -160,7 +160,7 @@ This is a test file.
 
 After creating the note, you can click the `Share to NotionNext` button on the left sidebar to sync the note to Notion.
 
-![general-sync](https://minioapi.pjx.ac.cn/img1/2024/07/6a690dc4b04d6b74134e9d3d76636c1b.gif)
+![general-sync](https://r2img.jxpeng.dev/2024/07/6a690dc4b04d6b74134e9d3d76636c1b.gif)
 
 #### 2️⃣ note for NotionNext database
 
@@ -188,7 +188,7 @@ NotionID-pengjiaxin: 8ba573de-8fdf-4681-b063-c39d26e7860e
 this is a test file
 ```
 
-![notionnext-sync](https://minioapi.pjx.ac.cn/img1/2024/07/5539ec534e7a855ad87aa7949e5e836f.gif)
+![notionnext-sync](https://r2img.jxpeng.dev/2024/07/5539ec534e7a855ad87aa7949e5e836f.gif)
 
 #### 3️⃣ note for custom database
 
@@ -196,7 +196,7 @@ this is a test file
 
 Use the previously created general database and rename `title` to `Name` and `tags` to `Tags` in Notion.
 
-![rename-notion](https://minioapi.pjx.ac.cn/img1/2024/07/e4d1c988be22353537998db897c7a471.gif)
+![rename-notion](https://r2img.jxpeng.dev/2024/07/e4d1c988be22353537998db897c7a471.gif)
 
 The front matter for the custom database is as follows:
 
@@ -211,23 +211,23 @@ Tags:
 This is a test file. 
 ```
 
-![sync-custom](https://minioapi.pjx.ac.cn/img1/2024/07/973f17955cd921cca6b5007f0990eea4.gif)
+![sync-custom](https://r2img.jxpeng.dev/2024/07/973f17955cd921cca6b5007f0990eea4.gif)
 
 ##### sync more properties
 
 Add more property to the custom database. For example, we can add a `summary` and `date` property to the custom database.
 
   1). Click `Edit` in the plugin settings.
-  ![edit](https://minioapi.pjx.ac.cn/img1/2024/07/f50639d8118b1f106d7bb29be5d3527b.png)
+  ![edit](https://r2img.jxpeng.dev/2024/07/f50639d8118b1f106d7bb29be5d3527b.png)
   2). Click `Add` and add the `summary` and `date` property.
 
-![add-property](https://minioapi.pjx.ac.cn/img1/2024/07/49716657adf0255a37fa214abf4716dc.gif)
+![add-property](https://r2img.jxpeng.dev/2024/07/49716657adf0255a37fa214abf4716dc.gif)
 
   3). After adding the properties, you can see the properties in the plugin settings.
-  ![four properties](https://minioapi.pjx.ac.cn/img1/2024/07/63a0a0e09d537b1cf55cfdc49de4db1a.png)
+  ![four properties](https://r2img.jxpeng.dev/2024/07/63a0a0e09d537b1cf55cfdc49de4db1a.png)
   4). Add the `summary` and `date` in Notion
 
-  ![add-in-notion](https://minioapi.pjx.ac.cn/img1/2024/07/d193fe72ce3676bf643b0d1eb92dd4b7.gif)
+  ![add-in-notion](https://r2img.jxpeng.dev/2024/07/d193fe72ce3676bf643b0d1eb92dd4b7.gif)
 
   5). Create a new note with the `summary` and `date` property.
     
@@ -246,7 +246,7 @@ Add more property to the custom database. For example, we can add a `summary` an
 
   6). Sync the note to Notion.
 
-  ![sync-custom](https://minioapi.pjx.ac.cn/img1/2024/07/0e4cfbd61acdaf813fd81ee6d046e067.gif)
+  ![sync-custom](https://r2img.jxpeng.dev/2024/07/0e4cfbd61acdaf813fd81ee6d046e067.gif)
   
 ---
 
