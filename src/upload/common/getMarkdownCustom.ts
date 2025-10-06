@@ -1,6 +1,6 @@
-import { App, Notice } from "obsidian";
-import { i18nConfig } from "../../lang/I18n";
-import { DatabaseDetails } from "../../ui/settingTabs";
+import {App, Notice} from "obsidian";
+import {i18nConfig} from "../../lang/I18n";
+import {DatabaseDetails} from "../../ui/settingTabs";
 
 export async function getNowFileMarkdownContentCustom(
 	app: App,
@@ -24,6 +24,7 @@ export async function getNowFileMarkdownContentCustom(
 			.map(property => property.customName);
 
 		// Extract custom values from the front matter based on the names
+		// Only collect data 'Relation' should be handled separately in the function buildBodyString
 		customPropertyNames.forEach(propertyName => {
 			if (FileCache.frontmatter && FileCache.frontmatter[propertyName] !== undefined) {
 				customValues[propertyName] = FileCache.frontmatter[propertyName];
@@ -31,7 +32,8 @@ export async function getNowFileMarkdownContentCustom(
 		});
 
 		// Check if any of the customProperties has a customType of 'title'
-		const titleProperty = dbDetails.customProperties.find(property => property.customType === 'title');
+		const titleProperty = dbDetails.customProperties
+			.find(property => property.customType === 'title');
 
 		// If a 'title' type property exists, use the file's basename as its value
 		if (titleProperty) {

@@ -1,13 +1,11 @@
 import {i18nConfig} from "../lang/I18n";
 import {App, Notice} from "obsidian";
-import {Upload2NotionNext} from "./upload_next/Upload2NotionNext";
-import {Upload2NotionGeneral} from "./upload_general/Upload2NotionGeneral";
-import {Upload2NotionCustom} from "./upoload_custom/Upload2NotionCustom";
+import {Upload2Notion} from "./Upload2Notion";
 import {DatabaseDetails, PluginSettings} from "../ui/settingTabs";
 import ObsidianSyncNotionPlugin from "../main";
-import {getNowFileMarkdownContentNext} from "./upload_next/getMarkdownNext";
-import {getNowFileMarkdownContentGeneral} from "./upload_general/getMarkdownGeneral";
-import {getNowFileMarkdownContentCustom} from "./upoload_custom/getMarkdownCustom";
+import {getNowFileMarkdownContentNext} from "./common/getMarkdownNext";
+import {getNowFileMarkdownContentGeneral} from "./common/getMarkdownGeneral";
+import {getNowFileMarkdownContentCustom} from "./common/getMarkdownCustom";
 
 export async function uploadCommandNext(
 	plugin: ObsidianSyncNotionPlugin,
@@ -17,6 +15,7 @@ export async function uploadCommandNext(
 ) {
 
 	const {notionAPI, databaseID} = dbDetails;
+	console.log(`[uploadCommandNext] ${new Date().toISOString()} Triggered for file`, app.workspace.getActiveFile()?.path);
 
 	// Check if the user has set up the Notion API and database ID
 	if (notionAPI === "" || databaseID === "") {
@@ -44,8 +43,25 @@ export async function uploadCommandNext(
 	if (markDownData) {
 		const {basename} = nowFile;
 
-		const upload = new Upload2NotionNext(plugin, dbDetails);
-		const res = await upload.syncMarkdownToNotionNext(basename, emoji, cover, tags, type, slug, stats, category, summary, paword, favicon, datetime, markDownData, nowFile, this.app);
+		const upload = new Upload2Notion(plugin, dbDetails);
+		const res = await upload.sync({
+			dataset: "next",
+			title: basename,
+			emoji: emoji || "",
+			cover: cover || "",
+			tags: tags || [],
+			type: type || "",
+			slug: slug || "",
+			stats: stats || "",
+			category: category || "",
+			summary: summary || "",
+			password: paword || "",
+			favicon: favicon || "",
+			datetime: datetime || "",
+			markdown: markDownData,
+			nowFile,
+			app,
+		});
 
 		const {response} = res;
 		if (response.status === 200) {
@@ -68,6 +84,7 @@ export async function uploadCommandGeneral(
 ) {
 
 	const {notionAPI, databaseID} = dbDetails;
+	console.log(`[uploadCommandGeneral] ${new Date().toISOString()} Triggered for file`, app.workspace.getActiveFile()?.path);
 
 	// Check if the user has set up the Notion API and database ID
 	if (notionAPI === "" || databaseID === "") {
@@ -84,8 +101,16 @@ export async function uploadCommandGeneral(
 	if (markDownData) {
 		const {basename} = nowFile;
 
-		const upload = new Upload2NotionGeneral(plugin, dbDetails);
-		const res = await upload.syncMarkdownToNotionGeneral(basename, cover, tags, markDownData, nowFile, this.app);
+		const upload = new Upload2Notion(plugin, dbDetails);
+		const res = await upload.sync({
+			dataset: "general",
+			title: basename,
+			cover: cover || "",
+			tags: tags || [],
+			markdown: markDownData,
+			nowFile,
+			app,
+		});
 
 		const {response} = res;
 		if (response.status === 200) {
@@ -107,7 +132,8 @@ export async function uploadCommandCustom(
 	app: App,
 ) {
 
-	const {notionAPI, databaseID} = settings;
+	const {notionAPI, databaseID} = dbDetails;
+	console.log(`[uploadCommandCustom] ${new Date().toISOString()} Triggered for file`, app.workspace.getActiveFile()?.path);
 
 	// Check if the user has set up the Notion API and database ID
 	if (notionAPI === "" || databaseID === "") {
@@ -124,8 +150,15 @@ export async function uploadCommandCustom(
 	if (markDownData) {
 		const {basename} = nowFile;
 
-		const upload = new Upload2NotionCustom(plugin, dbDetails);
-		const res = await upload.syncMarkdownToNotionCustom(cover, customValues, markDownData, nowFile, this.app);
+		const upload = new Upload2Notion(plugin, dbDetails);
+		const res = await upload.sync({
+			dataset: "custom",
+			cover: cover || "",
+			customValues,
+			markdown: markDownData,
+			nowFile,
+			app,
+		});
 
 		const {response} = res;
 
