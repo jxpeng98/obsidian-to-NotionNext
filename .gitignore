@@ -24,3 +24,7 @@ data.json
 
 # local data
 local-data
+
+# vitepress
+doc/.vitepress/dist
+doc/.vitepress/cache

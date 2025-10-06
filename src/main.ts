@@ -1,7 +1,5 @@
 import { App, Editor, MarkdownView, Notice, Plugin, PluginSettingTab, Setting } from "obsidian";
 import { addIcons } from 'src/ui/icon';
-import { Upload2NotionGeneral } from "src/upload/upload_general/Upload2NotionGeneral";
-import { Upload2NotionNext } from "src/upload/upload_next/Upload2NotionNext";
 import { i18nConfig } from "src/lang/I18n";
 import ribbonCommands from "src/commands/NotionCommands";
 import { ObsidianSettingTab, PluginSettings, DEFAULT_SETTINGS, DatabaseDetails } from "src/ui/settingTabs";
@@ -83,7 +81,6 @@ export default class ObsidianSyncNotionPlugin extends Plugin {
     }
 
 }
-
 
 
 
