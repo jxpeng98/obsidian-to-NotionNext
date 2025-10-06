@@ -1,6 +1,6 @@
 {
   "name": "share-to-notionnext",
-  "version": "2.5.0",
+  "version": "2.6.0",
   "type": "module",
   "description": "Share files to any Notion database using the Notion API, originally created by EasyChris/obsidian-to-notion.",
   "main": "main.js",
