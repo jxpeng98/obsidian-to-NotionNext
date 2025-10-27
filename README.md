@@ -30,7 +30,19 @@
 - [x] Support custom properties for Notion General database. 支持自定义属性
 - [x] Support preview for database details in plugin settings. 支持预览数据库详情
 - [x] Support edit for database details in plugin settings. 支持编辑数据库详情
+- [x] Convert Obsidian callouts into Notion callout blocks so your `[!info]` style notes stay consistent after syncing.
 - [ ] Support group upload with one click 支持一键多数据库上传
+
+## Callout support
+
+Obsidian callouts written with the standard syntax (for example `> [!warning]` or `> [!quote]`) are automatically rendered as Notion callout blocks during upload. The plugin keeps the chosen callout type, title, and body content so your callout styling survives the trip from Obsidian to Notion without extra configuration.
+
+```markdown
+> [!info] Tips
+> Remember to update your front matter before syncing.
+```
+
+After syncing, the note will contain an equivalent Notion callout block with the same icon and text.
 
 ## How to use
 
