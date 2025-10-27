@@ -1,7 +1,7 @@
 import { App, TFile } from "obsidian";
 import { markdownToBlocks } from "@jxpeng98/martian";
 import * as yamlFrontMatter from "yaml-front-matter";
-import { LIMITS, paragraph } from "@jxpeng98/martian/src/notion";
+import { LIMITS, paragraph } from "@jxpeng98/martian";
 import MyPlugin from "src/main";
 import { DatabaseDetails } from "../ui/settingTabs";
 import { updateYamlInfo } from "./updateYaml";
@@ -89,10 +89,12 @@ export class Upload2Notion extends UploadBase {
 	}
 
 	async sync(request: SyncRequest): Promise<NotionPageResponse> {
-		console.log(`[Upload2Notion] Start sync`, {
+		const startedAt = Date.now();
+		this.debugLog("Upload2Notion", "Sync invoked", {
 			dataset: request.dataset,
-			file: request.nowFile.path,
-			database: this.dbDetails.databaseID,
+			filePath: request.nowFile.path,
+			databaseId: this.dbDetails.databaseID,
+			abName: this.dbDetails.abName,
 		});
 
 		let response: NotionPageResponse;
@@ -112,6 +114,12 @@ export class Upload2Notion extends UploadBase {
 		}
 
 		console.log(`[Upload2Notion] Notion response status`, response.response?.status);
+		this.debugLog("Upload2Notion", "Sync completed", {
+			status: response.response?.status ?? null,
+			durationMs: Date.now() - startedAt,
+			pageId: response.data?.id ?? null,
+			pageUrl: response.data?.url ?? null,
+		});
 
 		if (response.response && response.response.status === 200) {
 			console.log(`[Upload2Notion] Sync success`, {
@@ -142,6 +150,11 @@ export class Upload2Notion extends UploadBase {
 			notionLimits: {truncate: false},
 		});
 		const notionId = this.getNotionId(request.app, request.nowFile);
+		this.debugLog("Upload2Notion", "General dataset payload prepared", {
+			blockCount: blocks.length,
+			notionId: notionId ?? null,
+			tagCount: request.tags?.length ?? 0,
+		});
 
 		return this.upsertGeneral({
 			title: request.title,
@@ -163,6 +176,12 @@ export class Upload2Notion extends UploadBase {
 		});
 		this.splitRichTextParagraphs(blocks);
 		const notionId = this.getNotionId(request.app, request.nowFile);
+		this.debugLog("Upload2Notion", "Next dataset payload prepared", {
+			blockCount: blocks.length,
+			notionId: notionId ?? null,
+			hasEmoji: !!request.emoji,
+			tags: request.tags || [],
+		});
 
 		return this.upsertNext({
 			title: request.title,
@@ -191,6 +210,11 @@ export class Upload2Notion extends UploadBase {
 			notionLimits: {truncate: false},
 		});
 		const notionId = this.getNotionId(request.app, request.nowFile);
+		this.debugLog("Upload2Notion", "Custom dataset payload prepared", {
+			blockCount: blocks.length,
+			notionId: notionId ?? null,
+			customValueKeys: Object.keys(request.customValues || {}),
+		});
 
 		return this.upsertCustom({
 			cover: request.cover,
@@ -203,17 +227,31 @@ export class Upload2Notion extends UploadBase {
 	private buildBlocks(markdown: string, options: Record<string, unknown>): any[] {
 		const yamlContent: any = yamlFrontMatter.loadFront(markdown);
 		const content = yamlContent.__content;
-		return markdownToBlocks(content, options);
+		const blocks = markdownToBlocks(content, options);
+		this.debugLog("Upload2Notion", "Converted markdown to blocks", {
+			blockCount: blocks.length,
+			firstBlockTypes: blocks.slice(0, 5).map((block: any) => block?.type),
+			options,
+		});
+		return blocks;
 	}
 
 	private getNotionId(app: App, nowFile: TFile): string | undefined {
 		const frontMatter = app.metadataCache.getFileCache(nowFile)?.frontmatter;
 		if (!frontMatter) {
+			this.debugLog("Upload2Notion", "No frontmatter found when resolving Notion ID", {
+				filePath: nowFile.path,
+			});
 			return undefined;
 		}
 		const {abName} = this.dbDetails;
 		const notionIDKey = `NotionID-${abName}`;
 		const notionId = frontMatter[notionIDKey];
+		this.debugLog("Upload2Notion", "Resolved Notion ID from frontmatter", {
+			filePath: nowFile.path,
+			notionId: notionId ? String(notionId) : null,
+			frontMatterKeys: Object.keys(frontMatter),
+		});
 		return notionId ? String(notionId) : undefined;
 	}
 
@@ -247,8 +285,20 @@ export class Upload2Notion extends UploadBase {
 		const cover = params.notionId
 			? await this.resolveCoverForUpdate(params.cover)
 			: params.cover;
+		this.debugLog("Upload2Notion", "Upserting general page", {
+			title: params.title,
+			blockCount: params.childArr.length,
+			firstChunkSize: firstChunk.length,
+			extraChunkCount: extraChunks.length,
+			cover: cover ?? null,
+			notionIdExisting: params.notionId ?? null,
+			tagList: params.tags,
+		});
 
 		if (params.notionId) {
+			console.log(`[Upload2Notion] Deleting existing Notion page`, {
+				notionId: params.notionId,
+			});
 			await this.deletePage(params.notionId);
 		}
 
@@ -267,6 +317,17 @@ export class Upload2Notion extends UploadBase {
 		const cover = params.notionId
 			? await this.resolveCoverForUpdate(params.cover)
 			: params.cover;
+		this.debugLog("Upload2Notion", "Upserting NotionNext page", {
+			title: params.title,
+			type: params.type,
+			slug: params.slug,
+			blockCount: params.childArr.length,
+			firstChunkSize: firstChunk.length,
+			extraChunkCount: extraChunks.length,
+			cover: cover ?? null,
+			hasEmoji: !!params.emoji,
+			notionIdExisting: params.notionId ?? null,
+		});
 
 		if (params.notionId) {
 			await this.deletePage(params.notionId);
@@ -296,6 +357,14 @@ export class Upload2Notion extends UploadBase {
 		const cover = params.notionId
 			? await this.resolveCoverForUpdate(params.cover)
 			: params.cover;
+		this.debugLog("Upload2Notion", "Upserting custom page", {
+			blockCount: params.childArr.length,
+			firstChunkSize: firstChunk.length,
+			extraChunkCount: extraChunks.length,
+			cover: cover ?? null,
+			notionIdExisting: params.notionId ?? null,
+			customValueKeys: Object.keys(params.customValues || {}),
+		});
 
 		if (params.notionId) {
 			await this.deletePage(params.notionId);

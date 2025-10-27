@@ -24,7 +24,11 @@ export abstract class UploadBase {
 
 	async deletePage(notionID: string) {
 		const {notionAPI} = this.dbDetails;
-		return requestUrl({
+		this.debugLog("UploadBase", "Deleting Notion page request issued", {
+			notionId: notionID,
+			apiTokenPreview: this.maskValue(notionAPI),
+		});
+		return await requestUrl({
 			url: `https://api.notion.com/v1/blocks/${notionID}`,
 			method: "DELETE",
 			headers: {
@@ -33,6 +37,15 @@ export abstract class UploadBase {
 				"Notion-Version": "2022-06-28",
 			},
 			body: "",
+			throw: false,
+		}).catch((error) =>
+			this.handleRequestError(error, `Deleting Notion page ${notionID}`),
+		).then((response) => {
+			this.debugLog("UploadBase", "Delete page response received", {
+				notionId: notionID,
+				status: response.status,
+			});
+			return response;
 		});
 	}
 
@@ -43,6 +56,9 @@ export abstract class UploadBase {
 		console.log(`Page includes ${childArrLength} blocks`);
 
 		if (childArrLength <= 100) {
+			this.debugLog("UploadBase", "Blocks fit into a single request", {
+				totalBlocks: childArrLength,
+			});
 			return {
 				firstChunk: childArr,
 				extraChunks: [],
@@ -53,6 +69,13 @@ export abstract class UploadBase {
 		for (let i = 100; i < childArr.length; i += 100) {
 			extraChunks.push(childArr.slice(i, i + 100));
 		}
+
+		this.debugLog("UploadBase", "Blocks split into multiple chunks", {
+			totalBlocks: childArrLength,
+			firstChunkSize: 100,
+			extraChunkCount: extraChunks.length,
+			lastChunkSize: extraChunks[extraChunks.length - 1].length,
+		});
 
 		return {
 			firstChunk: childArr.slice(0, 100),
@@ -76,18 +99,37 @@ export abstract class UploadBase {
 				},
 			};
 		}
+
+		this.debugLog("UploadBase", "Cover applied to payload", {
+			chosenCover: body.cover?.external?.url ?? null,
+			defaultBannerUsed: !cover && !!this.plugin.settings.bannerUrl,
+		});
 	}
 
 	protected async resolveCoverForUpdate(cover?: string): Promise<string | undefined> {
 		if (cover) {
+			this.debugLog("UploadBase", "Existing cover retained for update", {
+				cover,
+			});
 			return cover;
 		}
 		const databaseCover = await this.fetchDatabaseCover();
+		this.debugLog("UploadBase", "Cover fetched from database", {
+			databaseCover: databaseCover ?? null,
+		});
 		return databaseCover ?? undefined;
 	}
 
 	protected async submitPage(body: any, extraChunks: any[][]): Promise<NotionPageResponse> {
 		const {notionAPI} = this.dbDetails;
+		const startedAt = Date.now();
+
+		this.debugLog("UploadBase", "Submitting page creation request", {
+			apiTokenPreview: this.maskValue(notionAPI),
+			propertyKeys: Object.keys(body?.properties ?? {}),
+			childrenCount: Array.isArray(body?.children) ? body.children.length : 0,
+			extraChunkCount: extraChunks.length,
+		});
 
 		const response = await requestUrl({
 			url: `https://api.notion.com/v1/pages`,
@@ -99,9 +141,17 @@ export abstract class UploadBase {
 			},
 			body: JSON.stringify(body),
 			throw: false,
-		});
+		}).catch((error) =>
+			this.handleRequestError(error, "Creating Notion page"),
+		);
 
 		const data = await response.json;
+		this.debugLog("UploadBase", "Page creation response received", {
+			status: response.status,
+			durationMs: Date.now() - startedAt,
+			notionUrl: data?.url ?? null,
+			pageId: data?.id ?? null,
+		});
 
 		if (response.status !== 200) {
 			new Notice(`Error ${data.status}: ${data.code} \n ${i18nConfig["CheckConsole"]}`, 5000);
@@ -138,7 +188,11 @@ export abstract class UploadBase {
 				children: chunk,
 			};
 
-			console.log(extraBlocks);
+			this.debugLog("UploadBase", "Appending extra blocks chunk", {
+				chunkIndex: i,
+				chunkSize: chunk.length,
+				pageId,
+			});
 
 			const extraResponse = await requestUrl({
 				url: `https://api.notion.com/v1/blocks/${pageId}/children`,
@@ -149,9 +203,18 @@ export abstract class UploadBase {
 					"Notion-Version": "2022-06-28",
 				},
 				body: JSON.stringify(extraBlocks),
-			});
+				throw: false,
+			}).catch((error) =>
+				this.handleRequestError(error, `Appending blocks to page ${pageId}`),
+			);
 
 			const extraData: any = await extraResponse.json;
+			this.debugLog("UploadBase", "Append blocks response received", {
+				chunkIndex: i,
+				status: extraResponse.status,
+				pageId,
+				hasError: extraResponse.status !== 200,
+			});
 
 			if (extraResponse.status !== 200) {
 				new Notice(`Error ${extraData.status}: ${extraData.code} \n ${i18nConfig["CheckConsole"]}`, 5000);
@@ -168,6 +231,10 @@ export abstract class UploadBase {
 
 	private async fetchDatabaseCover(): Promise<string | null> {
 		const {notionAPI, databaseID} = this.dbDetails;
+		this.debugLog("UploadBase", "Fetching database cover", {
+			databaseId: databaseID,
+			apiTokenPreview: this.maskValue(notionAPI),
+		});
 		const response = await requestUrl({
 			url: `https://api.notion.com/v1/databases/${databaseID}`,
 			method: "GET",
@@ -175,6 +242,14 @@ export abstract class UploadBase {
 				Authorization: "Bearer " + notionAPI,
 				"Notion-Version": "2022-06-28",
 			},
+			throw: false,
+		}).catch((error) =>
+			this.handleRequestError(error, `Fetching database ${databaseID}`),
+		);
+
+		this.debugLog("UploadBase", "Database cover response received", {
+			status: response.status,
+			hasCover: !!response.json.cover,
 		});
 
 		if (response.json.cover && response.json.cover.external) {
@@ -182,5 +257,36 @@ export abstract class UploadBase {
 		}
 
 		return null;
+	}
+
+	protected debugLog(context: string, message: string, payload?: Record<string, unknown>): void {
+		if (payload) {
+			console.log(`[${context}] ${message}`, payload);
+		} else {
+			console.log(`[${context}] ${message}`);
+		}
+	}
+
+	protected maskValue(value?: string, visibleChars = 4): string | undefined {
+		if (!value) {
+			return value;
+		}
+		if (value.length <= visibleChars * 2) {
+			return `${value.slice(0, visibleChars)}***`;
+		}
+		return `${value.slice(0, visibleChars)}***${value.slice(-visibleChars)}`;
+	}
+
+	private handleRequestError(error: unknown, context: string): never {
+		const message = error instanceof Error && error.message
+			? error.message
+			: String(error);
+		console.error(`[UploadBase] ${context} failed`, {
+			message,
+			error,
+		});
+		throw new Error(
+			`${context} failed: ${message}. Please check your network connection or proxy settings.`,
+		);
 	}
 }
