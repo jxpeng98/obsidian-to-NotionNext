@@ -24,7 +24,7 @@
     "typescript": "5.2.2"
   },
   "dependencies": {
-    "@jxpeng98/martian": "^1.3.0",
+    "@jxpeng98/martian": "^1.3.1",
     "https-proxy-agent": "^7.0.2",
     "remark-math": "^6.0.0",
     "yaml": "^2.3.4",
