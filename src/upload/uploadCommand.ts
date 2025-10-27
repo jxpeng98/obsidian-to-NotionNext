@@ -43,10 +43,6 @@ export async function uploadCommandNext(
 
 	const {notionAPI, databaseID} = dbDetails;
 	console.log(`[uploadCommandNext] ${new Date().toISOString()} Triggered for file`, app.workspace.getActiveFile()?.path);
-	logCommandDebug("uploadCommandNext", "Command invoked", {
-		databaseId: databaseID,
-		apiTokenPreview: `${notionAPI?.slice(0, 4) ?? ""}***`,
-	});
 
 	// Check if the user has set up the Notion API and database ID
 	if (notionAPI === "" || databaseID === "") {
@@ -123,7 +119,7 @@ export async function uploadCommandNext(
 		const {response} = res;
 		if (response.status === 200) {
 			new Notice(`${i18nConfig["sync-preffix"]} ${basename} ${i18nConfig["sync-success"]}`).noticeEl.style.color = "green";
-			console.log(`${i18nConfig["sync-preffix"]} ${basename} ${i18nConfig["sync-success"]}`);
+			
 			logCommandDebug("uploadCommandNext", "Sync succeeded", {
 				filename: basename,
 				status: response.status,
@@ -154,10 +150,6 @@ export async function uploadCommandGeneral(
 
 	const {notionAPI, databaseID} = dbDetails;
 	console.log(`[uploadCommandGeneral] ${new Date().toISOString()} Triggered for file`, app.workspace.getActiveFile()?.path);
-	logCommandDebug("uploadCommandGeneral", "Command invoked", {
-		databaseId: databaseID,
-		apiTokenPreview: `${notionAPI?.slice(0, 4) ?? ""}***`,
-	});
 
 	// Check if the user has set up the Notion API and database ID
 	if (notionAPI === "" || databaseID === "") {
@@ -204,7 +196,7 @@ export async function uploadCommandGeneral(
 		const {response} = res;
 		if (response.status === 200) {
 			new Notice(`${i18nConfig["sync-preffix"]} ${basename} ${i18nConfig["sync-success"]}`).noticeEl.style.color = "green";
-			console.log(`${i18nConfig["sync-preffix"]} ${basename} ${i18nConfig["sync-success"]}`);
+			
 			logCommandDebug("uploadCommandGeneral", "Sync succeeded", {
 				filename: basename,
 				status: response.status,
@@ -235,10 +227,6 @@ export async function uploadCommandCustom(
 
 	const {notionAPI, databaseID} = dbDetails;
 	console.log(`[uploadCommandCustom] ${new Date().toISOString()} Triggered for file`, app.workspace.getActiveFile()?.path);
-	logCommandDebug("uploadCommandCustom", "Command invoked", {
-		databaseId: databaseID,
-		apiTokenPreview: `${notionAPI?.slice(0, 4) ?? ""}***`,
-	});
 
 	// Check if the user has set up the Notion API and database ID
 	if (notionAPI === "" || databaseID === "") {
@@ -285,7 +273,7 @@ export async function uploadCommandCustom(
 
 		if (response.status === 200) {
 			new Notice(`${i18nConfig["sync-preffix"]} ${basename} ${i18nConfig["sync-success"]}`).noticeEl.style.color = "green";
-			console.log(`${i18nConfig["sync-preffix"]} ${basename} ${i18nConfig["sync-success"]}`);
+			
 			logCommandDebug("uploadCommandCustom", "Sync succeeded", {
 				filename: basename,
 				status: response.status,

@@ -90,12 +90,6 @@ export class Upload2Notion extends UploadBase {
 
 	async sync(request: SyncRequest): Promise<NotionPageResponse> {
 		const startedAt = Date.now();
-		this.debugLog("Upload2Notion", "Sync invoked", {
-			dataset: request.dataset,
-			filePath: request.nowFile.path,
-			databaseId: this.dbDetails.databaseID,
-			abName: this.dbDetails.abName,
-		});
 
 		let response: NotionPageResponse;
 
@@ -113,19 +107,7 @@ export class Upload2Notion extends UploadBase {
 				throw new Error(`Unsupported dataset type: ${(request as any).dataset}`);
 		}
 
-		console.log(`[Upload2Notion] Notion response status`, response.response?.status);
-		this.debugLog("Upload2Notion", "Sync completed", {
-			status: response.response?.status ?? null,
-			durationMs: Date.now() - startedAt,
-			pageId: response.data?.id ?? null,
-			pageUrl: response.data?.url ?? null,
-		});
-
 		if (response.response && response.response.status === 200) {
-			console.log(`[Upload2Notion] Sync success`, {
-				notionPageId: response.data?.id,
-				notionPageUrl: response.data?.url,
-			});
 			await updateYamlInfo(
 				request.markdown,
 				request.nowFile,
@@ -247,11 +229,6 @@ export class Upload2Notion extends UploadBase {
 		const {abName} = this.dbDetails;
 		const notionIDKey = `NotionID-${abName}`;
 		const notionId = frontMatter[notionIDKey];
-		this.debugLog("Upload2Notion", "Resolved Notion ID from frontmatter", {
-			filePath: nowFile.path,
-			notionId: notionId ? String(notionId) : null,
-			frontMatterKeys: Object.keys(frontMatter),
-		});
 		return notionId ? String(notionId) : undefined;
 	}
 

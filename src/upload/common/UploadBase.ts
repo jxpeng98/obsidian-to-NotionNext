@@ -24,10 +24,6 @@ export abstract class UploadBase {
 
 	async deletePage(notionID: string) {
 		const {notionAPI} = this.dbDetails;
-		this.debugLog("UploadBase", "Deleting Notion page", {
-			notionId: notionID,
-			apiTokenPreview: this.maskValue(notionAPI),
-		});
 		return requestUrl({
 			url: `https://api.notion.com/v1/blocks/${notionID}`,
 			method: "DELETE",
@@ -47,7 +43,6 @@ export abstract class UploadBase {
 		this.stripCodeAnnotations(childArr);
 
 		const childArrLength = childArr.length;
-		console.log(`Page includes ${childArrLength} blocks`);
 
 		if (childArrLength <= 100) {
 			this.debugLog("UploadBase", "Blocks fit into a single request", {
@@ -108,9 +103,6 @@ export abstract class UploadBase {
 			return cover;
 		}
 		const databaseCover = await this.fetchDatabaseCover();
-		this.debugLog("UploadBase", "Cover fetched from database", {
-			databaseCover: databaseCover ?? null,
-		});
 		return databaseCover ?? undefined;
 	}
 
@@ -144,8 +136,6 @@ export abstract class UploadBase {
 			new Notice(`Error ${data.status}: ${data.code} \n ${i18nConfig["CheckConsole"]}`, 5000);
 			console.log(`Error message: \n ${data.message}`);
 		} else {
-			console.log(`Page created: ${data.url}`);
-			console.log(`Page ID: ${data.id}`);
 			if (extraChunks.length > 0) {
 				await this.appendExtraBlocks(data.id, extraChunks);
 			}
@@ -206,10 +196,6 @@ export abstract class UploadBase {
 
 	private async fetchDatabaseCover(): Promise<string | null> {
 		const {notionAPI, databaseID} = this.dbDetails;
-		this.debugLog("UploadBase", "Fetching database cover", {
-			databaseId: databaseID,
-			apiTokenPreview: this.maskValue(notionAPI),
-		});
 		const response = await requestUrl({
 			url: `https://api.notion.com/v1/databases/${databaseID}`,
 			method: "GET",
@@ -221,11 +207,6 @@ export abstract class UploadBase {
 		}).catch((error) =>
 			this.handleRequestError(error, `Fetching database ${databaseID}`),
 		);
-
-		this.debugLog("UploadBase", "Database cover response received", {
-			status: response.status,
-			hasCover: !!response.json.cover,
-		});
 
 		if (response.json.cover && response.json.cover.external) {
 			return response.json.cover.external.url;
