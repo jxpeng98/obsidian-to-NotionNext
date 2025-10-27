@@ -24,11 +24,11 @@ export abstract class UploadBase {
 
 	async deletePage(notionID: string) {
 		const {notionAPI} = this.dbDetails;
-		this.debugLog("UploadBase", "Deleting Notion page request issued", {
+		this.debugLog("UploadBase", "Deleting Notion page", {
 			notionId: notionID,
 			apiTokenPreview: this.maskValue(notionAPI),
 		});
-		return await requestUrl({
+		return requestUrl({
 			url: `https://api.notion.com/v1/blocks/${notionID}`,
 			method: "DELETE",
 			headers: {
@@ -40,13 +40,7 @@ export abstract class UploadBase {
 			throw: false,
 		}).catch((error) =>
 			this.handleRequestError(error, `Deleting Notion page ${notionID}`),
-		).then((response) => {
-			this.debugLog("UploadBase", "Delete page response received", {
-				notionId: notionID,
-				status: response.status,
-			});
-			return response;
-		});
+		);
 	}
 
 	protected prepareBlocks(childArr: any[]): PreparedBlocks {
@@ -124,13 +118,6 @@ export abstract class UploadBase {
 		const {notionAPI} = this.dbDetails;
 		const startedAt = Date.now();
 
-		this.debugLog("UploadBase", "Submitting page creation request", {
-			apiTokenPreview: this.maskValue(notionAPI),
-			propertyKeys: Object.keys(body?.properties ?? {}),
-			childrenCount: Array.isArray(body?.children) ? body.children.length : 0,
-			extraChunkCount: extraChunks.length,
-		});
-
 		const response = await requestUrl({
 			url: `https://api.notion.com/v1/pages`,
 			method: "POST",
@@ -188,12 +175,6 @@ export abstract class UploadBase {
 				children: chunk,
 			};
 
-			this.debugLog("UploadBase", "Appending extra blocks chunk", {
-				chunkIndex: i,
-				chunkSize: chunk.length,
-				pageId,
-			});
-
 			const extraResponse = await requestUrl({
 				url: `https://api.notion.com/v1/blocks/${pageId}/children`,
 				method: "PATCH",
@@ -209,12 +190,6 @@ export abstract class UploadBase {
 			);
 
 			const extraData: any = await extraResponse.json;
-			this.debugLog("UploadBase", "Append blocks response received", {
-				chunkIndex: i,
-				status: extraResponse.status,
-				pageId,
-				hasError: extraResponse.status !== 200,
-			});
 
 			if (extraResponse.status !== 200) {
 				new Notice(`Error ${extraData.status}: ${extraData.code} \n ${i18nConfig["CheckConsole"]}`, 5000);
