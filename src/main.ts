@@ -226,41 +226,63 @@ export default class ObsidianSyncNotionPlugin extends Plugin {
                 return;
             }
 
-            // Find which database this file belongs to by checking for NotionID-{abName}
-            let foundDbDetails: DatabaseDetails | null = null;
-            let notionId: string | null = null;
+            // Find all databases this file belongs to by checking for NotionID-{abName}
+            const foundDatabases: Array<{ dbDetails: DatabaseDetails, notionId: string }> = [];
 
             for (const key in this.settings.databaseDetails) {
                 const dbDetails = this.settings.databaseDetails[key];
                 const notionIDKey = `NotionID-${dbDetails.abName}`;
 
                 if (frontMatter[notionIDKey]) {
-                    foundDbDetails = dbDetails;
-                    notionId = String(frontMatter[notionIDKey]);
-                    break;
+                    foundDatabases.push({
+                        dbDetails: dbDetails,
+                        notionId: String(frontMatter[notionIDKey])
+                    });
                 }
             }
 
-            // If no NotionID found, skip auto sync
-            if (!foundDbDetails || !notionId) {
+            // If no NotionID found, notify user to upload manually first
+            if (foundDatabases.length === 0) {
                 console.log(`[AutoSync] No NotionID found in ${file.path}, skipping auto sync`);
+                new Notice(i18nConfig.AutoSyncNoNotionID, 4000);
                 return;
             }
 
-            console.log(`[AutoSync] ${new Date().toISOString()} Auto syncing ${file.basename} to ${foundDbDetails.fullName}`);
+            // Notify user about multiple syncs if applicable
+            if (foundDatabases.length > 1) {
+                const message = i18nConfig.AutoSyncMultipleSync.replace('{count}', String(foundDatabases.length));
+                new Notice(message, 3000);
+                console.log(`[AutoSync] Found ${foundDatabases.length} NotionIDs in ${file.path}`);
+            }
 
-            // Trigger appropriate upload command based on database format
-            if (foundDbDetails.format === 'next') {
-                await uploadCommandNext(this, this.settings, foundDbDetails, this.app);
-            } else if (foundDbDetails.format === 'general') {
-                await uploadCommandGeneral(this, this.settings, foundDbDetails, this.app);
-            } else if (foundDbDetails.format === 'custom') {
-                await uploadCommandCustom(this, this.settings, foundDbDetails, this.app);
+            // Sync to all found databases
+            for (const { dbDetails, notionId } of foundDatabases) {
+                console.log(`[AutoSync] ${new Date().toISOString()} Auto syncing ${file.basename} to ${dbDetails.fullName} (${dbDetails.abName})`);
+
+                try {
+                    // Trigger appropriate upload command based on database format
+                    if (dbDetails.format === 'next') {
+                        await uploadCommandNext(this, this.settings, dbDetails, this.app);
+                    } else if (dbDetails.format === 'general') {
+                        await uploadCommandGeneral(this, this.settings, dbDetails, this.app);
+                    } else if (dbDetails.format === 'custom') {
+                        await uploadCommandCustom(this, this.settings, dbDetails, this.app);
+                    }
+                } catch (error) {
+                    console.error(`[AutoSync] Error syncing to ${dbDetails.fullName}:`, error);
+                    const message = i18nConfig.AutoSyncFailed
+                        .replace('{database}', dbDetails.fullName)
+                        .replace('{error}', error.message);
+                    new Notice(message, 5000);
+                }
             }
 
         } catch (error) {
             console.error(`[AutoSync] Error syncing file ${file.path}:`, error);
-            new Notice(`Auto sync failed for ${file.basename}: ${error.message}`);
+            const message = i18nConfig.AutoSyncError
+                .replace('{filename}', file.basename)
+                .replace('{error}', error.message);
+            new Notice(message);
         } finally {
             this.syncingFiles.delete(file.path);
         }
