@@ -7,7 +7,7 @@
 
 使用 Notion API 将文件从 Obsidian 分享到任何 Notion 数据库。此插件支持通用 Notion 数据库、NotionNext 博客模板和完全自定义的数据库模式。
 
-**详细说明请访问[文档网站](https://jxpeng98.github.io/obsidian-to-NotionNext/)。**
+**详细说明请访问[文档网站](https://obsidian-to-notionnext.pages.dev/)。**
 
 ## 功能特性
 

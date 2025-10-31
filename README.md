@@ -8,7 +8,7 @@
 [中文版](README-zh.md)
 Share files from Obsidian to any Notion database using the Notion API. This plugin supports general Notion databases, NotionNext blog templates, and fully custom database schemas.
 
-**For detailed instructions, please visit the [documentation website](https://jxpeng98.github.io/obsidian-to-NotionNext/).**
+**For detailed instructions, please visit the [documentation website](https://obsidian-to-notionnext.pages.dev/).**
 
 ## Features
 
