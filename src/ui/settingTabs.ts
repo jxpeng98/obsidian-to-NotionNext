@@ -13,6 +13,8 @@ export interface PluginSettings {
 	bannerUrl: string;
 	notionUser: string;
 	NotionLinkDisplay: boolean;
+	autoSync: boolean;
+	autoSyncDelay: number;
 	proxy: string;
 	GeneralButton: boolean;
 	tagButton: boolean;
@@ -49,6 +51,8 @@ export const DEFAULT_SETTINGS: PluginSettings = {
 	bannerUrl: "",
 	notionUser: "",
 	NotionLinkDisplay: true,
+	autoSync: false,
+	autoSyncDelay: 5,
 	proxy: "",
 	GeneralButton: true,
 	tagButton: true,
@@ -67,6 +71,7 @@ export const DEFAULT_SETTINGS: PluginSettings = {
 export class ObsidianSettingTab extends PluginSettingTab {
 	plugin: ObsidianSyncNotionPlugin;
 	databaseEl: HTMLDivElement;
+	autoSyncDelayContainer: HTMLElement | null = null;
 
 	constructor(app: App, plugin: ObsidianSyncNotionPlugin) {
 		super(app, plugin);
@@ -86,6 +91,34 @@ export class ObsidianSettingTab extends PluginSettingTab {
 		this.createSettingEl(containerEl, i18nConfig.NotionUser, i18nConfig.NotionUserDesc, 'text', i18nConfig.NotionUserText, this.plugin.settings.notionUser, 'notionUser')
 
 		this.createSettingEl(containerEl, i18nConfig.NotionLinkDisplay, i18nConfig.NotionLinkDisplayDesc, 'toggle', i18nConfig.NotionLinkDisplay, this.plugin.settings.NotionLinkDisplay, 'NotionLinkDisplay')
+
+		this.createSettingEl(containerEl, i18nConfig.AutoSync, i18nConfig.AutoSyncDesc, 'toggle', i18nConfig.AutoSync, this.plugin.settings.autoSync, 'autoSync')
+
+		// Auto Sync Delay setting - only visible when autoSync is enabled
+		this.autoSyncDelayContainer = containerEl.createDiv();
+		const delaySetting = new Setting(this.autoSyncDelayContainer)
+			.setName(i18nConfig.AutoSyncDelay)
+			.setDesc(i18nConfig.AutoSyncDelayDesc)
+			.addText((text) =>
+				text
+					.setPlaceholder(i18nConfig.AutoSyncDelayText)
+					.setValue(String(this.plugin.settings.autoSyncDelay))
+					.onChange(async (value) => {
+						const delay = parseFloat(value);
+						if (!isNaN(delay) && delay >= 2) {
+							this.plugin.settings.autoSyncDelay = delay;
+							await this.plugin.saveSettings();
+						} else if (!isNaN(delay) && delay < 2) {
+							// If user enters less than 2 seconds, set it to 2
+							this.plugin.settings.autoSyncDelay = 2;
+							await this.plugin.saveSettings();
+							text.setValue('2');
+						}
+					})
+			);
+		
+		// Set initial visibility
+		this.updateAutoSyncDelayVisibility();
 
 
 		// add new button
@@ -151,6 +184,13 @@ export class ObsidianSettingTab extends PluginSettingTab {
 		element.style.alignItems = "center";
 	}
 
+	// Update visibility of autoSyncDelay setting based on autoSync toggle
+	public updateAutoSyncDelayVisibility() {
+		if (this.autoSyncDelayContainer) {
+			this.autoSyncDelayContainer.style.display = this.plugin.settings.autoSync ? "block" : "none";
+		}
+	}
+
 	// function to add one setting element in the setting tab.
 	public createSettingEl(containerEl: HTMLElement, name: string, desc: string, type: string, placeholder: string, holderValue: any, settingsKey: string) {
 		if (type === 'password') {
@@ -178,6 +218,12 @@ export class ObsidianSettingTab extends PluginSettingTab {
 							this.plugin.settings[settingsKey] = value; // Update the plugin settings directly
 							await this.plugin.saveSettings();
 							await this.plugin.commands.updateCommand();
+							
+							// If autoSync setting changed, update the listener and visibility
+							if (settingsKey === 'autoSync') {
+								this.plugin.setupAutoSync();
+								this.updateAutoSyncDelayVisibility();
+							}
 						})
 				);
 		} else if (type === 'text') {
