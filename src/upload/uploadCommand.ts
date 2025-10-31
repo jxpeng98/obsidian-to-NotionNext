@@ -160,7 +160,7 @@ export async function uploadCommandGeneral(
 
 	const {markDownData, nowFile, cover, tags} = await getNowFileMarkdownContentGeneral(app, settings)
 
-	new Notice(`Start upload ${nowFile.basename}`);
+	new Notice(i18nConfig.StartUpload.replace('{filename}', nowFile.basename));
 	console.log(`Start upload ${nowFile.basename}`);
 
 	if (markDownData) {
@@ -237,7 +237,7 @@ export async function uploadCommandCustom(
 
 	const {markDownData, nowFile, cover, customValues} = await getNowFileMarkdownContentCustom(app, dbDetails)
 
-	new Notice(`Start upload ${nowFile.basename}`);
+	new Notice(i18nConfig.StartUpload.replace('{filename}', nowFile.basename));
 	console.log(`Start upload ${nowFile.basename}`);
 
 	if (markDownData) {

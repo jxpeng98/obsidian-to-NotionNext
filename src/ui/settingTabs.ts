@@ -123,11 +123,11 @@ export class ObsidianSettingTab extends PluginSettingTab {
 
 		// add new button
 		new Setting(containerEl)
-			.setName("Add New Database")
-			.setDesc("Add New Database")
+			.setName(i18nConfig.AddNewDatabase)
+			.setDesc(i18nConfig.AddNewDatabaseDesc)
 			.addButton((button: ButtonComponent): ButtonComponent => {
 				return button
-					.setTooltip("Add New Database")
+					.setTooltip(i18nConfig.AddNewDatabaseTooltip)
 					.setIcon("plus")
 					.onClick(async () => {
 						let modal = new SettingModal(this.app, this.plugin, this);

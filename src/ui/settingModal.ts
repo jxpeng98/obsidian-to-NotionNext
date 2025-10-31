@@ -56,7 +56,7 @@ export class SettingModal extends Modal {
 
 	display(): void {
 		this.containerEl.addClass("settings-modal");
-		this.titleEl.setText('Add new database');
+		this.titleEl.setText(i18nConfig.AddNewDatabaseModal);
 
 		// create the dropdown button to select the database format
 		let { contentEl } = this;
