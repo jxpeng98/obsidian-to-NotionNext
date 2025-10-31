@@ -19,3 +19,9 @@ order: 0
 [同步笔记](./04-sync.md)
 
 [问题排查](./05-troubleshooting.md)
+
+---
+
+[更新日志](./06-changelog.md)
+
+[路线图](./07-roadmap.md)

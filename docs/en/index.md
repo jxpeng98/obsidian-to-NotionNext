@@ -19,3 +19,9 @@ This guide will walk you through the process of setting up the Obsidian to Notio
 [Syncing Notes](./04-sync.md)
 
 [Troubleshooting](./05-troubleshooting.md)
+
+---
+
+[Changelog](./06-changelog.md)
+
+[Roadmap](./07-roadmap.md)
