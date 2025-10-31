@@ -39,7 +39,7 @@ const vitePressOptions = {
 
 
 const commonSidebarOptions = {
-  documentRootPath: '/docs',
+  documentRootPath: '/',
   useTitleFromFrontmatter: true,
   frontmatterTitleFieldName: 'title',
   collapsed: true,

@@ -1,0 +1,17 @@
+{
+    "name": "obsidian-to-notionnext-docs",
+    "private": true,
+    "engines": {
+        "node": ">=20"
+    },
+    "scripts": {
+        "dev": "vitepress dev",
+        "build": "vitepress build",
+        "preview": "vitepress preview"
+    },
+    "devDependencies": {
+        "vitepress": "^2.0.0-alpha.12",
+        "vitepress-sidebar": "^1.33.0",
+        "vue": "^3.5.22"
+    }
+}
