@@ -84,5 +84,6 @@ export const en = {
 	BlockUploaded: "All blocks uploaded",
 	ExtraBlockUploaded: "Extra blocks uploaded",
 	CheckConsole: "Check the console for more information \n opt+cmd+i/ctrl+shift+i",
+	SettingsMigrated: "✨ Plugin settings updated! Auto sync feature added, check plugin settings",
 	"reach-mobile-limit": "The number of blocks exceeds the limit of 100, please use the desktop plugin",
 }

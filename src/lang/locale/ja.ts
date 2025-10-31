@@ -76,4 +76,6 @@ export const ja = {
 	BlockUploaded: "ブロックがアップロードされました",
 	ExtraBlockUploaded: "追加ブロックがアップロードされました",
 	CheckConsole: "詳細情報を確認するには、コンソールを開いてください \n opt+cmd+i/ctrl+shift+i",
+	SettingsMigrated: "✨ プラグイン設定が更新されました！自動同期機能が追加されました。設定を確認してください",
+	"reach-mobile-limit": "ブロック数が100の制限を超えています。デスクトップ版プラグインを使用してください",
 };

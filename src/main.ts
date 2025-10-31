@@ -18,6 +18,17 @@ export default class ObsidianSyncNotionPlugin extends Plugin {
 
     async onload() {
         await this.loadSettings();
+
+        // Log loaded settings for debugging
+        console.log('[Plugin] Loaded settings:', {
+            autoSync: this.settings.autoSync,
+            autoSyncDelay: this.settings.autoSyncDelay,
+            NotionLinkDisplay: this.settings.NotionLinkDisplay,
+            bannerUrl: this.settings.bannerUrl ? 'set' : 'empty',
+            notionUser: this.settings.notionUser ? 'set' : 'empty',
+            databaseCount: Object.keys(this.settings.databaseDetails || {}).length
+        });
+
         this.commands = new ribbonCommands(this);
 
         addIcons();
@@ -55,15 +66,89 @@ export default class ObsidianSyncNotionPlugin extends Plugin {
     }
 
     async loadSettings() {
+        const loadedData = await this.loadData();
+
+        // Merge loaded data with defaults, ensuring all fields exist
         this.settings = Object.assign(
             {},
             DEFAULT_SETTINGS,
-            await this.loadData()
+            loadedData || {}
         );
+
+        // Ensure critical fields have valid values
+        if (typeof this.settings.autoSync !== 'boolean') {
+            this.settings.autoSync = DEFAULT_SETTINGS.autoSync;
+        }
+        if (typeof this.settings.autoSyncDelay !== 'number' || this.settings.autoSyncDelay < 2) {
+            this.settings.autoSyncDelay = DEFAULT_SETTINGS.autoSyncDelay;
+        }
+        if (typeof this.settings.NotionLinkDisplay !== 'boolean') {
+            this.settings.NotionLinkDisplay = DEFAULT_SETTINGS.NotionLinkDisplay;
+        }
+
+        // Ensure databaseDetails exists
+        if (!this.settings.databaseDetails || typeof this.settings.databaseDetails !== 'object') {
+            this.settings.databaseDetails = {};
+        }
+
+        // Save settings if any migration was needed
+        const needsSave = !loadedData ||
+            loadedData.autoSync === undefined ||
+            loadedData.autoSyncDelay === undefined ||
+            loadedData.NotionLinkDisplay === undefined;
+
+        if (needsSave) {
+            const migratedFields = [];
+            if (!loadedData) {
+                console.log('[Settings] First-time setup, creating default settings');
+            } else {
+                if (loadedData.autoSync === undefined) migratedFields.push('autoSync');
+                if (loadedData.autoSyncDelay === undefined) migratedFields.push('autoSyncDelay');
+                if (loadedData.NotionLinkDisplay === undefined) migratedFields.push('NotionLinkDisplay');
+
+                console.log('[Settings] Migrating settings, adding fields:', migratedFields.join(', '));
+            }
+
+            await this.saveSettings();
+
+            // Notify user about settings migration (only for existing users, not first-time setup)
+            if (loadedData && Object.keys(loadedData).length > 0 && migratedFields.length > 0) {
+                new Notice(i18nConfig.SettingsMigrated, 6000);
+                console.log('[Settings] Migration notice shown to user');
+            }
+        }
     }
 
     async saveSettings() {
+        // Validate settings before saving
+        this.validateSettings();
         await this.saveData(this.settings);
+        console.log('[Settings] Settings saved successfully', {
+            autoSync: this.settings.autoSync,
+            autoSyncDelay: this.settings.autoSyncDelay,
+            NotionLinkDisplay: this.settings.NotionLinkDisplay,
+            databaseCount: Object.keys(this.settings.databaseDetails || {}).length
+        });
+    }
+
+    validateSettings() {
+        // Ensure all required fields have valid values
+        if (typeof this.settings.autoSync !== 'boolean') {
+            console.warn('[Settings] Invalid autoSync value, resetting to default');
+            this.settings.autoSync = DEFAULT_SETTINGS.autoSync;
+        }
+        if (typeof this.settings.autoSyncDelay !== 'number' || this.settings.autoSyncDelay < 2) {
+            console.warn('[Settings] Invalid autoSyncDelay value, resetting to default');
+            this.settings.autoSyncDelay = DEFAULT_SETTINGS.autoSyncDelay;
+        }
+        if (typeof this.settings.NotionLinkDisplay !== 'boolean') {
+            console.warn('[Settings] Invalid NotionLinkDisplay value, resetting to default');
+            this.settings.NotionLinkDisplay = DEFAULT_SETTINGS.NotionLinkDisplay;
+        }
+        if (!this.settings.databaseDetails || typeof this.settings.databaseDetails !== 'object') {
+            console.warn('[Settings] Invalid databaseDetails, resetting to empty object');
+            this.settings.databaseDetails = {};
+        }
     }
 
     async addDatabaseDetails(dbDetails: DatabaseDetails) {
@@ -133,7 +218,7 @@ export default class ObsidianSyncNotionPlugin extends Plugin {
 
         try {
             this.syncingFiles.add(file.path);
-            
+
             // Get file's frontmatter
             const frontMatter = this.app.metadataCache.getFileCache(file)?.frontmatter;
             if (!frontMatter) {
@@ -148,7 +233,7 @@ export default class ObsidianSyncNotionPlugin extends Plugin {
             for (const key in this.settings.databaseDetails) {
                 const dbDetails = this.settings.databaseDetails[key];
                 const notionIDKey = `NotionID-${dbDetails.abName}`;
-                
+
                 if (frontMatter[notionIDKey]) {
                     foundDbDetails = dbDetails;
                     notionId = String(frontMatter[notionIDKey]);
@@ -180,8 +265,5 @@ export default class ObsidianSyncNotionPlugin extends Plugin {
             this.syncingFiles.delete(file.path);
         }
     }
-
 }
-
-
 
