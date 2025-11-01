@@ -220,9 +220,9 @@ export default class ObsidianSyncNotionPlugin extends Plugin {
 
         // Filter out NotionID-related keys and Obsidian internal keys
         const isIgnoredKey = (key: string) => {
-            return key.startsWith('NotionID-') || 
-                   key === 'NotionID' || 
-                   key === 'position'; // Obsidian's internal metadata
+            return key.startsWith('NotionID-') ||
+                key === 'NotionID' ||
+                key === 'position'; // Obsidian's internal metadata
         };
         const oldNonNotionKeys = oldKeys.filter(k => !isIgnoredKey(k)).sort();
         const newNonNotionKeys = newKeys.filter(k => !isIgnoredKey(k)).sort();
@@ -296,11 +296,11 @@ export default class ObsidianSyncNotionPlugin extends Plugin {
 
             // Check if only NotionID fields changed (to avoid sync loops)
             const lastFrontmatter = this.lastFrontmatterCache.get(file.path);
-            
+
             if (lastFrontmatter && lastContentHash) {
                 const frontmatterOnlyNotionIDChanged = this.onlyNotionIDChanged(lastFrontmatter, frontMatter);
                 const contentUnchanged = contentHash === lastContentHash;
-                
+
                 console.log(`[AutoSync] Change analysis for ${file.basename}:`, {
                     frontmatterOnlyNotionIDChanged,
                     contentUnchanged,
@@ -308,7 +308,7 @@ export default class ObsidianSyncNotionPlugin extends Plugin {
                     contentChanged: !contentUnchanged,
                     willSync: !(frontmatterOnlyNotionIDChanged && contentUnchanged)
                 });
-                
+
                 // Only skip sync if BOTH conditions are true:
                 // 1. Frontmatter only has NotionID changes (no real user changes)
                 // 2. Content is completely unchanged
@@ -319,7 +319,7 @@ export default class ObsidianSyncNotionPlugin extends Plugin {
                     this.lastContentHashCache.set(file.path, contentHash);
                     return;
                 }
-                
+
                 if (!contentUnchanged) {
                     console.log(`[AutoSync] Content changed - will sync`);
                 } else if (!frontmatterOnlyNotionIDChanged) {
@@ -384,7 +384,7 @@ export default class ObsidianSyncNotionPlugin extends Plugin {
                 const updatedFrontmatter = this.app.metadataCache.getFileCache(file)?.frontmatter;
                 const updatedContent = await this.app.vault.read(file);
                 const updatedHash = this.simpleHash(updatedContent);
-                
+
                 if (updatedFrontmatter) {
                     this.lastFrontmatterCache.set(file.path, { ...updatedFrontmatter });
                     this.lastContentHashCache.set(file.path, updatedHash);
