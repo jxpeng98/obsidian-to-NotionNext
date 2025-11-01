@@ -15,6 +15,8 @@ export default class ObsidianSyncNotionPlugin extends Plugin {
     modifyEventRef: EventRef | null = null;
     autoSyncTimeout: NodeJS.Timeout | null = null;
     private syncingFiles: Set<string> = new Set();
+    private lastFrontmatterCache: Map<string, any> = new Map();
+    private lastContentHashCache: Map<string, string> = new Map();
 
     async onload() {
         await this.loadSettings();
@@ -63,6 +65,8 @@ export default class ObsidianSyncNotionPlugin extends Plugin {
         if (this.autoSyncTimeout) {
             clearTimeout(this.autoSyncTimeout);
         }
+        this.lastFrontmatterCache.clear();
+        this.lastContentHashCache.clear();
     }
 
     async loadSettings() {
@@ -209,6 +213,65 @@ export default class ObsidianSyncNotionPlugin extends Plugin {
         });
     }
 
+    onlyNotionIDChanged(oldFrontmatter: any, newFrontmatter: any): boolean {
+        // Get all keys from both frontmatters
+        const oldKeys = Object.keys(oldFrontmatter || {});
+        const newKeys = Object.keys(newFrontmatter || {});
+
+        // Filter out NotionID-related keys and Obsidian internal keys
+        const isIgnoredKey = (key: string) => {
+            return key.startsWith('NotionID-') || 
+                   key === 'NotionID' || 
+                   key === 'position'; // Obsidian's internal metadata
+        };
+        const oldNonNotionKeys = oldKeys.filter(k => !isIgnoredKey(k)).sort();
+        const newNonNotionKeys = newKeys.filter(k => !isIgnoredKey(k)).sort();
+
+        // If number of non-NotionID keys changed, something else changed
+        if (oldNonNotionKeys.length !== newNonNotionKeys.length) {
+            console.log('[AutoSync] Frontmatter: Key count changed:', oldNonNotionKeys.length, '->', newNonNotionKeys.length);
+            return false;
+        }
+
+        // Check if any non-NotionID key values changed
+        for (const key of oldNonNotionKeys) {
+            if (!newNonNotionKeys.includes(key)) {
+                console.log('[AutoSync] Frontmatter: Key removed or added:', key);
+                return false; // Key was removed or added
+            }
+            // Deep comparison for the value
+            const oldValue = JSON.stringify(oldFrontmatter[key]);
+            const newValue = JSON.stringify(newFrontmatter[key]);
+            if (oldValue !== newValue) {
+                console.log('[AutoSync] Frontmatter: Value changed for key "' + key + '"');
+                console.log('  Old:', oldValue.substring(0, 100));
+                console.log('  New:', newValue.substring(0, 100));
+                return false; // Value changed
+            }
+        }
+
+        // Check if any new non-NotionID keys were added
+        for (const key of newNonNotionKeys) {
+            if (!oldNonNotionKeys.includes(key)) {
+                console.log('[AutoSync] Frontmatter: New key added:', key);
+                return false; // New key was added
+            }
+        }
+
+        // Only NotionID fields changed (or nothing in frontmatter changed)
+        return true;
+    }
+
+    simpleHash(str: string): string {
+        let hash = 0;
+        for (let i = 0; i < str.length; i++) {
+            const char = str.charCodeAt(i);
+            hash = ((hash << 5) - hash) + char;
+            hash = hash & hash; // Convert to 32bit integer
+        }
+        return hash.toString();
+    }
+
     async autoSyncFile(file: TFile) {
         // Check if file is already being synced
         if (this.syncingFiles.has(file.path)) {
@@ -224,6 +287,44 @@ export default class ObsidianSyncNotionPlugin extends Plugin {
             if (!frontMatter) {
                 console.log(`[AutoSync] No frontmatter found in ${file.path}`);
                 return;
+            }
+
+            // Get file content hash for comparison
+            const content = await this.app.vault.read(file);
+            const contentHash = this.simpleHash(content);
+            const lastContentHash = this.lastContentHashCache.get(file.path);
+
+            // Check if only NotionID fields changed (to avoid sync loops)
+            const lastFrontmatter = this.lastFrontmatterCache.get(file.path);
+            
+            if (lastFrontmatter && lastContentHash) {
+                const frontmatterOnlyNotionIDChanged = this.onlyNotionIDChanged(lastFrontmatter, frontMatter);
+                const contentUnchanged = contentHash === lastContentHash;
+                
+                console.log(`[AutoSync] Change analysis for ${file.basename}:`, {
+                    frontmatterOnlyNotionIDChanged,
+                    contentUnchanged,
+                    frontmatterHasRealChanges: !frontmatterOnlyNotionIDChanged,
+                    contentChanged: !contentUnchanged,
+                    willSync: !(frontmatterOnlyNotionIDChanged && contentUnchanged)
+                });
+                
+                // Only skip sync if BOTH conditions are true:
+                // 1. Frontmatter only has NotionID changes (no real user changes)
+                // 2. Content is completely unchanged
+                if (frontmatterOnlyNotionIDChanged && contentUnchanged) {
+                    console.log(`[AutoSync] Only NotionID updated (from sync), content unchanged - skipping auto sync`);
+                    // Update cache even when skipping, so next comparison uses the current state
+                    this.lastFrontmatterCache.set(file.path, { ...frontMatter });
+                    this.lastContentHashCache.set(file.path, contentHash);
+                    return;
+                }
+                
+                if (!contentUnchanged) {
+                    console.log(`[AutoSync] Content changed - will sync`);
+                } else if (!frontmatterOnlyNotionIDChanged) {
+                    console.log(`[AutoSync] Frontmatter changed - will sync`);
+                }
             }
 
             // Find all databases this file belongs to by checking for NotionID-{abName}
@@ -276,6 +377,20 @@ export default class ObsidianSyncNotionPlugin extends Plugin {
                     new Notice(message, 5000);
                 }
             }
+
+            // After sync completes, update cache with the latest frontmatter (including updated NotionIDs)
+            // Wait a bit for metadata cache to update
+            setTimeout(async () => {
+                const updatedFrontmatter = this.app.metadataCache.getFileCache(file)?.frontmatter;
+                const updatedContent = await this.app.vault.read(file);
+                const updatedHash = this.simpleHash(updatedContent);
+                
+                if (updatedFrontmatter) {
+                    this.lastFrontmatterCache.set(file.path, { ...updatedFrontmatter });
+                    this.lastContentHashCache.set(file.path, updatedHash);
+                    console.log(`[AutoSync] Cached updated frontmatter and content hash for ${file.path}`);
+                }
+            }, 500);
 
         } catch (error) {
             console.error(`[AutoSync] Error syncing file ${file.path}:`, error);
