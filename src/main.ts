@@ -13,7 +13,7 @@ export default class ObsidianSyncNotionPlugin extends Plugin {
     commands: ribbonCommands;
     app: App;
     modifyEventRef: EventRef | null = null;
-    autoSyncTimeout: NodeJS.Timeout | null = null;
+    autoSyncTimeout: number | null = null;
     private syncingFiles: Set<string> = new Set();
     private lastFrontmatterCache: Map<string, any> = new Map();
     private lastContentHashCache: Map<string, string> = new Map();
@@ -207,7 +207,7 @@ export default class ObsidianSyncNotionPlugin extends Plugin {
 
             // Set a new timeout to trigger sync after user-configured delay (in seconds)
             const delayMs = (this.settings.autoSyncDelay || 2) * 1000;
-            this.autoSyncTimeout = setTimeout(async () => {
+            this.autoSyncTimeout = window.setTimeout(async () => {
                 await this.autoSyncFile(file);
             }, delayMs);
         });
@@ -380,7 +380,7 @@ export default class ObsidianSyncNotionPlugin extends Plugin {
 
             // After sync completes, update cache with the latest frontmatter (including updated NotionIDs)
             // Wait a bit for metadata cache to update
-            setTimeout(async () => {
+            window.setTimeout(async () => {
                 const updatedFrontmatter = this.app.metadataCache.getFileCache(file)?.frontmatter;
                 const updatedContent = await this.app.vault.read(file);
                 const updatedHash = this.simpleHash(updatedContent);
