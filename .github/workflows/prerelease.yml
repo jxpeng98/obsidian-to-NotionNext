@@ -2,8 +2,6 @@ name: Prerelease
 
 on:
     push:
-        branches:
-            - dev
         tags:
             - "*-beta*"
             - "*-rc*"
