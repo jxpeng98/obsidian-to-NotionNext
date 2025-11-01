@@ -1,8 +1,9 @@
-import { App, Editor, MarkdownView, Notice, Plugin, PluginSettingTab, Setting } from "obsidian";
+import { App, Editor, MarkdownView, Notice, Plugin, PluginSettingTab, Setting, TFile, EventRef } from "obsidian";
 import { addIcons } from 'src/ui/icon';
 import { i18nConfig } from "src/lang/I18n";
 import ribbonCommands from "src/commands/NotionCommands";
 import { ObsidianSettingTab, PluginSettings, DEFAULT_SETTINGS, DatabaseDetails } from "src/ui/settingTabs";
+import { uploadCommandNext, uploadCommandGeneral, uploadCommandCustom } from "src/upload/uploadCommand";
 
 // Remember to rename these classes and interfaces!
 
@@ -11,9 +12,25 @@ export default class ObsidianSyncNotionPlugin extends Plugin {
     settings: PluginSettings;
     commands: ribbonCommands;
     app: App;
+    modifyEventRef: EventRef | null = null;
+    autoSyncTimeout: number | null = null;
+    private syncingFiles: Set<string> = new Set();
+    private lastFrontmatterCache: Map<string, any> = new Map();
+    private lastContentHashCache: Map<string, string> = new Map();
 
     async onload() {
         await this.loadSettings();
+
+        // Log loaded settings for debugging
+        console.log('[Plugin] Loaded settings:', {
+            autoSync: this.settings.autoSync,
+            autoSyncDelay: this.settings.autoSyncDelay,
+            NotionLinkDisplay: this.settings.NotionLinkDisplay,
+            bannerUrl: this.settings.bannerUrl ? 'set' : 'empty',
+            notionUser: this.settings.notionUser ? 'set' : 'empty',
+            databaseCount: Object.keys(this.settings.databaseDetails || {}).length
+        });
+
         this.commands = new ribbonCommands(this);
 
         addIcons();
@@ -36,21 +53,106 @@ export default class ObsidianSyncNotionPlugin extends Plugin {
         // This adds a settings tab so the user can configure various aspects of the plugin
         this.addSettingTab(new ObsidianSettingTab(this.app, this));
 
+        // Setup auto sync listener
+        this.setupAutoSync();
+
     }
 
     onunload() {
+        if (this.modifyEventRef) {
+            this.app.vault.offref(this.modifyEventRef);
+        }
+        if (this.autoSyncTimeout) {
+            clearTimeout(this.autoSyncTimeout);
+        }
+        this.lastFrontmatterCache.clear();
+        this.lastContentHashCache.clear();
     }
 
     async loadSettings() {
+        const loadedData = await this.loadData();
+
+        // Merge loaded data with defaults, ensuring all fields exist
         this.settings = Object.assign(
             {},
             DEFAULT_SETTINGS,
-            await this.loadData()
+            loadedData || {}
         );
+
+        // Ensure critical fields have valid values
+        if (typeof this.settings.autoSync !== 'boolean') {
+            this.settings.autoSync = DEFAULT_SETTINGS.autoSync;
+        }
+        if (typeof this.settings.autoSyncDelay !== 'number' || this.settings.autoSyncDelay < 2) {
+            this.settings.autoSyncDelay = DEFAULT_SETTINGS.autoSyncDelay;
+        }
+        if (typeof this.settings.NotionLinkDisplay !== 'boolean') {
+            this.settings.NotionLinkDisplay = DEFAULT_SETTINGS.NotionLinkDisplay;
+        }
+
+        // Ensure databaseDetails exists
+        if (!this.settings.databaseDetails || typeof this.settings.databaseDetails !== 'object') {
+            this.settings.databaseDetails = {};
+        }
+
+        // Save settings if any migration was needed
+        const needsSave = !loadedData ||
+            loadedData.autoSync === undefined ||
+            loadedData.autoSyncDelay === undefined ||
+            loadedData.NotionLinkDisplay === undefined;
+
+        if (needsSave) {
+            const migratedFields = [];
+            if (!loadedData) {
+                console.log('[Settings] First-time setup, creating default settings');
+            } else {
+                if (loadedData.autoSync === undefined) migratedFields.push('autoSync');
+                if (loadedData.autoSyncDelay === undefined) migratedFields.push('autoSyncDelay');
+                if (loadedData.NotionLinkDisplay === undefined) migratedFields.push('NotionLinkDisplay');
+
+                console.log('[Settings] Migrating settings, adding fields:', migratedFields.join(', '));
+            }
+
+            await this.saveSettings();
+
+            // Notify user about settings migration (only for existing users, not first-time setup)
+            if (loadedData && Object.keys(loadedData).length > 0 && migratedFields.length > 0) {
+                new Notice(i18nConfig.SettingsMigrated, 6000);
+                console.log('[Settings] Migration notice shown to user');
+            }
+        }
     }
 
     async saveSettings() {
+        // Validate settings before saving
+        this.validateSettings();
         await this.saveData(this.settings);
+        console.log('[Settings] Settings saved successfully', {
+            autoSync: this.settings.autoSync,
+            autoSyncDelay: this.settings.autoSyncDelay,
+            NotionLinkDisplay: this.settings.NotionLinkDisplay,
+            databaseCount: Object.keys(this.settings.databaseDetails || {}).length
+        });
+    }
+
+    validateSettings() {
+        // Ensure all required fields have valid values
+        if (typeof this.settings.autoSync !== 'boolean') {
+            console.warn('[Settings] Invalid autoSync value, resetting to default');
+            this.settings.autoSync = DEFAULT_SETTINGS.autoSync;
+        }
+        if (typeof this.settings.autoSyncDelay !== 'number' || this.settings.autoSyncDelay < 2) {
+            console.warn('[Settings] Invalid autoSyncDelay value, resetting to default');
+            this.settings.autoSyncDelay = DEFAULT_SETTINGS.autoSyncDelay;
+        }
+        if (typeof this.settings.NotionLinkDisplay !== 'boolean') {
+            console.warn('[Settings] Invalid NotionLinkDisplay value, resetting to default');
+            this.settings.NotionLinkDisplay = DEFAULT_SETTINGS.NotionLinkDisplay;
+        }
+        if (!this.settings.databaseDetails || typeof this.settings.databaseDetails !== 'object') {
+            console.warn('[Settings] Invalid databaseDetails, resetting to empty object');
+            this.settings.databaseDetails = {};
+        }
     }
 
     async addDatabaseDetails(dbDetails: DatabaseDetails) {
@@ -80,7 +182,225 @@ export default class ObsidianSyncNotionPlugin extends Plugin {
         await this.saveSettings();
     }
 
+    setupAutoSync() {
+        // Remove existing listener if any
+        if (this.modifyEventRef) {
+            this.app.vault.offref(this.modifyEventRef);
+        }
+
+        // Only setup if autoSync is enabled
+        if (!this.settings.autoSync) {
+            return;
+        }
+
+        // Listen for file modifications
+        this.modifyEventRef = this.app.vault.on('modify', async (file: TFile) => {
+            // Only process markdown files
+            if (!(file instanceof TFile) || file.extension !== 'md') {
+                return;
+            }
+
+            // Debounce: clear existing timeout
+            if (this.autoSyncTimeout) {
+                clearTimeout(this.autoSyncTimeout);
+            }
+
+            // Set a new timeout to trigger sync after user-configured delay (in seconds)
+            const delayMs = (this.settings.autoSyncDelay || 2) * 1000;
+            this.autoSyncTimeout = window.setTimeout(async () => {
+                await this.autoSyncFile(file);
+            }, delayMs);
+        });
+    }
+
+    onlyNotionIDChanged(oldFrontmatter: any, newFrontmatter: any): boolean {
+        // Get all keys from both frontmatters
+        const oldKeys = Object.keys(oldFrontmatter || {});
+        const newKeys = Object.keys(newFrontmatter || {});
+
+        // Filter out NotionID-related keys and Obsidian internal keys
+        const isIgnoredKey = (key: string) => {
+            return key.startsWith('NotionID-') ||
+                key === 'NotionID' ||
+                key === 'position'; // Obsidian's internal metadata
+        };
+        const oldNonNotionKeys = oldKeys.filter(k => !isIgnoredKey(k)).sort();
+        const newNonNotionKeys = newKeys.filter(k => !isIgnoredKey(k)).sort();
+
+        // If number of non-NotionID keys changed, something else changed
+        if (oldNonNotionKeys.length !== newNonNotionKeys.length) {
+            console.log('[AutoSync] Frontmatter: Key count changed:', oldNonNotionKeys.length, '->', newNonNotionKeys.length);
+            return false;
+        }
+
+        // Check if any non-NotionID key values changed
+        for (const key of oldNonNotionKeys) {
+            if (!newNonNotionKeys.includes(key)) {
+                console.log('[AutoSync] Frontmatter: Key removed or added:', key);
+                return false; // Key was removed or added
+            }
+            // Deep comparison for the value
+            const oldValue = JSON.stringify(oldFrontmatter[key]);
+            const newValue = JSON.stringify(newFrontmatter[key]);
+            if (oldValue !== newValue) {
+                console.log('[AutoSync] Frontmatter: Value changed for key "' + key + '"');
+                console.log('  Old:', oldValue.substring(0, 100));
+                console.log('  New:', newValue.substring(0, 100));
+                return false; // Value changed
+            }
+        }
+
+        // Check if any new non-NotionID keys were added
+        for (const key of newNonNotionKeys) {
+            if (!oldNonNotionKeys.includes(key)) {
+                console.log('[AutoSync] Frontmatter: New key added:', key);
+                return false; // New key was added
+            }
+        }
+
+        // Only NotionID fields changed (or nothing in frontmatter changed)
+        return true;
+    }
+
+    simpleHash(str: string): string {
+        let hash = 0;
+        for (let i = 0; i < str.length; i++) {
+            const char = str.charCodeAt(i);
+            hash = ((hash << 5) - hash) + char;
+            hash = hash & hash; // Convert to 32bit integer
+        }
+        return hash.toString();
+    }
+
+    async autoSyncFile(file: TFile) {
+        // Check if file is already being synced
+        if (this.syncingFiles.has(file.path)) {
+            console.log(`[AutoSync] File ${file.path} is already being synced, skipping`);
+            return;
+        }
+
+        try {
+            this.syncingFiles.add(file.path);
+
+            // Get file's frontmatter
+            const frontMatter = this.app.metadataCache.getFileCache(file)?.frontmatter;
+            if (!frontMatter) {
+                console.log(`[AutoSync] No frontmatter found in ${file.path}`);
+                return;
+            }
+
+            // Get file content hash for comparison
+            const content = await this.app.vault.read(file);
+            const contentHash = this.simpleHash(content);
+            const lastContentHash = this.lastContentHashCache.get(file.path);
+
+            // Check if only NotionID fields changed (to avoid sync loops)
+            const lastFrontmatter = this.lastFrontmatterCache.get(file.path);
+
+            if (lastFrontmatter && lastContentHash) {
+                const frontmatterOnlyNotionIDChanged = this.onlyNotionIDChanged(lastFrontmatter, frontMatter);
+                const contentUnchanged = contentHash === lastContentHash;
+
+                console.log(`[AutoSync] Change analysis for ${file.basename}:`, {
+                    frontmatterOnlyNotionIDChanged,
+                    contentUnchanged,
+                    frontmatterHasRealChanges: !frontmatterOnlyNotionIDChanged,
+                    contentChanged: !contentUnchanged,
+                    willSync: !(frontmatterOnlyNotionIDChanged && contentUnchanged)
+                });
+
+                // Only skip sync if BOTH conditions are true:
+                // 1. Frontmatter only has NotionID changes (no real user changes)
+                // 2. Content is completely unchanged
+                if (frontmatterOnlyNotionIDChanged && contentUnchanged) {
+                    console.log(`[AutoSync] Only NotionID updated (from sync), content unchanged - skipping auto sync`);
+                    // Update cache even when skipping, so next comparison uses the current state
+                    this.lastFrontmatterCache.set(file.path, { ...frontMatter });
+                    this.lastContentHashCache.set(file.path, contentHash);
+                    return;
+                }
+
+                if (!contentUnchanged) {
+                    console.log(`[AutoSync] Content changed - will sync`);
+                } else if (!frontmatterOnlyNotionIDChanged) {
+                    console.log(`[AutoSync] Frontmatter changed - will sync`);
+                }
+            }
+
+            // Find all databases this file belongs to by checking for NotionID-{abName}
+            const foundDatabases: Array<{ dbDetails: DatabaseDetails, notionId: string }> = [];
+
+            for (const key in this.settings.databaseDetails) {
+                const dbDetails = this.settings.databaseDetails[key];
+                const notionIDKey = `NotionID-${dbDetails.abName}`;
+
+                if (frontMatter[notionIDKey]) {
+                    foundDatabases.push({
+                        dbDetails: dbDetails,
+                        notionId: String(frontMatter[notionIDKey])
+                    });
+                }
+            }
+
+            // If no NotionID found, notify user to upload manually first
+            if (foundDatabases.length === 0) {
+                console.log(`[AutoSync] No NotionID found in ${file.path}, skipping auto sync`);
+                new Notice(i18nConfig.AutoSyncNoNotionID, 4000);
+                return;
+            }
+
+            // Notify user about multiple syncs if applicable
+            if (foundDatabases.length > 1) {
+                const message = i18nConfig.AutoSyncMultipleSync.replace('{count}', String(foundDatabases.length));
+                new Notice(message, 3000);
+                console.log(`[AutoSync] Found ${foundDatabases.length} NotionIDs in ${file.path}`);
+            }
+
+            // Sync to all found databases
+            for (const { dbDetails, notionId } of foundDatabases) {
+                console.log(`[AutoSync] ${new Date().toISOString()} Auto syncing ${file.basename} to ${dbDetails.fullName} (${dbDetails.abName})`);
+
+                try {
+                    // Trigger appropriate upload command based on database format
+                    if (dbDetails.format === 'next') {
+                        await uploadCommandNext(this, this.settings, dbDetails, this.app);
+                    } else if (dbDetails.format === 'general') {
+                        await uploadCommandGeneral(this, this.settings, dbDetails, this.app);
+                    } else if (dbDetails.format === 'custom') {
+                        await uploadCommandCustom(this, this.settings, dbDetails, this.app);
+                    }
+                } catch (error) {
+                    console.error(`[AutoSync] Error syncing to ${dbDetails.fullName}:`, error);
+                    const message = i18nConfig.AutoSyncFailed
+                        .replace('{database}', dbDetails.fullName)
+                        .replace('{error}', error.message);
+                    new Notice(message, 5000);
+                }
+            }
+
+            // After sync completes, update cache with the latest frontmatter (including updated NotionIDs)
+            // Wait a bit for metadata cache to update
+            window.setTimeout(async () => {
+                const updatedFrontmatter = this.app.metadataCache.getFileCache(file)?.frontmatter;
+                const updatedContent = await this.app.vault.read(file);
+                const updatedHash = this.simpleHash(updatedContent);
+
+                if (updatedFrontmatter) {
+                    this.lastFrontmatterCache.set(file.path, { ...updatedFrontmatter });
+                    this.lastContentHashCache.set(file.path, updatedHash);
+                    console.log(`[AutoSync] Cached updated frontmatter and content hash for ${file.path}`);
+                }
+            }, 500);
+
+        } catch (error) {
+            console.error(`[AutoSync] Error syncing file ${file.path}:`, error);
+            const message = i18nConfig.AutoSyncError
+                .replace('{filename}', file.basename)
+                .replace('{error}', error.message);
+            new Notice(message);
+        } finally {
+            this.syncingFiles.delete(file.path);
+        }
+    }
 }
-
-
 

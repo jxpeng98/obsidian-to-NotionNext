@@ -1,0 +1,113 @@
+name: Prerelease
+
+on:
+    push:
+        branches:
+            - dev
+        tags:
+            - "*-beta*"
+            - "*-rc*"
+            - "*-alpha*"
+            - "*-test*"
+
+env:
+    PLUGIN_NAME: share-to-notionnext
+    CHANGELOG_FILENAME: CHANGELOG.md
+
+jobs:
+    build:
+        name: prerelease
+        runs-on: ubuntu-latest
+
+        steps:
+            - uses: actions/checkout@v4
+            
+            - name: Use Node.js
+              uses: actions/setup-node@v3
+              with:
+                  node-version: "18"
+
+            - name: Build
+              id: build
+              run: |
+                  npm install
+                  npm run build
+                  mkdir ${{ env.PLUGIN_NAME }}
+                  cp main.js manifest.json ${{ env.PLUGIN_NAME }}
+                  zip -r ${{ env.PLUGIN_NAME }}.zip ${{ env.PLUGIN_NAME }}
+                  ls
+                  echo "tag_name=$(git tag --sort version:refname | tail -n 1)" >> $GITHUB_OUTPUT
+
+            - name: Create Prerelease
+              id: create_prerelease
+              uses: actions/create-release@v1
+              env:
+                  GITHUB_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
+                  VERSION: ${{ github.ref }}
+              with:
+                  tag_name: ${{ github.ref }}
+                  release_name: ${{ github.ref }} (Prerelease)
+                  body: |
+                      ## ⚠️ Prerelease Version - For Testing Only
+                      
+                      This is a prerelease version intended for testing purposes.
+                      
+                      **Important Notes:**
+                      - This version may contain bugs or experimental features
+                      - Not recommended for production use
+                      - Please report any issues you encounter
+                      
+                      ### Installation
+                      
+                      **Method 1: Using BRAT (Recommended)**
+                      1. Install [BRAT](https://github.com/TfTHacker/obsidian42-brat) plugin if you haven't already
+                      2. Open BRAT settings
+                      3. Click "Add Beta plugin"
+                      4. Enter: `jxpeng98/obsidian-to-NotionNext`
+                      5. Enable "Share to NotionNext" in Community Plugins
+                      
+                      **Method 2: Manual Installation**
+                      1. Download the `${{ env.PLUGIN_NAME }}-${{ steps.build.outputs.tag_name }}.zip` file
+                      2. Extract it to your `.obsidian/plugins/` folder
+                      3. Reload Obsidian
+                      
+                      ### Changelog
+                      See [CHANGELOG.md](${{ env.CHANGELOG_FILENAME }}) for details.
+                      
+                      ---
+                      **Feedback:** Please report issues in the [GitHub Issues](https://github.com/${{ github.repository }}/issues) section.
+                  draft: false
+                  prerelease: true
+
+            - name: Upload zip file
+              id: upload-zip
+              uses: actions/upload-release-asset@v1
+              env:
+                  GITHUB_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
+              with:
+                  upload_url: ${{ steps.create_prerelease.outputs.upload_url }}
+                  asset_path: ./${{ env.PLUGIN_NAME }}.zip
+                  asset_name: ${{ env.PLUGIN_NAME }}-${{ steps.build.outputs.tag_name }}.zip
+                  asset_content_type: application/zip
+
+            - name: Upload main.js
+              id: upload-main
+              uses: actions/upload-release-asset@v1
+              env:
+                  GITHUB_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
+              with:
+                  upload_url: ${{ steps.create_prerelease.outputs.upload_url }}
+                  asset_path: ./main.js
+                  asset_name: main.js
+                  asset_content_type: text/javascript
+
+            - name: Upload manifest.json
+              id: upload-manifest
+              uses: actions/upload-release-asset@v1
+              env:
+                  GITHUB_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
+              with:
+                  upload_url: ${{ steps.create_prerelease.outputs.upload_url }}
+                  asset_path: ./manifest.json
+                  asset_name: manifest.json
+                  asset_content_type: application/json
