@@ -22,6 +22,25 @@ The plugin supports automatic syncing that monitors your notes for changes and a
 3. Enable the toggle
 4. Configure the "Auto Sync Delay" (default: 5 seconds, minimum: 2 seconds)
 
+### Prepare the Frontmatter
+
+Auto sync reads the database list from the frontmatter key you configured in **Settings → Auto Sync Frontmatter Key** (default: `autosync-database`). To make sure your notes can sync automatically:
+
+- Add the configured key to your note's frontmatter
+- List one or more database abbreviations that you defined in the plugin settings
+- Keep the list updated if you change the databases a note should sync to
+
+Example with the default key:
+
+```yaml
+---
+title: My Article
+autosync-database: [blog, portfolio]
+---
+```
+
+If you change the key name in the settings, update your frontmatter to match. The plugin will prompt you when the entry is missing.
+
 ### How Auto Sync Works
 
 When auto sync is enabled:
@@ -32,7 +51,7 @@ When auto sync is enabled:
 
 ### Auto Sync Scenarios
 
-#### Scenario A: New Document (Not Yet Synced)
+#### Scenario A: Missing Auto Sync Entry
 
 ```yaml
 ---
@@ -42,17 +61,33 @@ tags: [blog, tech]
 ```
 
 **Behavior:**
+- ✅ Detects that the configured auto sync key is missing
+- ✅ Shows notice: `⚠️ Auto sync skipped: Add a "{key}" entry in the frontmatter to choose databases`
+- ✅ No sync operation performed
+- 📝 **Action Required:** Add the configured key (default `autosync-database`) to the frontmatter with the database abbreviations
+
+#### Scenario B: New Document (Not Yet Synced)
+
+```yaml
+---
+title: My New Article
+aytosync-database: [blog]
+---
+```
+
+**Behavior:**
 - ✅ Detects no NotionID present
 - ✅ Shows notice: "⚠️ Auto sync skipped: This document has not been synced to Notion, please upload manually first"
 - ✅ No sync operation performed
 - 📝 **Action Required:** Manually sync the document first using the command palette
 
-#### Scenario B: Synced to One Database
+#### Scenario C: Synced to One Database
 
 ```yaml
 ---
 title: My Article
 NotionID-blog: abc123
+autosync-database: [blog]
 ---
 ```
 
@@ -62,7 +97,7 @@ NotionID-blog: abc123
 - ✅ Shows success/failure notification from the upload command
 - 📝 **No Action Required:** Changes are automatically synced
 
-#### Scenario C: Synced to Multiple Databases
+#### Scenario D: Synced to Multiple Databases
 
 ```yaml
 ---
@@ -80,6 +115,21 @@ NotionID-notes: ghi789
 - ✅ Shows individual result notifications for each database
 - 📝 **No Action Required:** Changes are automatically synced to all linked databases
 
+#### Scenario E: Custom Frontmatter Key
+
+```yaml
+---
+title: My Article
+NotionID-blog: abc123
+NotionID-portfolio: def456
+🚀-sync-targets: [blog, portfolio]
+---
+```
+
+**Behavior:**
+- ✅ Uses your custom key (for example `🚀-sync-targets`) configured in settings
+- ✅ Syncs to the listed databases when NotionIDs are present
+- 📝 **Remember:** Update both the setting and your frontmatter if you rename the key
 ### Auto Sync Best Practices
 
 1. **First Sync Manually**: Always perform the first sync manually to establish the NotionID link
