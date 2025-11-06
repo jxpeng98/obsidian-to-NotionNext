@@ -4,6 +4,7 @@ import { i18nConfig } from "src/lang/I18n";
 import ribbonCommands from "src/commands/NotionCommands";
 import { ObsidianSettingTab, PluginSettings, DEFAULT_SETTINGS, DatabaseDetails } from "src/ui/settingTabs";
 import { uploadCommandNext, uploadCommandGeneral, uploadCommandCustom } from "src/upload/uploadCommand";
+import { DEFAULT_AUTO_SYNC_DATABASE_KEY, parseAutoSyncDatabaseList, resolveAutoSyncKey } from "src/utils/frontmatter";
 
 // Remember to rename these classes and interfaces!
 
@@ -17,6 +18,7 @@ export default class ObsidianSyncNotionPlugin extends Plugin {
     private syncingFiles: Set<string> = new Set();
     private lastFrontmatterCache: Map<string, any> = new Map();
     private lastContentHashCache: Map<string, string> = new Map();
+    private missingAutoSyncNoticeShown: Set<string> = new Set();
 
     async onload() {
         await this.loadSettings();
@@ -67,6 +69,7 @@ export default class ObsidianSyncNotionPlugin extends Plugin {
         }
         this.lastFrontmatterCache.clear();
         this.lastContentHashCache.clear();
+        this.missingAutoSyncNoticeShown.clear();
     }
 
     async loadSettings() {
@@ -89,6 +92,10 @@ export default class ObsidianSyncNotionPlugin extends Plugin {
         if (typeof this.settings.NotionLinkDisplay !== 'boolean') {
             this.settings.NotionLinkDisplay = DEFAULT_SETTINGS.NotionLinkDisplay;
         }
+        if (typeof this.settings.autoSyncFrontmatterKey !== 'string') {
+            this.settings.autoSyncFrontmatterKey = DEFAULT_AUTO_SYNC_DATABASE_KEY;
+        }
+        this.settings.autoSyncFrontmatterKey = resolveAutoSyncKey(this.settings.autoSyncFrontmatterKey);
 
         // Ensure databaseDetails exists
         if (!this.settings.databaseDetails || typeof this.settings.databaseDetails !== 'object') {
@@ -99,7 +106,8 @@ export default class ObsidianSyncNotionPlugin extends Plugin {
         const needsSave = !loadedData ||
             loadedData.autoSync === undefined ||
             loadedData.autoSyncDelay === undefined ||
-            loadedData.NotionLinkDisplay === undefined;
+            loadedData.NotionLinkDisplay === undefined ||
+            loadedData.autoSyncFrontmatterKey === undefined;
 
         if (needsSave) {
             const migratedFields = [];
@@ -131,6 +139,7 @@ export default class ObsidianSyncNotionPlugin extends Plugin {
             autoSync: this.settings.autoSync,
             autoSyncDelay: this.settings.autoSyncDelay,
             NotionLinkDisplay: this.settings.NotionLinkDisplay,
+            autoSyncFrontmatterKey: this.settings.autoSyncFrontmatterKey,
             databaseCount: Object.keys(this.settings.databaseDetails || {}).length
         });
     }
@@ -153,6 +162,20 @@ export default class ObsidianSyncNotionPlugin extends Plugin {
             console.warn('[Settings] Invalid databaseDetails, resetting to empty object');
             this.settings.databaseDetails = {};
         }
+        if (typeof this.settings.autoSyncFrontmatterKey !== 'string' || this.settings.autoSyncFrontmatterKey.trim().length === 0) {
+            console.warn('[Settings] Invalid autoSyncFrontmatterKey, resetting to default');
+            this.settings.autoSyncFrontmatterKey = DEFAULT_AUTO_SYNC_DATABASE_KEY;
+        } else {
+            this.settings.autoSyncFrontmatterKey = resolveAutoSyncKey(this.settings.autoSyncFrontmatterKey);
+        }
+    }
+
+    resetAutoSyncNoticeCache() {
+        this.missingAutoSyncNoticeShown.clear();
+    }
+
+    getAutoSyncFrontmatterKey(): string {
+        return resolveAutoSyncKey(this.settings.autoSyncFrontmatterKey);
     }
 
     async addDatabaseDetails(dbDetails: DatabaseDetails) {
@@ -327,19 +350,50 @@ export default class ObsidianSyncNotionPlugin extends Plugin {
                 }
             }
 
-            // Find all databases this file belongs to by checking for NotionID-{abName}
-            const foundDatabases: Array<{ dbDetails: DatabaseDetails, notionId: string }> = [];
+            const autoSyncKey = this.getAutoSyncFrontmatterKey();
+            const autoSyncTargets = parseAutoSyncDatabaseList(frontMatter[autoSyncKey]);
 
+            if (autoSyncTargets.length === 0) {
+                if (!this.missingAutoSyncNoticeShown.has(file.path)) {
+                    const message = i18nConfig.AutoSyncMissingDatabaseList.replace('{key}', autoSyncKey);
+                    new Notice(message, 10000);
+                    this.missingAutoSyncNoticeShown.add(file.path);
+                }
+                console.log(`[AutoSync] No auto sync database list found in ${file.path} using key "${autoSyncKey}"`);
+                return;
+            }
+
+            this.missingAutoSyncNoticeShown.delete(file.path);
+
+            const dbByShortName = new Map<string, DatabaseDetails>();
             for (const key in this.settings.databaseDetails) {
                 const dbDetails = this.settings.databaseDetails[key];
-                const notionIDKey = `NotionID-${dbDetails.abName}`;
+                dbByShortName.set(dbDetails.abName.toLowerCase(), dbDetails);
+            }
 
+            const foundDatabases: Array<{ dbDetails: DatabaseDetails, notionId: string }> = [];
+            const unresolvedTargets: string[] = [];
+
+            for (const target of autoSyncTargets) {
+                const lookupKey = target.toLowerCase();
+                const dbDetails = dbByShortName.get(lookupKey);
+
+                if (!dbDetails) {
+                    unresolvedTargets.push(target);
+                    continue;
+                }
+
+                const notionIDKey = `NotionID-${dbDetails.abName}`;
                 if (frontMatter[notionIDKey]) {
                     foundDatabases.push({
-                        dbDetails: dbDetails,
+                        dbDetails,
                         notionId: String(frontMatter[notionIDKey])
                     });
                 }
+            }
+
+            if (unresolvedTargets.length > 0) {
+                console.log(`[AutoSync] Frontmatter auto sync targets not found in settings: ${unresolvedTargets.join(", ")}`);
             }
 
             // If no NotionID found, notify user to upload manually first
@@ -403,4 +457,3 @@ export default class ObsidianSyncNotionPlugin extends Plugin {
         }
     }
 }
-

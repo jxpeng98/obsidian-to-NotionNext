@@ -2,6 +2,7 @@ import { App, Notice, TFile } from "obsidian";
 import ObsidianSyncNotionPlugin from "../main";
 import { DatabaseDetails } from "../ui/settingTabs";
 import { i18nConfig } from "src/lang/I18n";
+import { ensureAutoSyncDatabaseEntry } from "src/utils/frontmatter";
 
 export async function updateYamlInfo(
     yamlContent: string,
@@ -17,6 +18,7 @@ export async function updateYamlInfo(
     const { abName } = dbDetails
     const notionIDKey = `NotionID-${abName}`;
     const linkKey = `link-${abName}`;
+    const autoSyncKey = plugin.getAutoSyncFrontmatterKey();
 
     if (notionUser !== "") {
         // replace url str "www" to notionID
@@ -33,6 +35,12 @@ export async function updateYamlInfo(
         // add new notionID and link
         yamlContent[notionIDKey] = id;
         (NotionLinkDisplay) ? yamlContent[linkKey] = url : null;
+
+        // ensure auto sync database list contains current short name
+        yamlContent[autoSyncKey] = ensureAutoSyncDatabaseEntry(
+            yamlContent[autoSyncKey],
+            abName
+        );
     });
 
     try {
