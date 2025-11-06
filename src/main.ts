@@ -4,6 +4,7 @@ import { i18nConfig } from "src/lang/I18n";
 import ribbonCommands from "src/commands/NotionCommands";
 import { ObsidianSettingTab, PluginSettings, DEFAULT_SETTINGS, DatabaseDetails } from "src/ui/settingTabs";
 import { uploadCommandNext, uploadCommandGeneral, uploadCommandCustom } from "src/upload/uploadCommand";
+import { AUTO_SYNC_DATABASE_KEY, parseAutoSyncDatabaseList } from "src/utils/frontmatter";
 
 // Remember to rename these classes and interfaces!
 
@@ -17,6 +18,7 @@ export default class ObsidianSyncNotionPlugin extends Plugin {
     private syncingFiles: Set<string> = new Set();
     private lastFrontmatterCache: Map<string, any> = new Map();
     private lastContentHashCache: Map<string, string> = new Map();
+    private missingAutoSyncNoticeShown: Set<string> = new Set();
 
     async onload() {
         await this.loadSettings();
@@ -67,6 +69,7 @@ export default class ObsidianSyncNotionPlugin extends Plugin {
         }
         this.lastFrontmatterCache.clear();
         this.lastContentHashCache.clear();
+        this.missingAutoSyncNoticeShown.clear();
     }
 
     async loadSettings() {
@@ -327,19 +330,48 @@ export default class ObsidianSyncNotionPlugin extends Plugin {
                 }
             }
 
-            // Find all databases this file belongs to by checking for NotionID-{abName}
-            const foundDatabases: Array<{ dbDetails: DatabaseDetails, notionId: string }> = [];
+            const autoSyncTargets = parseAutoSyncDatabaseList(frontMatter[AUTO_SYNC_DATABASE_KEY]);
 
+            if (autoSyncTargets.length === 0) {
+                if (!this.missingAutoSyncNoticeShown.has(file.path)) {
+                    new Notice(i18nConfig.AutoSyncMissingDatabaseList, 10000);
+                    this.missingAutoSyncNoticeShown.add(file.path);
+                }
+                console.log(`[AutoSync] No auto sync database list found in ${file.path}`);
+                return;
+            }
+
+            this.missingAutoSyncNoticeShown.delete(file.path);
+
+            const dbByShortName = new Map<string, DatabaseDetails>();
             for (const key in this.settings.databaseDetails) {
                 const dbDetails = this.settings.databaseDetails[key];
-                const notionIDKey = `NotionID-${dbDetails.abName}`;
+                dbByShortName.set(dbDetails.abName.toLowerCase(), dbDetails);
+            }
 
+            const foundDatabases: Array<{ dbDetails: DatabaseDetails, notionId: string }> = [];
+            const unresolvedTargets: string[] = [];
+
+            for (const target of autoSyncTargets) {
+                const lookupKey = target.toLowerCase();
+                const dbDetails = dbByShortName.get(lookupKey);
+
+                if (!dbDetails) {
+                    unresolvedTargets.push(target);
+                    continue;
+                }
+
+                const notionIDKey = `NotionID-${dbDetails.abName}`;
                 if (frontMatter[notionIDKey]) {
                     foundDatabases.push({
-                        dbDetails: dbDetails,
+                        dbDetails,
                         notionId: String(frontMatter[notionIDKey])
                     });
                 }
+            }
+
+            if (unresolvedTargets.length > 0) {
+                console.log(`[AutoSync] Frontmatter auto sync targets not found in settings: ${unresolvedTargets.join(", ")}`);
             }
 
             // If no NotionID found, notify user to upload manually first
@@ -403,4 +435,3 @@ export default class ObsidianSyncNotionPlugin extends Plugin {
         }
     }
 }
-

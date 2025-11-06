@@ -78,6 +78,7 @@ export const ja = {
 	CheckConsole: "詳細情報を確認するには、コンソールを開いてください \n opt+cmd+i/ctrl+shift+i",
 	SettingsMigrated: "✨ プラグイン設定が更新されました！自動同期機能が追加されました。設定を確認してください",
 	AutoSyncNoNotionID: "⚠️ 自動同期をスキップ：このドキュメントは Notion に同期されていません。まず手動でアップロードしてください",
+	AutoSyncMissingDatabaseList: "⚠️ 自動同期をスキップ：frontmatter に aytosync-database リストを設定してください",
 	AutoSyncMultipleSync: "🔄 自動同期：{count} 個のデータベースに同期中...",
 	AutoSyncFailed: "{database} への自動同期に失敗しました：{error}",
 	AutoSyncError: "{filename} の自動同期に失敗しました：{error}",

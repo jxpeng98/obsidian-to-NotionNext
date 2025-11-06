@@ -86,6 +86,7 @@ export const en = {
 	CheckConsole: "Check the console for more information \n opt+cmd+i/ctrl+shift+i",
 	SettingsMigrated: "✨ Plugin settings updated! Auto sync feature added, check plugin settings",
 	AutoSyncNoNotionID: "⚠️ Auto sync skipped: This document has not been synced to Notion, please upload manually first",
+	AutoSyncMissingDatabaseList: "⚠️ Auto sync skipped: Add an \"aytosync-database\" list in the frontmatter to choose databases",
 	AutoSyncMultipleSync: "🔄 Auto sync: Syncing to {count} database(s)...",
 	AutoSyncFailed: "Auto sync to {database} failed: {error}",
 	AutoSyncError: "Auto sync failed for {filename}: {error}",

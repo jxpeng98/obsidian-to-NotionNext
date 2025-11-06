@@ -81,6 +81,7 @@ export const zh = {
 	CheckConsole: "opt+cmd+i/ctrl+shift+i，\n打开控制台查看更多信息",
 	SettingsMigrated: "✨ 插件设置已更新！新增自动同步功能，请在设置中查看",
 	AutoSyncNoNotionID: "⚠️ 自动同步跳过：此文档未同步到 Notion，请先手动上传",
+	AutoSyncMissingDatabaseList: "⚠️ 自动同步跳过：请在 frontmatter 中设置 aytosync-database 列表",
 	AutoSyncMultipleSync: "🔄 自动同步：正在同步到 {count} 个数据库...",
 	AutoSyncFailed: "自动同步到 {database} 失败：{error}",
 	AutoSyncError: "自动同步 {filename} 失败：{error}",
