@@ -1,4 +1,15 @@
-export const AUTO_SYNC_DATABASE_KEY = "aytosync-database";
+export const DEFAULT_AUTO_SYNC_DATABASE_KEY = "autosync-database";
+
+export function resolveAutoSyncKey(rawKey: unknown): string {
+    if (typeof rawKey === "string") {
+        const trimmed = rawKey.trim();
+        if (trimmed.length > 0) {
+            return trimmed;
+        }
+    }
+
+    return DEFAULT_AUTO_SYNC_DATABASE_KEY;
+}
 
 function toCandidateList(value: unknown): string[] {
     if (Array.isArray(value)) {

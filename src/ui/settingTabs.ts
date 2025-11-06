@@ -5,6 +5,7 @@ import { SettingModal } from "./settingModal";
 import { PreviewModal } from "./PreviewModal";
 import { EditModal } from "./EditModal";
 import { DeleteModal } from "./DeleteModal";
+import { DEFAULT_AUTO_SYNC_DATABASE_KEY } from "src/utils/frontmatter";
 
 export interface PluginSettings {
 	NextButton: boolean;
@@ -15,6 +16,7 @@ export interface PluginSettings {
 	NotionLinkDisplay: boolean;
 	autoSync: boolean;
 	autoSyncDelay: number;
+	autoSyncFrontmatterKey: string;
 	proxy: string;
 	GeneralButton: boolean;
 	tagButton: boolean;
@@ -53,6 +55,7 @@ export const DEFAULT_SETTINGS: PluginSettings = {
 	NotionLinkDisplay: true,
 	autoSync: false,
 	autoSyncDelay: 5,
+	autoSyncFrontmatterKey: DEFAULT_AUTO_SYNC_DATABASE_KEY,
 	proxy: "",
 	GeneralButton: true,
 	tagButton: true,
@@ -93,6 +96,20 @@ export class ObsidianSettingTab extends PluginSettingTab {
 		this.createSettingEl(containerEl, i18nConfig.NotionLinkDisplay, i18nConfig.NotionLinkDisplayDesc, 'toggle', i18nConfig.NotionLinkDisplay, this.plugin.settings.NotionLinkDisplay, 'NotionLinkDisplay')
 
 		this.createSettingEl(containerEl, i18nConfig.AutoSync, i18nConfig.AutoSyncDesc, 'toggle', i18nConfig.AutoSync, this.plugin.settings.autoSync, 'autoSync')
+
+		new Setting(containerEl)
+			.setName(i18nConfig.AutoSyncFrontmatterKey)
+			.setDesc(i18nConfig.AutoSyncFrontmatterKeyDesc)
+			.addText((text) =>
+				text
+					.setPlaceholder(DEFAULT_AUTO_SYNC_DATABASE_KEY)
+					.setValue(this.plugin.settings.autoSyncFrontmatterKey ?? "")
+					.onChange(async (value) => {
+						this.plugin.settings.autoSyncFrontmatterKey = value;
+						await this.plugin.saveSettings();
+						this.plugin.resetAutoSyncNoticeCache();
+					})
+			);
 
 		// Auto Sync Delay setting - only visible when autoSync is enabled
 		this.autoSyncDelayContainer = containerEl.createDiv();
@@ -349,5 +366,4 @@ export class ObsidianSettingTab extends PluginSettingTab {
 		}
 	}
 }
-
 

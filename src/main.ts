@@ -4,7 +4,7 @@ import { i18nConfig } from "src/lang/I18n";
 import ribbonCommands from "src/commands/NotionCommands";
 import { ObsidianSettingTab, PluginSettings, DEFAULT_SETTINGS, DatabaseDetails } from "src/ui/settingTabs";
 import { uploadCommandNext, uploadCommandGeneral, uploadCommandCustom } from "src/upload/uploadCommand";
-import { AUTO_SYNC_DATABASE_KEY, parseAutoSyncDatabaseList } from "src/utils/frontmatter";
+import { DEFAULT_AUTO_SYNC_DATABASE_KEY, parseAutoSyncDatabaseList, resolveAutoSyncKey } from "src/utils/frontmatter";
 
 // Remember to rename these classes and interfaces!
 
@@ -92,6 +92,10 @@ export default class ObsidianSyncNotionPlugin extends Plugin {
         if (typeof this.settings.NotionLinkDisplay !== 'boolean') {
             this.settings.NotionLinkDisplay = DEFAULT_SETTINGS.NotionLinkDisplay;
         }
+        if (typeof this.settings.autoSyncFrontmatterKey !== 'string') {
+            this.settings.autoSyncFrontmatterKey = DEFAULT_AUTO_SYNC_DATABASE_KEY;
+        }
+        this.settings.autoSyncFrontmatterKey = resolveAutoSyncKey(this.settings.autoSyncFrontmatterKey);
 
         // Ensure databaseDetails exists
         if (!this.settings.databaseDetails || typeof this.settings.databaseDetails !== 'object') {
@@ -102,7 +106,8 @@ export default class ObsidianSyncNotionPlugin extends Plugin {
         const needsSave = !loadedData ||
             loadedData.autoSync === undefined ||
             loadedData.autoSyncDelay === undefined ||
-            loadedData.NotionLinkDisplay === undefined;
+            loadedData.NotionLinkDisplay === undefined ||
+            loadedData.autoSyncFrontmatterKey === undefined;
 
         if (needsSave) {
             const migratedFields = [];
@@ -134,6 +139,7 @@ export default class ObsidianSyncNotionPlugin extends Plugin {
             autoSync: this.settings.autoSync,
             autoSyncDelay: this.settings.autoSyncDelay,
             NotionLinkDisplay: this.settings.NotionLinkDisplay,
+            autoSyncFrontmatterKey: this.settings.autoSyncFrontmatterKey,
             databaseCount: Object.keys(this.settings.databaseDetails || {}).length
         });
     }
@@ -156,6 +162,20 @@ export default class ObsidianSyncNotionPlugin extends Plugin {
             console.warn('[Settings] Invalid databaseDetails, resetting to empty object');
             this.settings.databaseDetails = {};
         }
+        if (typeof this.settings.autoSyncFrontmatterKey !== 'string' || this.settings.autoSyncFrontmatterKey.trim().length === 0) {
+            console.warn('[Settings] Invalid autoSyncFrontmatterKey, resetting to default');
+            this.settings.autoSyncFrontmatterKey = DEFAULT_AUTO_SYNC_DATABASE_KEY;
+        } else {
+            this.settings.autoSyncFrontmatterKey = resolveAutoSyncKey(this.settings.autoSyncFrontmatterKey);
+        }
+    }
+
+    resetAutoSyncNoticeCache() {
+        this.missingAutoSyncNoticeShown.clear();
+    }
+
+    getAutoSyncFrontmatterKey(): string {
+        return resolveAutoSyncKey(this.settings.autoSyncFrontmatterKey);
     }
 
     async addDatabaseDetails(dbDetails: DatabaseDetails) {
@@ -330,14 +350,16 @@ export default class ObsidianSyncNotionPlugin extends Plugin {
                 }
             }
 
-            const autoSyncTargets = parseAutoSyncDatabaseList(frontMatter[AUTO_SYNC_DATABASE_KEY]);
+            const autoSyncKey = this.getAutoSyncFrontmatterKey();
+            const autoSyncTargets = parseAutoSyncDatabaseList(frontMatter[autoSyncKey]);
 
             if (autoSyncTargets.length === 0) {
                 if (!this.missingAutoSyncNoticeShown.has(file.path)) {
-                    new Notice(i18nConfig.AutoSyncMissingDatabaseList, 10000);
+                    const message = i18nConfig.AutoSyncMissingDatabaseList.replace('{key}', autoSyncKey);
+                    new Notice(message, 10000);
                     this.missingAutoSyncNoticeShown.add(file.path);
                 }
-                console.log(`[AutoSync] No auto sync database list found in ${file.path}`);
+                console.log(`[AutoSync] No auto sync database list found in ${file.path} using key "${autoSyncKey}"`);
                 return;
             }
 
