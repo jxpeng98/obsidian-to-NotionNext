@@ -1,5 +1,11 @@
 # Changelog
 
+## v2.8.0-beta.2 (2025-11-05)
+
+### Featured
+
+- Added setting to customise the frontmatter key used for auto sync database lists (defaults to `autosync-database`)
+
 ## v2.8.0-beta.1 (2025-10-31)
 
 ### Added
@@ -12,6 +18,7 @@
   - Works on both desktop and mobile platforms
 - Added comprehensive i18n support for all UI elements and notifications
 - Added prerelease workflow for beta testing via GitHub Actions and BRAT
+- Added setting to customise the frontmatter key used for auto sync database lists (defaults to `autosync-database`)
 
 ### Changed
 
