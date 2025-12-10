@@ -39,19 +39,21 @@ autosync-database: [blog, portfolio]
 ---
 ```
 
-If you change the key name in the settings, update your frontmatter to match. The plugin will prompt you when the entry is missing.
+If you change the key name in the settings, update your frontmatter to match.
 
 ### How Auto Sync Works
 
 When auto sync is enabled:
 - The plugin monitors markdown files for changes
 - After you stop editing for the configured delay period, auto sync is triggered
-- Only files that have already been synced to Notion (have a NotionID in frontmatter) will be auto-synced
+- Files with the `autosync-database` key in frontmatter will be automatically synced
+- **First-time upload is supported**: No need to manually sync first - just add the frontmatter key and the plugin will handle the initial upload
 - If a file is linked to multiple databases, it will sync to all of them automatically
+- After the first sync, a `NotionID-{database}` will be added to the frontmatter for future updates
 
 ### Auto Sync Scenarios
 
-#### Scenario A: Missing Auto Sync Entry
+#### Scenario A-1: New File Missing Auto Sync Entry
 
 ```yaml
 ---
@@ -61,25 +63,42 @@ tags: [blog, tech]
 ```
 
 **Behavior:**
-- ✅ Detects that the configured auto sync key is missing
-- ✅ Shows notice: `⚠️ Auto sync skipped: Add a "{key}" entry in the frontmatter to choose databases`
-- ✅ No sync operation performed
-- 📝 **Action Required:** Add the configured key (default `autosync-database`) to the frontmatter with the database abbreviations
+- ✅ Detects that the auto sync key is missing
+- ✅ Detects no NotionID present (new file)
+- ✅ Silently skips - no notice shown
+- 📝 **To enable auto sync:** Add `autosync-database: [your-db-abbreviation]` to the frontmatter
 
-#### Scenario B: New Document (Not Yet Synced)
+#### Scenario A-2: Synced File Missing Auto Sync Entry
 
 ```yaml
 ---
-title: My New Article
-aytosync-database: [blog]
+title: My Article
+NotionID-blog: abc123
 ---
 ```
 
 **Behavior:**
-- ✅ Detects no NotionID present
-- ✅ Shows notice: "⚠️ Auto sync skipped: This document has not been synced to Notion, please upload manually first"
+- ✅ Detects that the auto sync key is missing
+- ✅ Detects existing NotionID (file was synced before)
+- ✅ Shows notice: "⚠️ Auto-sync skipped: Add autosync-database to your frontmatter to specify target databases"
 - ✅ No sync operation performed
-- 📝 **Action Required:** Manually sync the document first using the command palette
+- 📝 **Action Required:** Add `autosync-database: [blog]` to the frontmatter
+
+#### Scenario B: New Document (First-Time Auto Upload)
+
+```yaml
+---
+title: My New Article
+autosync-database: [blog]
+---
+```
+
+**Behavior:**
+- ✅ Detects no NotionID present but `autosync-database` is configured
+- ✅ Automatically performs first-time upload to the Blog database
+- ✅ Adds `NotionID-blog: xxx` to the frontmatter after successful upload
+- ✅ Shows success/failure notification
+- 📝 **No Action Required:** The plugin handles the initial upload automatically
 
 #### Scenario C: Synced to One Database
 
@@ -105,11 +124,12 @@ title: My Article
 NotionID-blog: abc123
 NotionID-portfolio: def456
 NotionID-notes: ghi789
+autosync-database: [blog, portfolio, notes]
 ---
 ```
 
 **Behavior:**
-- ✅ Detects 3 NotionIDs
+- ✅ Detects 3 database targets
 - ✅ Shows notice: "🔄 Auto sync: Syncing to 3 database(s)..."
 - ✅ Syncs to all 3 databases sequentially
 - ✅ Shows individual result notifications for each database
@@ -132,7 +152,7 @@ NotionID-portfolio: def456
 - 📝 **Remember:** Update both the setting and your frontmatter if you rename the key
 ### Auto Sync Best Practices
 
-1. **First Sync Manually**: Always perform the first sync manually to establish the NotionID link
+1. **Add Frontmatter Key**: Just add `autosync-database: [your-db]` to enable auto sync - no manual upload needed
 2. **Configure Delay Appropriately**: Set a longer delay (5-10 seconds) if you make frequent edits
 3. **Monitor Sync Status**: Check the notifications to ensure syncs complete successfully
 4. **Check Logs**: Open the developer console (Ctrl+Shift+I / Cmd+Option+I) to view detailed sync logs

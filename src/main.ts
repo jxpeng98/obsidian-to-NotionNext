@@ -18,7 +18,7 @@ export default class ObsidianSyncNotionPlugin extends Plugin {
     private syncingFiles: Set<string> = new Set();
     private lastFrontmatterCache: Map<string, any> = new Map();
     private lastContentHashCache: Map<string, string> = new Map();
-    private missingAutoSyncNoticeShown: Set<string> = new Set();
+
 
     async onload() {
         await this.loadSettings();
@@ -69,7 +69,7 @@ export default class ObsidianSyncNotionPlugin extends Plugin {
         }
         this.lastFrontmatterCache.clear();
         this.lastContentHashCache.clear();
-        this.missingAutoSyncNoticeShown.clear();
+
     }
 
     async loadSettings() {
@@ -170,9 +170,7 @@ export default class ObsidianSyncNotionPlugin extends Plugin {
         }
     }
 
-    resetAutoSyncNoticeCache() {
-        this.missingAutoSyncNoticeShown.clear();
-    }
+
 
     getAutoSyncFrontmatterKey(): string {
         return resolveAutoSyncKey(this.settings.autoSyncFrontmatterKey);
@@ -353,17 +351,24 @@ export default class ObsidianSyncNotionPlugin extends Plugin {
             const autoSyncKey = this.getAutoSyncFrontmatterKey();
             const autoSyncTargets = parseAutoSyncDatabaseList(frontMatter[autoSyncKey]);
 
+            // If no autosync-database field specified
             if (autoSyncTargets.length === 0) {
-                if (!this.missingAutoSyncNoticeShown.has(file.path)) {
+                // Check if file has any existing NotionID (meaning it was synced before)
+                const hasExistingNotionID = Object.keys(frontMatter).some(key =>
+                    key.startsWith('NotionID-') || key === 'NotionID'
+                );
+
+                if (hasExistingNotionID) {
+                    // User likely forgot to add autosync-database - show a notice
                     const message = i18nConfig.AutoSyncMissingDatabaseList.replace('{key}', autoSyncKey);
-                    new Notice(message, 10000);
-                    this.missingAutoSyncNoticeShown.add(file.path);
+                    new Notice(message, 8000);
+                    console.log(`[AutoSync] File ${file.path} has NotionID but missing autosync-database - showing notice`);
                 }
-                console.log(`[AutoSync] No auto sync database list found in ${file.path} using key "${autoSyncKey}"`);
+                // Silently skip files without NotionID (new files that don't need auto-sync)
                 return;
             }
 
-            this.missingAutoSyncNoticeShown.delete(file.path);
+
 
             const dbByShortName = new Map<string, DatabaseDetails>();
             for (const key in this.settings.databaseDetails) {
