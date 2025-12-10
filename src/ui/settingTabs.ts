@@ -111,7 +111,6 @@ export class ObsidianSettingTab extends PluginSettingTab {
 					.onChange(async (value) => {
 						this.plugin.settings.autoSyncFrontmatterKey = value;
 						await this.plugin.saveSettings();
-						this.plugin.resetAutoSyncNoticeCache();
 					})
 			);
 
@@ -137,7 +136,7 @@ export class ObsidianSettingTab extends PluginSettingTab {
 						}
 					})
 			);
-		
+
 		// Set initial visibility
 		this.updateAutoSyncDelayVisibility();
 
@@ -239,7 +238,7 @@ export class ObsidianSettingTab extends PluginSettingTab {
 							this.plugin.settings[settingsKey] = value; // Update the plugin settings directly
 							await this.plugin.saveSettings();
 							await this.plugin.commands.updateCommand();
-							
+
 							// If autoSync setting changed, update the listener and visibility
 							if (settingsKey === 'autoSync') {
 								this.plugin.setupAutoSync();
