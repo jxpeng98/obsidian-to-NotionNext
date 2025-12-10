@@ -43,10 +43,13 @@ export async function updateYamlInfo(
         );
     });
 
-    try {
-        await navigator.clipboard.writeText(url)
-    } catch (error) {
-        console.log(error)
-        new Notice(`${i18nConfig.CopyErrorMessage}`);
+    // copy url to clipboard only if autoCopyNotionLink is enabled
+    if (plugin.settings.autoCopyNotionLink) {
+        try {
+            await navigator.clipboard.writeText(url);
+        } catch (error) {
+            console.log(error);
+            new Notice(`${i18nConfig.CopyErrorMessage}`);
+        }
     }
 }

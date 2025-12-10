@@ -14,6 +14,7 @@ export interface PluginSettings {
 	bannerUrl: string;
 	notionUser: string;
 	NotionLinkDisplay: boolean;
+	autoCopyNotionLink: boolean;
 	autoSync: boolean;
 	autoSyncDelay: number;
 	autoSyncFrontmatterKey: string;
@@ -53,6 +54,7 @@ export const DEFAULT_SETTINGS: PluginSettings = {
 	bannerUrl: "",
 	notionUser: "",
 	NotionLinkDisplay: true,
+	autoCopyNotionLink: true,
 	autoSync: false,
 	autoSyncDelay: 5,
 	autoSyncFrontmatterKey: DEFAULT_AUTO_SYNC_DATABASE_KEY,
@@ -94,6 +96,8 @@ export class ObsidianSettingTab extends PluginSettingTab {
 		this.createSettingEl(containerEl, i18nConfig.NotionUser, i18nConfig.NotionUserDesc, 'text', i18nConfig.NotionUserText, this.plugin.settings.notionUser, 'notionUser')
 
 		this.createSettingEl(containerEl, i18nConfig.NotionLinkDisplay, i18nConfig.NotionLinkDisplayDesc, 'toggle', i18nConfig.NotionLinkDisplay, this.plugin.settings.NotionLinkDisplay, 'NotionLinkDisplay')
+
+		this.createSettingEl(containerEl, i18nConfig.AutoCopyNotionLink, i18nConfig.AutoCopyNotionLinkDesc, 'toggle', i18nConfig.AutoCopyNotionLink, this.plugin.settings.autoCopyNotionLink, 'autoCopyNotionLink')
 
 		this.createSettingEl(containerEl, i18nConfig.AutoSync, i18nConfig.AutoSyncDesc, 'toggle', i18nConfig.AutoSync, this.plugin.settings.autoSync, 'autoSync')
 
