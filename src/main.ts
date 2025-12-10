@@ -371,7 +371,7 @@ export default class ObsidianSyncNotionPlugin extends Plugin {
                 dbByShortName.set(dbDetails.abName.toLowerCase(), dbDetails);
             }
 
-            const foundDatabases: Array<{ dbDetails: DatabaseDetails, notionId: string }> = [];
+            const foundDatabases: Array<{ dbDetails: DatabaseDetails, notionId: string | undefined }> = [];
             const unresolvedTargets: string[] = [];
 
             for (const target of autoSyncTargets) {
@@ -384,22 +384,20 @@ export default class ObsidianSyncNotionPlugin extends Plugin {
                 }
 
                 const notionIDKey = `NotionID-${dbDetails.abName}`;
-                if (frontMatter[notionIDKey]) {
-                    foundDatabases.push({
-                        dbDetails,
-                        notionId: String(frontMatter[notionIDKey])
-                    });
-                }
+                // Include database even if no NotionID exists (for first-time upload)
+                foundDatabases.push({
+                    dbDetails,
+                    notionId: frontMatter[notionIDKey] ? String(frontMatter[notionIDKey]) : undefined
+                });
             }
 
             if (unresolvedTargets.length > 0) {
                 console.log(`[AutoSync] Frontmatter auto sync targets not found in settings: ${unresolvedTargets.join(", ")}`);
             }
 
-            // If no NotionID found, notify user to upload manually first
+            // If no valid databases found in settings, skip
             if (foundDatabases.length === 0) {
-                console.log(`[AutoSync] No NotionID found in ${file.path}, skipping auto sync`);
-                new Notice(i18nConfig.AutoSyncNoNotionID, 4000);
+                console.log(`[AutoSync] No matching databases found in settings for ${file.path}, skipping auto sync`);
                 return;
             }
 
@@ -407,12 +405,13 @@ export default class ObsidianSyncNotionPlugin extends Plugin {
             if (foundDatabases.length > 1) {
                 const message = i18nConfig.AutoSyncMultipleSync.replace('{count}', String(foundDatabases.length));
                 new Notice(message, 3000);
-                console.log(`[AutoSync] Found ${foundDatabases.length} NotionIDs in ${file.path}`);
+                console.log(`[AutoSync] Found ${foundDatabases.length} database targets in ${file.path}`);
             }
 
             // Sync to all found databases
             for (const { dbDetails, notionId } of foundDatabases) {
-                console.log(`[AutoSync] ${new Date().toISOString()} Auto syncing ${file.basename} to ${dbDetails.fullName} (${dbDetails.abName})`);
+                const isFirstSync = !notionId;
+                console.log(`[AutoSync] ${new Date().toISOString()} Auto syncing ${file.basename} to ${dbDetails.fullName} (${dbDetails.abName})${isFirstSync ? ' [First Upload]' : ''}`);
 
                 try {
                     // Trigger appropriate upload command based on database format
