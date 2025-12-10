@@ -92,6 +92,9 @@ export default class ObsidianSyncNotionPlugin extends Plugin {
         if (typeof this.settings.NotionLinkDisplay !== 'boolean') {
             this.settings.NotionLinkDisplay = DEFAULT_SETTINGS.NotionLinkDisplay;
         }
+        if (typeof this.settings.autoCopyNotionLink !== 'boolean') {
+            this.settings.autoCopyNotionLink = DEFAULT_SETTINGS.autoCopyNotionLink;
+        }
         if (typeof this.settings.autoSyncFrontmatterKey !== 'string') {
             this.settings.autoSyncFrontmatterKey = DEFAULT_AUTO_SYNC_DATABASE_KEY;
         }
@@ -107,6 +110,7 @@ export default class ObsidianSyncNotionPlugin extends Plugin {
             loadedData.autoSync === undefined ||
             loadedData.autoSyncDelay === undefined ||
             loadedData.NotionLinkDisplay === undefined ||
+            loadedData.autoCopyNotionLink === undefined ||
             loadedData.autoSyncFrontmatterKey === undefined;
 
         if (needsSave) {
@@ -117,6 +121,7 @@ export default class ObsidianSyncNotionPlugin extends Plugin {
                 if (loadedData.autoSync === undefined) migratedFields.push('autoSync');
                 if (loadedData.autoSyncDelay === undefined) migratedFields.push('autoSyncDelay');
                 if (loadedData.NotionLinkDisplay === undefined) migratedFields.push('NotionLinkDisplay');
+                if (loadedData.autoCopyNotionLink === undefined) migratedFields.push('autoCopyNotionLink');
 
                 console.log('[Settings] Migrating settings, adding fields:', migratedFields.join(', '));
             }
@@ -157,6 +162,10 @@ export default class ObsidianSyncNotionPlugin extends Plugin {
         if (typeof this.settings.NotionLinkDisplay !== 'boolean') {
             console.warn('[Settings] Invalid NotionLinkDisplay value, resetting to default');
             this.settings.NotionLinkDisplay = DEFAULT_SETTINGS.NotionLinkDisplay;
+        }
+        if (typeof this.settings.autoCopyNotionLink !== 'boolean') {
+            console.warn('[Settings] Invalid autoCopyNotionLink value, resetting to default');
+            this.settings.autoCopyNotionLink = DEFAULT_SETTINGS.autoCopyNotionLink;
         }
         if (!this.settings.databaseDetails || typeof this.settings.databaseDetails !== 'object') {
             console.warn('[Settings] Invalid databaseDetails, resetting to empty object');
