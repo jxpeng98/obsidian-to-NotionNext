@@ -60,6 +60,7 @@ export const zh = {
 	NotYetFinish: "此功能将在未来版本中提供",
 	PlaceHolder: "输入数据库名称",
 	"notion-logo": "同步到 NotionNext",
+	"sync-preffix": "📄",
 	"sync-success": "成功同步到 NotionNext：\n",
 	"sync-fail": "同步到 NotionNext 失败：\n",
 	"open-file": "请先打开要同步的文件。",

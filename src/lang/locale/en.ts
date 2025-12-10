@@ -60,6 +60,7 @@ export const en = {
 	NotYetFinish: "This feature will be available in a future version.",
 	PlaceHolder: "Enter database name",
 	"notion-logo": "Sync to NotionNext",
+	"sync-preffix": "📄",
 	"sync-success": "Successfully synced to NotionNext:\n",
 	"sync-fail": "Failed to sync to NotionNext:\n",
 	"open-notion": "Please open a file to sync first.",
