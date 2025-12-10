@@ -1,5 +1,25 @@
 # Changelog
 
+## v2.8.0-beta.3 (2025-12-10)
+
+### Added
+
+- **Auto-copy Notion Link setting**: New toggle to automatically copy the Notion page link to clipboard after syncing (defaults to on)
+- **Smart auto-sync notice**: Show notice only for files that were previously synced but missing `autosync-database` field; new files are silently skipped
+
+### Fixed
+
+- Fixed `undefined` appearing in sync success notification by adding missing `sync-preffix` i18n key
+- Fixed build error caused by removed `resetAutoSyncNoticeCache()` method reference
+- Added `autoCopyNotionLink` to settings migration logic for seamless upgrades
+
+### Changed
+
+- Improved auto-sync behavior: files without `autosync-database` are now silently ignored unless they have an existing NotionID
+- Updated documentation with new auto-sync scenarios (A-1 and A-2)
+
+---
+
 ## v2.8.0-beta.2 (2025-11-05)
 
 ### Featured
