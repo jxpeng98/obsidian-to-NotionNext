@@ -87,6 +87,7 @@ export const zh = {
 	SettingsMigrated: "✨ 插件设置已更新！新增自动同步功能，详情请查看设置。",
 	AutoSyncNoNotionID: "🆕 自动同步：首次上传到 Notion",
 	AutoSyncMissingDatabaseList: "⚠️ 自动同步已跳过：请在 frontmatter 中添加 \"{key}\" 以指定目标数据库。",
+	AutoSyncSkippedAttachments: "⚠️ 自动同步已跳过：检测到 {filename} 含有本地附件（图片/PDF），请手动同步。",
 	AutoSyncMultipleSync: "🔄 自动同步：正在同步到 {count} 个数据库...",
 	AutoSyncFailed: "同步到 {database} 失败：{error}",
 	AutoSyncError: "同步 {filename} 失败：{error}",

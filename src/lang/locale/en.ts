@@ -91,6 +91,7 @@ export const en = {
 	SettingsMigrated: "✨ Settings updated! Auto-Sync is now available. Check the settings to learn more.",
 	AutoSyncNoNotionID: "🆕 Auto-sync: First upload to Notion",
 	AutoSyncMissingDatabaseList: "⚠️ Auto-sync skipped: Add `{key}: [database_name]` to your frontmatter to specify target databases.",
+	AutoSyncSkippedAttachments: "⚠️ Auto-sync skipped: {filename} contains internal attachments (images/PDFs). Please sync manually.",
 	AutoSyncMultipleSync: "🔄 Auto-sync: Syncing to {count} database(s)...",
 	AutoSyncFailed: "Auto-sync to {database} failed: {error}",
 	AutoSyncError: "Auto-sync for {filename} failed: {error}",

@@ -84,6 +84,7 @@ export const ja = {
 	SettingsMigrated: "✨ 設定が更新されました！自動同期が利用可能です。詳細は設定画面をご確認ください。",
 	AutoSyncNoNotionID: "🆕 自動同期：Notionへ初めてアップロードします",
 	AutoSyncMissingDatabaseList: "⚠️ 自動同期をスキップ：frontmatterに `{key}: [データベース名]` を追加して同期先を指定してください。",
+	AutoSyncSkippedAttachments: "⚠️ 自動同期をスキップ：{filename} に内部添付（画像/PDF）が含まれています。手動で同期してください。",
 	AutoSyncMultipleSync: "🔄 自動同期：{count}個のデータベースに同期しています...",
 	AutoSyncFailed: "{database}への自動同期に失敗しました：{error}",
 	AutoSyncError: "{filename}の自動同期に失敗しました：{error}",
