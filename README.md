@@ -15,6 +15,7 @@ Share files from Obsidian to any Notion database using the Notion API. This plug
 - **Multiple Database Types**: Supports General, NotionNext, and Custom databases.
 - **Custom Properties**: Map any frontmatter key to any Notion property in custom databases.
 - **Flexible Syncing**: Choose which database to sync to on-the-fly.
+- **Attachment Upload**: Automatically uploads local images and PDFs to Notion, supporting Wikilinks and Markdown links.
 
 ## Acknowledgment
 
