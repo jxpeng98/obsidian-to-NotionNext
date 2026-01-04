@@ -4,6 +4,7 @@ import { i18nConfig } from "src/lang/I18n";
 import ribbonCommands from "src/commands/NotionCommands";
 import { ObsidianSettingTab, PluginSettings, DEFAULT_SETTINGS, DatabaseDetails } from "src/ui/settingTabs";
 import { uploadCommandNext, uploadCommandGeneral, uploadCommandCustom } from "src/upload/uploadCommand";
+import { AttachmentProcessor } from "src/upload/common/AttachmentProcessor";
 import { DEFAULT_AUTO_SYNC_DATABASE_KEY, parseAutoSyncDatabaseList, resolveAutoSyncKey } from "src/utils/frontmatter";
 
 // Remember to rename these classes and interfaces!
@@ -18,6 +19,7 @@ export default class ObsidianSyncNotionPlugin extends Plugin {
     private syncingFiles: Set<string> = new Set();
     private lastFrontmatterCache: Map<string, any> = new Map();
     private lastContentHashCache: Map<string, string> = new Map();
+    private autoSyncAttachmentBlocked: Set<string> = new Set();
 
 
     async onload() {
@@ -69,6 +71,7 @@ export default class ObsidianSyncNotionPlugin extends Plugin {
         }
         this.lastFrontmatterCache.clear();
         this.lastContentHashCache.clear();
+        this.autoSyncAttachmentBlocked.clear();
 
     }
 
@@ -315,7 +318,14 @@ export default class ObsidianSyncNotionPlugin extends Plugin {
             // Get file's frontmatter
             const frontMatter = this.app.metadataCache.getFileCache(file)?.frontmatter;
             if (!frontMatter) {
-                console.log(`[AutoSync] No frontmatter found in ${file.path}`);
+                return;
+            }
+
+            // Check autosync property first - only proceed if it exists
+            const autoSyncKey = this.getAutoSyncFrontmatterKey();
+            const autoSyncTargets = parseAutoSyncDatabaseList(frontMatter[autoSyncKey]);
+
+            if (autoSyncTargets.length === 0) {
                 return;
             }
 
@@ -331,50 +341,11 @@ export default class ObsidianSyncNotionPlugin extends Plugin {
                 const frontmatterOnlyNotionIDChanged = this.onlyNotionIDChanged(lastFrontmatter, frontMatter);
                 const contentUnchanged = contentHash === lastContentHash;
 
-                console.log(`[AutoSync] Change analysis for ${file.basename}:`, {
-                    frontmatterOnlyNotionIDChanged,
-                    contentUnchanged,
-                    frontmatterHasRealChanges: !frontmatterOnlyNotionIDChanged,
-                    contentChanged: !contentUnchanged,
-                    willSync: !(frontmatterOnlyNotionIDChanged && contentUnchanged)
-                });
-
-                // Only skip sync if BOTH conditions are true:
-                // 1. Frontmatter only has NotionID changes (no real user changes)
-                // 2. Content is completely unchanged
                 if (frontmatterOnlyNotionIDChanged && contentUnchanged) {
-                    console.log(`[AutoSync] Only NotionID updated (from sync), content unchanged - skipping auto sync`);
-                    // Update cache even when skipping, so next comparison uses the current state
                     this.lastFrontmatterCache.set(file.path, { ...frontMatter });
                     this.lastContentHashCache.set(file.path, contentHash);
                     return;
                 }
-
-                if (!contentUnchanged) {
-                    console.log(`[AutoSync] Content changed - will sync`);
-                } else if (!frontmatterOnlyNotionIDChanged) {
-                    console.log(`[AutoSync] Frontmatter changed - will sync`);
-                }
-            }
-
-            const autoSyncKey = this.getAutoSyncFrontmatterKey();
-            const autoSyncTargets = parseAutoSyncDatabaseList(frontMatter[autoSyncKey]);
-
-            // If no autosync-database field specified
-            if (autoSyncTargets.length === 0) {
-                // Check if file has any existing NotionID (meaning it was synced before)
-                const hasExistingNotionID = Object.keys(frontMatter).some(key =>
-                    key.startsWith('NotionID-') || key === 'NotionID'
-                );
-
-                if (hasExistingNotionID) {
-                    // User likely forgot to add autosync-database - show a notice
-                    const message = i18nConfig.AutoSyncMissingDatabaseList.replace('{key}', autoSyncKey);
-                    new Notice(message, 8000);
-                    console.log(`[AutoSync] File ${file.path} has NotionID but missing autosync-database - showing notice`);
-                }
-                // Silently skip files without NotionID (new files that don't need auto-sync)
-                return;
             }
 
 
@@ -414,6 +385,20 @@ export default class ObsidianSyncNotionPlugin extends Plugin {
                 console.log(`[AutoSync] No matching databases found in settings for ${file.path}, skipping auto sync`);
                 return;
             }
+
+            // Temporarily disable auto-sync for files containing internal attachments (local images/PDFs)
+            const attachmentProcessor = new AttachmentProcessor(this, foundDatabases[0].dbDetails);
+            if (attachmentProcessor.hasInternalAttachments(content, file)) {
+                if (!this.autoSyncAttachmentBlocked.has(file.path)) {
+                    const message = i18nConfig.AutoSyncSkippedAttachments
+                        .replace('{filename}', file.basename);
+                    new Notice(message, 6000);
+                    this.autoSyncAttachmentBlocked.add(file.path);
+                }
+                console.log(`[AutoSync] Internal attachments detected in ${file.path}, auto-sync skipped`);
+                return;
+            }
+            this.autoSyncAttachmentBlocked.delete(file.path);
 
             // Notify user about multiple syncs if applicable
             if (foundDatabases.length > 1) {

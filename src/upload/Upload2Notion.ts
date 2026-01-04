@@ -6,6 +6,7 @@ import MyPlugin from "src/main";
 import { DatabaseDetails } from "../ui/settingTabs";
 import { updateYamlInfo } from "./updateYaml";
 import { UploadBase, NotionPageResponse } from "./common/UploadBase";
+import { AttachmentProcessor, applyBlockRewrites } from "./common/AttachmentProcessor";
 
 export type DatasetType = "general" | "next" | "custom";
 
@@ -128,7 +129,7 @@ export class Upload2Notion extends UploadBase {
 			cover: request.cover,
 			tags: request.tags,
 		});
-		const blocks = this.buildBlocks(request.markdown, {
+		const blocks = await this.buildBlocks(request.markdown, request.nowFile, {
 			notionLimits: {truncate: false},
 		});
 		const notionId = this.getNotionId(request.app, request.nowFile);
@@ -153,7 +154,7 @@ export class Upload2Notion extends UploadBase {
 			slug: request.slug,
 			category: request.category,
 		});
-		const blocks = this.buildBlocks(request.markdown, {
+		const blocks = await this.buildBlocks(request.markdown, request.nowFile, {
 			notionLimits: {truncate: false},
 		});
 		this.splitRichTextParagraphs(blocks);
@@ -187,7 +188,7 @@ export class Upload2Notion extends UploadBase {
 		console.log(`[Upload2Notion] Handling custom dataset`, {
 			customKeys: Object.keys(request.customValues || {}),
 		});
-		const blocks = this.buildBlocks(request.markdown, {
+		const blocks = await this.buildBlocks(request.markdown, request.nowFile, {
 			strictImageUrls: true,
 			notionLimits: {truncate: false},
 		});
@@ -206,10 +207,24 @@ export class Upload2Notion extends UploadBase {
 		});
 	}
 
-	private buildBlocks(markdown: string, options: Record<string, unknown>): any[] {
+	private async buildBlocks(markdown: string, nowFile: TFile, options: Record<string, unknown>): Promise<any[]> {
 		const yamlContent: any = yamlFrontMatter.loadFront(markdown);
-		const content = yamlContent.__content;
+		let content: string = yamlContent.__content ?? "";
+
+		// Process local attachments
+		const processor = new AttachmentProcessor(this.plugin, this.dbDetails);
+		const result = await processor.processContent(content, nowFile);
+		content = result.content;
+		const imageUrlToUploadId = result.imageUrlToUploadId;
+		const filePlaceholderToUpload = result.filePlaceholderToUpload;
+
 		const blocks = markdownToBlocks(content, options);
+
+		// Apply block rewrites for uploaded files
+		if (Object.keys(imageUrlToUploadId).length > 0 || Object.keys(filePlaceholderToUpload).length > 0) {
+			applyBlockRewrites(blocks, { imageUrlToUploadId, filePlaceholderToUpload });
+		}
+
 		this.debugLog("Upload2Notion", "Converted markdown to blocks", {
 			blockCount: blocks.length,
 			firstBlockTypes: blocks.slice(0, 5).map((block: any) => block?.type),
