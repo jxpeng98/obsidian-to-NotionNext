@@ -116,7 +116,7 @@ export class ObsidianSettingTab extends PluginSettingTab {
 
 		// Auto Sync Delay setting - only visible when autoSync is enabled
 		this.autoSyncDelayContainer = containerEl.createDiv();
-		const delaySetting = new Setting(this.autoSyncDelayContainer)
+		new Setting(this.autoSyncDelayContainer)
 			.setName(i18nConfig.AutoSyncDelay)
 			.setDesc(i18nConfig.AutoSyncDelayDesc)
 			.addText((text) =>
