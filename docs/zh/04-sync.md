@@ -11,6 +11,73 @@ description: 如何使用 NotionNext 插件将你的 Obsidian 笔记同步到 No
 
 要同步一篇笔记，只需打开你想要同步的笔记，然后从命令面板（`Ctrl/Cmd + P`）或笔记的右键菜单中选择 "Share to NotionNext" 命令。这会在你的 Notion 数据库中创建一个新页面，内容与你的 Obsidian 笔记完全一致。
 
+## 附件上传
+
+插件支持自动检测并上传笔记中的本地附件（图片、PDF 等）到 Notion。
+
+### 支持的附件格式
+
+**图片格式：**
+- PNG, JPG, JPEG, GIF, WebP, SVG, HEIC, TIF, TIFF, BMP
+
+**其他格式：**
+- PDF
+
+### 支持的链接格式
+
+当前支持：
+
+#### Wikilink 格式（推荐）
+
+```markdown
+![[image.png]]
+![[folder/image.png]]
+![[image.png|alt text]]
+
+[[document.pdf]]
+[[folder/document.pdf]]
+```
+
+#### 标准 Markdown 格式
+
+```markdown
+![alt text](image.png)
+![alt text](folder/image.png)
+![](./relative/path/image.png)
+
+[document.pdf](document.pdf)
+[document.pdf](folder/document.pdf)
+```
+
+#### TODO
+
+- [ ] Obsidian URL 格式
+
+  ```markdown
+  ![](obsidian://open?vault=MyVault&file=path/to/image.png)
+  ```
+
+- [ ] App URL 格式
+
+  ```markdown
+  ![](app://local/path/to/image.png)
+  ```
+
+### 附件上传工作原理
+
+1. **自动检测**：同步时，插件会自动扫描笔记内容，识别所有本地附件引用
+2. **上传到 Notion**：检测到的附件会通过 Notion File Upload API 上传
+3. **链接替换**：上传成功后，笔记中的本地链接会被替换为 Notion 的文件引用
+4. **图片显示**：图片会作为 Notion 的图片块显示
+5. **文件嵌入**：PDF 等非图片文件会作为文件块嵌入
+
+### 注意事项
+
+- 代码块中的附件引用不会被处理
+- 外部 URL（`http://` 或 `https://`）不会被处理
+- 单个文件大小限制为 5MB
+- 确保附件文件存在于 Vault 中
+
 ## 自动同步
 
 插件支持自动同步功能，可以监控你的笔记变化并自动同步到 Notion。
@@ -46,6 +113,9 @@ autosync-database: [blog, portfolio]
 当自动同步启用后：
 
 - 插件会监控 Markdown 文件的变化
+- **只有 frontmatter 中包含自动同步配置键的文件才会被处理**
+- 没有配置自动同步键的文件会被静默跳过，不会触发任何同步操作或提示
+- 含有本地附件（图片/PDF）的文件会跳过自动同步，请手动同步
 - 在你停止编辑达到配置的延迟时间后，自动触发同步
 - **支持首次自动上传**：无需先手动同步，只要添加 frontmatter 键名，插件会自动处理首次上传
 - 如果文件关联了多个数据库，会自动同步到所有数据库
@@ -53,40 +123,7 @@ autosync-database: [blog, portfolio]
 
 ### 自动同步场景示例
 
-#### 场景 A-1：新文件缺少自动同步配置
-
-```yaml
----
-title: 我的新文章
-tags: [博客, 技术]
----
-```
-
-**行为：**
-
-- ✅ 检测到缺少自动同步配置键
-- ✅ 检测到没有 NotionID（新文件）
-- ✅ 静默跳过，不显示任何提示
-- 📝 **如需启用自动同步：** 在 frontmatter 中添加 `autosync-database: [你的数据库简称]`
-
-#### 场景 A-2：已同步文件缺少自动同步配置
-
-```yaml
----
-title: 我的文章
-NotionID-blog: abc123
----
-```
-
-**行为：**
-
-- ✅ 检测到缺少自动同步配置键
-- ✅ 检测到已存在 NotionID（说明之前同步过）
-- ✅ 显示提示："⚠️ 自动同步已跳过：请在 frontmatter 中添加 autosync-database 以指定目标数据库"
-- ✅ 不执行同步操作
-- 📝 **需要操作：** 在 frontmatter 中添加 `autosync-database: [blog]`
-
-#### 场景 B：新文档（首次自动上传）
+#### 场景 A：新文档（首次自动上传）
 
 ```yaml
 ---
@@ -103,7 +140,7 @@ autosync-database: [blog]
 - ✅ 显示成功/失败通知
 - 📝 **无需操作：** 插件会自动处理首次上传
 
-#### 场景 C：已同步到一个数据库（更新）
+#### 场景 B：已同步到一个数据库（更新）
 
 ```yaml
 ---
@@ -120,7 +157,7 @@ autosync-database: [blog]
 - ✅ 显示上传命令返回的成功/失败通知
 - 📝 **无需操作：** 变更会自动同步
 
-#### 场景 D：同步到多个数据库
+#### 场景 C：同步到多个数据库
 
 ```yaml
 ---

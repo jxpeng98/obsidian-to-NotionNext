@@ -11,6 +11,73 @@ After configuring your Notion database in the plugin settings, you can start syn
 
 To sync a note, open the note you want to sync and use the "Share to NotionNext" command from the command palette or the note context menu. This will create a new page in your Notion database with the content of your Obsidian note.
 
+## Attachment Upload
+
+The plugin automatically detects and uploads local attachments (images, PDFs, etc.) from your notes to Notion.
+
+### Supported Attachment Formats
+
+**Image formats:**
+- PNG, JPG, JPEG, GIF, WebP, SVG, HEIC, TIF, TIFF, BMP
+
+**Other formats:**
+- PDF
+
+### Supported Link Formats
+
+Currently supported:
+
+#### Wikilink Format (Recommended)
+
+```markdown
+![[image.png]]
+![[folder/image.png]]
+![[image.png|alt text]]
+
+[[document.pdf]]
+[[folder/document.pdf]]
+```
+
+#### Standard Markdown Format
+
+```markdown
+![alt text](image.png)
+![alt text](folder/image.png)
+![](./relative/path/image.png)
+
+[document.pdf](document.pdf)
+[document.pdf](folder/document.pdf)
+```
+
+#### TODO
+
+- [ ] Obsidian URL Format
+
+  ```markdown
+  ![](obsidian://open?vault=MyVault&file=path/to/image.png)
+  ```
+
+- [ ] App URL Format
+
+  ```markdown
+  ![](app://local/path/to/image.png)
+  ```
+
+### How Attachment Upload Works
+
+1. **Auto Detection**: During sync, the plugin scans your note content and identifies all local attachment references
+2. **Upload to Notion**: Detected attachments are uploaded via the Notion File Upload API
+3. **Link Replacement**: After successful upload, local links are replaced with Notion file references
+4. **Image Display**: Images are displayed as Notion image blocks
+5. **File Embedding**: Non-image files like PDFs are embedded as file blocks
+
+### Notes
+
+- Attachment references inside code blocks are not processed
+- External URLs (`http://` or `https://`) are not processed
+- Single file size limit is 5MB
+- Ensure attachment files exist in your Vault
+
 ## Auto Sync
 
 The plugin supports automatic syncing that monitors your notes for changes and automatically syncs them to Notion.
@@ -45,46 +112,17 @@ If you change the key name in the settings, update your frontmatter to match.
 
 When auto sync is enabled:
 - The plugin monitors markdown files for changes
+- **Only files with the auto sync key in frontmatter will be processed**
+- Files without the auto sync key are silently skipped - no sync operations or notices
+- Files containing internal attachments (local images/PDFs) are skipped - sync them manually
 - After you stop editing for the configured delay period, auto sync is triggered
-- Files with the `autosync-database` key in frontmatter will be automatically synced
 - **First-time upload is supported**: No need to manually sync first - just add the frontmatter key and the plugin will handle the initial upload
 - If a file is linked to multiple databases, it will sync to all of them automatically
 - After the first sync, a `NotionID-{database}` will be added to the frontmatter for future updates
 
 ### Auto Sync Scenarios
 
-#### Scenario A-1: New File Missing Auto Sync Entry
-
-```yaml
----
-title: My New Article
-tags: [blog, tech]
----
-```
-
-**Behavior:**
-- ✅ Detects that the auto sync key is missing
-- ✅ Detects no NotionID present (new file)
-- ✅ Silently skips - no notice shown
-- 📝 **To enable auto sync:** Add `autosync-database: [your-db-abbreviation]` to the frontmatter
-
-#### Scenario A-2: Synced File Missing Auto Sync Entry
-
-```yaml
----
-title: My Article
-NotionID-blog: abc123
----
-```
-
-**Behavior:**
-- ✅ Detects that the auto sync key is missing
-- ✅ Detects existing NotionID (file was synced before)
-- ✅ Shows notice: "⚠️ Auto-sync skipped: Add autosync-database to your frontmatter to specify target databases"
-- ✅ No sync operation performed
-- 📝 **Action Required:** Add `autosync-database: [blog]` to the frontmatter
-
-#### Scenario B: New Document (First-Time Auto Upload)
+#### Scenario A: New Document (First-Time Auto Upload)
 
 ```yaml
 ---
@@ -100,7 +138,7 @@ autosync-database: [blog]
 - ✅ Shows success/failure notification
 - 📝 **No Action Required:** The plugin handles the initial upload automatically
 
-#### Scenario C: Synced to One Database
+#### Scenario B: Synced to One Database
 
 ```yaml
 ---
@@ -116,7 +154,7 @@ autosync-database: [blog]
 - ✅ Shows success/failure notification from the upload command
 - 📝 **No Action Required:** Changes are automatically synced
 
-#### Scenario D: Synced to Multiple Databases
+#### Scenario C: Synced to Multiple Databases
 
 ```yaml
 ---
@@ -135,7 +173,7 @@ autosync-database: [blog, portfolio, notes]
 - ✅ Shows individual result notifications for each database
 - 📝 **No Action Required:** Changes are automatically synced to all linked databases
 
-#### Scenario E: Custom Frontmatter Key
+#### Scenario D: Custom Frontmatter Key
 
 ```yaml
 ---
