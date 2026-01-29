@@ -5,6 +5,7 @@ import { SettingModal } from "./settingModal";
 import { PreviewModal } from "./PreviewModal";
 import { EditModal } from "./EditModal";
 import { DeleteModal } from "./DeleteModal";
+import { DEFAULT_AUTO_SYNC_DATABASE_KEY } from "src/utils/frontmatter";
 
 export interface PluginSettings {
 	NextButton: boolean;
@@ -13,6 +14,10 @@ export interface PluginSettings {
 	bannerUrl: string;
 	notionUser: string;
 	NotionLinkDisplay: boolean;
+	autoCopyNotionLink: boolean;
+	autoSync: boolean;
+	autoSyncDelay: number;
+	autoSyncFrontmatterKey: string;
 	proxy: string;
 	GeneralButton: boolean;
 	tagButton: boolean;
@@ -49,6 +54,10 @@ export const DEFAULT_SETTINGS: PluginSettings = {
 	bannerUrl: "",
 	notionUser: "",
 	NotionLinkDisplay: true,
+	autoCopyNotionLink: true,
+	autoSync: false,
+	autoSyncDelay: 5,
+	autoSyncFrontmatterKey: DEFAULT_AUTO_SYNC_DATABASE_KEY,
 	proxy: "",
 	GeneralButton: true,
 	tagButton: true,
@@ -67,6 +76,7 @@ export const DEFAULT_SETTINGS: PluginSettings = {
 export class ObsidianSettingTab extends PluginSettingTab {
 	plugin: ObsidianSyncNotionPlugin;
 	databaseEl: HTMLDivElement;
+	autoSyncDelayContainer: HTMLElement | null = null;
 
 	constructor(app: App, plugin: ObsidianSyncNotionPlugin) {
 		super(app, plugin);
@@ -87,14 +97,57 @@ export class ObsidianSettingTab extends PluginSettingTab {
 
 		this.createSettingEl(containerEl, i18nConfig.NotionLinkDisplay, i18nConfig.NotionLinkDisplayDesc, 'toggle', i18nConfig.NotionLinkDisplay, this.plugin.settings.NotionLinkDisplay, 'NotionLinkDisplay')
 
+		this.createSettingEl(containerEl, i18nConfig.AutoCopyNotionLink, i18nConfig.AutoCopyNotionLinkDesc, 'toggle', i18nConfig.AutoCopyNotionLink, this.plugin.settings.autoCopyNotionLink, 'autoCopyNotionLink')
+
+		this.createSettingEl(containerEl, i18nConfig.AutoSync, i18nConfig.AutoSyncDesc, 'toggle', i18nConfig.AutoSync, this.plugin.settings.autoSync, 'autoSync')
+
+		new Setting(containerEl)
+			.setName(i18nConfig.AutoSyncFrontmatterKey)
+			.setDesc(i18nConfig.AutoSyncFrontmatterKeyDesc)
+			.addText((text) =>
+				text
+					.setPlaceholder(DEFAULT_AUTO_SYNC_DATABASE_KEY)
+					.setValue(this.plugin.settings.autoSyncFrontmatterKey ?? "")
+					.onChange(async (value) => {
+						this.plugin.settings.autoSyncFrontmatterKey = value;
+						await this.plugin.saveSettings();
+					})
+			);
+
+		// Auto Sync Delay setting - only visible when autoSync is enabled
+		this.autoSyncDelayContainer = containerEl.createDiv();
+		new Setting(this.autoSyncDelayContainer)
+			.setName(i18nConfig.AutoSyncDelay)
+			.setDesc(i18nConfig.AutoSyncDelayDesc)
+			.addText((text) =>
+				text
+					.setPlaceholder(i18nConfig.AutoSyncDelayText)
+					.setValue(String(this.plugin.settings.autoSyncDelay))
+					.onChange(async (value) => {
+						const delay = parseFloat(value);
+						if (!isNaN(delay) && delay >= 2) {
+							this.plugin.settings.autoSyncDelay = delay;
+							await this.plugin.saveSettings();
+						} else if (!isNaN(delay) && delay < 2) {
+							// If user enters less than 2 seconds, set it to 2
+							this.plugin.settings.autoSyncDelay = 2;
+							await this.plugin.saveSettings();
+							text.setValue('2');
+						}
+					})
+			);
+
+		// Set initial visibility
+		this.updateAutoSyncDelayVisibility();
+
 
 		// add new button
 		new Setting(containerEl)
-			.setName("Add New Database")
-			.setDesc("Add New Database")
+			.setName(i18nConfig.AddNewDatabase)
+			.setDesc(i18nConfig.AddNewDatabaseDesc)
 			.addButton((button: ButtonComponent): ButtonComponent => {
 				return button
-					.setTooltip("Add New Database")
+					.setTooltip(i18nConfig.AddNewDatabaseTooltip)
 					.setIcon("plus")
 					.onClick(async () => {
 						let modal = new SettingModal(this.app, this.plugin, this);
@@ -151,6 +204,13 @@ export class ObsidianSettingTab extends PluginSettingTab {
 		element.style.alignItems = "center";
 	}
 
+	// Update visibility of autoSyncDelay setting based on autoSync toggle
+	public updateAutoSyncDelayVisibility() {
+		if (this.autoSyncDelayContainer) {
+			this.autoSyncDelayContainer.style.display = this.plugin.settings.autoSync ? "block" : "none";
+		}
+	}
+
 	// function to add one setting element in the setting tab.
 	public createSettingEl(containerEl: HTMLElement, name: string, desc: string, type: string, placeholder: string, holderValue: any, settingsKey: string) {
 		if (type === 'password') {
@@ -178,6 +238,12 @@ export class ObsidianSettingTab extends PluginSettingTab {
 							this.plugin.settings[settingsKey] = value; // Update the plugin settings directly
 							await this.plugin.saveSettings();
 							await this.plugin.commands.updateCommand();
+
+							// If autoSync setting changed, update the listener and visibility
+							if (settingsKey === 'autoSync') {
+								this.plugin.setupAutoSync();
+								this.updateAutoSyncDelayVisibility();
+							}
 						})
 				);
 		} else if (type === 'text') {
@@ -303,5 +369,4 @@ export class ObsidianSettingTab extends PluginSettingTab {
 		}
 	}
 }
-
 

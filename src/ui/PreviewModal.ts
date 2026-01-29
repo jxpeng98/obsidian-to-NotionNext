@@ -19,7 +19,7 @@ export class PreviewModal extends Modal {
 
 	display(): void {
 		this.containerEl.addClass('preview-modal')
-		this.titleEl.setText('Preview')
+		this.titleEl.setText(i18nConfig.Preview)
 
 		let { contentEl } = this;
 
@@ -27,21 +27,21 @@ export class PreviewModal extends Modal {
 
 		const dbFormatEl = new Setting(previewEl)
 		dbFormatEl
-			.setName('Database Format')
+			.setName(i18nConfig.DatabaseFormatLabel)
 			.addText(text => text
 				.setValue(this.dbDetails.format)
 				.setDisabled(true));
 
 		const dbFullEl = new Setting(previewEl)
 		dbFullEl
-			.setName('Database Full Name')
+			.setName(i18nConfig.DatabaseFullNameLabel)
 			.addText(text => text
 				.setValue(this.dbDetails.fullName)
 				.setDisabled(true));
 
 		const dbAbbrEl = new Setting(previewEl)
 		dbAbbrEl
-			.setName('Database Abbreviate Name')
+			.setName(i18nConfig.DatabaseAbbreviateNameLabel)
 			.addText(text => text
 				.setValue(this.dbDetails.abName)
 				.setDisabled(true));
@@ -49,12 +49,12 @@ export class PreviewModal extends Modal {
 
 		// Setting for toggle and copy buttons
 		new Setting(previewEl)
-			.setName('Notion API Key')
+			.setName(i18nConfig.NotionAPILabel)
 			.addExtraButton((button: ExtraButtonComponent) => {
 				let isApiKeyVisible = false;
 
 				return button
-					.setTooltip('Toggle API Key Visibility')
+					.setTooltip(i18nConfig.ToggleAPIKeyVisibility)
 					.setIcon('eye')
 					.onClick(() => {
 						isApiKeyVisible = !isApiKeyVisible;
@@ -73,11 +73,11 @@ export class PreviewModal extends Modal {
 		apiKeySetting
 			.addExtraButton((button: ExtraButtonComponent) => {
 				return button
-					.setTooltip('Copy API Key')
+					.setTooltip(i18nConfig.CopyAPIKey)
 					.setIcon('clipboard')
 					.onClick(() => {
 						navigator.clipboard.writeText(this.dbDetails.notionAPI)
-						new Notice('API Key copied to clipboard');
+						new Notice(i18nConfig.APIKeyCopied);
 					});
 			});
 
@@ -86,12 +86,12 @@ export class PreviewModal extends Modal {
 
 
 		new Setting(previewEl)
-			.setName('Database ID')
+			.setName(i18nConfig.DatabaseIDLabel)
 			.addExtraButton((button: ExtraButtonComponent) => {
 				let isDbIdVisible = false;
 
 				return button
-					.setTooltip('Toggle Database ID Visibility')
+					.setTooltip(i18nConfig.ToggleDatabaseIDVisibility)
 					.setIcon('eye')
 					.onClick(() => {
 
@@ -108,11 +108,11 @@ export class PreviewModal extends Modal {
 		dbIdSetting
 			.addExtraButton((button: ExtraButtonComponent) => {
 				return button
-					.setTooltip('Copy Database ID')
+					.setTooltip(i18nConfig.CopyDatabaseID)
 					.setIcon('clipboard')
 					.onClick(() => {
 						navigator.clipboard.writeText(this.dbDetails.databaseID)
-						new Notice('Database ID copied to clipboard');
+						new Notice(i18nConfig.DatabaseIDCopied);
 					});
 			});
 

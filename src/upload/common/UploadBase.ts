@@ -3,6 +3,8 @@ import MyPlugin from "src/main";
 import { DatabaseDetails } from "../../ui/settingTabs";
 import { i18nConfig } from "../../lang/I18n";
 
+const NOTION_API_VERSION = "2025-09-03";
+
 export interface NotionPageResponse {
 	response: any;
 	data: any;
@@ -30,7 +32,7 @@ export abstract class UploadBase {
 			headers: {
 				"Content-Type": "application/json",
 				Authorization: "Bearer " + notionAPI,
-				"Notion-Version": "2022-06-28",
+				"Notion-Version": NOTION_API_VERSION,
 			},
 			body: "",
 			throw: false,
@@ -116,7 +118,7 @@ export abstract class UploadBase {
 			headers: {
 				"Content-Type": "application/json",
 				Authorization: "Bearer " + notionAPI,
-				"Notion-Version": "2022-06-28",
+				"Notion-Version": NOTION_API_VERSION,
 			},
 			body: JSON.stringify(body),
 			throw: false,
@@ -171,7 +173,7 @@ export abstract class UploadBase {
 				headers: {
 					"Content-Type": "application/json",
 					Authorization: "Bearer " + notionAPI,
-					"Notion-Version": "2022-06-28",
+					"Notion-Version": NOTION_API_VERSION,
 				},
 				body: JSON.stringify(extraBlocks),
 				throw: false,
@@ -201,7 +203,7 @@ export abstract class UploadBase {
 			method: "GET",
 			headers: {
 				Authorization: "Bearer " + notionAPI,
-				"Notion-Version": "2022-06-28",
+				"Notion-Version": NOTION_API_VERSION,
 			},
 			throw: false,
 		}).catch((error) =>

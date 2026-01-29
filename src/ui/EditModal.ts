@@ -93,7 +93,7 @@ export class EditModal extends SettingModal {
 
 	display(): void {
 		this.containerEl.addClass("edit-modal");
-		this.titleEl.setText('Edit Database');
+		this.titleEl.setText(i18nConfig.EditDatabase);
 
 		let { contentEl } = this;
 		contentEl.empty();
@@ -245,8 +245,8 @@ export class EditModal extends SettingModal {
 		}
 
 		new Setting(containerEl)
-			.setName("Add New Property")
-			.setDesc("Click to add a new property")
+			.setName(i18nConfig.AddNewProperty)
+			.setDesc(i18nConfig.AddNewPropertyDesc)
 			.addButton(button => {
 				return button
 					.setButtonText('Add')

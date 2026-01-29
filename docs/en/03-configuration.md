@@ -22,6 +22,21 @@ In the plugin settings, you can add and configure the Notion databases you want 
   - [3️⃣ Custom Database](#3️⃣-custom-database)
   - [Finalizing Configuration](#finalizing-configuration)
 
+## Auto Sync Frontmatter Entry
+
+If you enable auto sync, the plugin needs a frontmatter entry that lists which configured databases should receive updates. You can customise the name of this entry in **Settings → Auto Sync Frontmatter Key** (default: `autosync-database`). Use any text you like—letters, numbers, emojis, or other scripts are all supported.
+
+In your note's frontmatter, add the configured key and list the database abbreviations you created in the settings:
+
+```yaml
+---
+title: My Article
+autosync-database: [blog, ideas]
+---
+```
+
+The entry can be a YAML list or comma-separated string, and manual uploads will automatically add the current database abbreviation if it is missing. If you change the key name in settings, update your frontmatter to match the new value.
+
 ## 1️⃣ General Database
 
 This is the most basic database type and is suitable for most users.
