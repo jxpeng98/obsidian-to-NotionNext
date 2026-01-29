@@ -1,5 +1,27 @@
 # Changelog
 
+## v2.8.0-beta.4 (2026-01-04)
+
+### Added
+
+- **Attachment Upload**: Upload local images and PDFs to Notion via the File Upload API and insert them as `image`/`file` blocks
+- **Auto-sync safeguard**: Auto-sync is skipped for notes containing internal attachments (manual sync required)
+
+### Changed
+
+- Limited attachment link parsing to **Wikilinks** and **standard Markdown links** (Obsidian/App URL formats are now TODO/disabled)
+- Standardized Notion API request header `Notion-Version` to `2025-09-03`
+- Reduced per-file upload limit to **5MB** to maximize compatibility across Notion plans
+
+### Fixed
+
+- File placeholder tokens no longer break due to Markdown underscore parsing
+- Better block ordering when attachments are on standalone lines in Markdown
+- Preserve image captions when converting `external` images to `file_upload`
+- Avoid duplicate filename display on uploaded `file` blocks
+
+---
+
 ## v2.8.0-beta.3 (2025-12-10)
 
 ### Added

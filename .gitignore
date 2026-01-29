@@ -28,3 +28,6 @@ local-data
 # vitepress
 docs/.vitepress/dist
 docs/.vitepress/cache
+
+# claude code
+.claude
