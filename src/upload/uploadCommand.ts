@@ -106,6 +106,7 @@ export async function uploadCommandNext(
 		try {
 			res = await upload.sync({
 				dataset: "next",
+				isAutoSync: options?.isAutoSync,
 				title: basename,
 				emoji: emoji || "",
 				cover: cover || "",
@@ -197,6 +198,7 @@ export async function uploadCommandGeneral(
 		try {
 			res = await upload.sync({
 				dataset: "general",
+				isAutoSync: options?.isAutoSync,
 				title: basename,
 				cover: cover || "",
 				tags: tags || [],
@@ -279,6 +281,7 @@ export async function uploadCommandCustom(
 		try {
 			res = await upload.sync({
 				dataset: "custom",
+				isAutoSync: options?.isAutoSync,
 				cover: cover || "",
 				customValues,
 				markdown: markDownData,

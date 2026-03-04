@@ -15,6 +15,7 @@ interface BaseSyncRequest {
 	markdown: string;
 	nowFile: TFile;
 	app: App;
+	isAutoSync?: boolean;
 }
 
 interface GeneralSyncRequest extends BaseSyncRequest {
@@ -91,6 +92,7 @@ export class Upload2Notion extends UploadBase {
 
 	async sync(request: SyncRequest): Promise<NotionPageResponse> {
 		const startedAt = Date.now();
+		this.isAutoSync = !!request.isAutoSync;
 
 		let response: NotionPageResponse;
 

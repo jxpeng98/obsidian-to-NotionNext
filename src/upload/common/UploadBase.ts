@@ -18,10 +18,18 @@ interface PreparedBlocks {
 export abstract class UploadBase {
 	protected plugin: MyPlugin;
 	protected dbDetails: DatabaseDetails;
+	protected isAutoSync = false;
 
 	protected constructor(plugin: MyPlugin, dbDetails: DatabaseDetails) {
 		this.plugin = plugin;
 		this.dbDetails = dbDetails;
+	}
+
+	private shouldShowSuccessNotices(): boolean {
+		if (!this.isAutoSync) {
+			return true;
+		}
+		return !!this.plugin.settings.autoSyncSuccessNotice;
 	}
 
 	async deletePage(notionID: string) {
@@ -190,7 +198,9 @@ export abstract class UploadBase {
 				console.log(`${i18nConfig["ExtraBlockUploaded"]} to page: ${pageId}`);
 				if (i === extraChunks.length - 1) {
 					console.log(`${i18nConfig["BlockUploaded"]} to page: ${pageId}`);
-					new Notice(`${i18nConfig["BlockUploaded"]} page: ${pageId}`, 5000);
+					if (this.shouldShowSuccessNotices()) {
+						new Notice(`${i18nConfig["BlockUploaded"]} page: ${pageId}`, 5000);
+					}
 				}
 			}
 		}
