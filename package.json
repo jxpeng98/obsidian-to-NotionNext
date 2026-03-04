@@ -13,7 +13,7 @@
   "author": "Jiaxin PENG",
   "license": "GNU GPLv3",
   "devDependencies": {
-    "@types/node": "^20.5.7",
+    "@types/node": "^22.11.3",
     "@types/yaml-front-matter": "^4.1.3",
     "@typescript-eslint/eslint-plugin": "^6.16.0",
     "@typescript-eslint/parser": "^6.16.0",
