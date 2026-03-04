@@ -7,13 +7,13 @@
 ### Changed
 
 ### Fixed
+
 ## v2.8.2 (2026-03-04)
 
-### Added
-
-### Changed
-
 ### Fixed
+
+- Fixed version bump with `tag-version-prefix="v"` in `.npmrc` causing `v` to be included in the version number (e.g. `v2.8.2` instead of `2.8.2`)
+
 ## v2.8.1 (2026-03-04)
 
 ### Added
