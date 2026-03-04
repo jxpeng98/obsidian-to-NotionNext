@@ -1,5 +1,19 @@
 # Changelog
 
+## Unreleased
+
+### Added
+
+- **Auto-sync success notice setting**: Toggle whether to show success notifications for auto-sync (defaults to off)
+
+### Changed
+
+- Auto-sync is quieter by default: success and "start upload" notices are suppressed unless explicitly enabled
+
+### Fixed
+
+- Auto-sync no longer shows "All blocks has been uploaded" (`BlockUploaded`) notice when success notices are disabled
+
 ## v2.8.0 (2026-01-29)
 
 ### Added
