@@ -8,13 +8,13 @@
 
 ### Fixed
 
-## v2.8.2 (2026-03-04)
+## 2.8.2 (2026-03-04)
 
 ### Fixed
 
-- Fixed version bump with `tag-version-prefix="v"` in `.npmrc` causing `v` to be included in the version number (e.g. `v2.8.2` instead of `2.8.2`)
+- Fixed version bump with `tag-version-prefix="v"` in `.npmrc` causing incorrect version format in `package.json` (e.g. `v2.8.1` instead of `2.8.1`)
 
-## v2.8.1 (2026-03-04)
+## 2.8.1 (2026-03-04)
 
 ### Added
 
@@ -28,7 +28,7 @@
 
 - Auto-sync no longer shows "All blocks has been uploaded" (`BlockUploaded`) notice when success notices are disabled
 
-## v2.8.0 (2026-01-29)
+## 2.8.0 (2026-01-29)
 
 ### Added
 
