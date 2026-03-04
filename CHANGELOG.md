@@ -7,6 +7,13 @@
 ### Changed
 
 ### Fixed
+## v2.8.2 (2026-03-04)
+
+### Added
+
+### Changed
+
+### Fixed
 ## v2.8.1 (2026-03-04)
 
 ### Added
