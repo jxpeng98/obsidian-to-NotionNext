@@ -17,6 +17,7 @@ export interface PluginSettings {
 	autoCopyNotionLink: boolean;
 	autoSync: boolean;
 	autoSyncDelay: number;
+	autoSyncSuccessNotice: boolean;
 	autoSyncFrontmatterKey: string;
 	proxy: string;
 	GeneralButton: boolean;
@@ -57,6 +58,7 @@ export const DEFAULT_SETTINGS: PluginSettings = {
 	autoCopyNotionLink: true,
 	autoSync: false,
 	autoSyncDelay: 5,
+	autoSyncSuccessNotice: false,
 	autoSyncFrontmatterKey: DEFAULT_AUTO_SYNC_DATABASE_KEY,
 	proxy: "",
 	GeneralButton: true,
@@ -100,6 +102,15 @@ export class ObsidianSettingTab extends PluginSettingTab {
 		this.createSettingEl(containerEl, i18nConfig.AutoCopyNotionLink, i18nConfig.AutoCopyNotionLinkDesc, 'toggle', i18nConfig.AutoCopyNotionLink, this.plugin.settings.autoCopyNotionLink, 'autoCopyNotionLink')
 
 		this.createSettingEl(containerEl, i18nConfig.AutoSync, i18nConfig.AutoSyncDesc, 'toggle', i18nConfig.AutoSync, this.plugin.settings.autoSync, 'autoSync')
+		this.createSettingEl(
+			containerEl,
+			i18nConfig.AutoSyncSuccessNotice,
+			i18nConfig.AutoSyncSuccessNoticeDesc,
+			'toggle',
+			i18nConfig.AutoSyncSuccessNotice,
+			this.plugin.settings.autoSyncSuccessNotice,
+			'autoSyncSuccessNotice'
+		)
 
 		new Setting(containerEl)
 			.setName(i18nConfig.AutoSyncFrontmatterKey)
@@ -369,4 +380,3 @@ export class ObsidianSettingTab extends PluginSettingTab {
 		}
 	}
 }
-

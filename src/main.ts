@@ -92,6 +92,9 @@ export default class ObsidianSyncNotionPlugin extends Plugin {
         if (typeof this.settings.autoSyncDelay !== 'number' || this.settings.autoSyncDelay < 2) {
             this.settings.autoSyncDelay = DEFAULT_SETTINGS.autoSyncDelay;
         }
+        if (typeof this.settings.autoSyncSuccessNotice !== 'boolean') {
+            this.settings.autoSyncSuccessNotice = DEFAULT_SETTINGS.autoSyncSuccessNotice;
+        }
         if (typeof this.settings.NotionLinkDisplay !== 'boolean') {
             this.settings.NotionLinkDisplay = DEFAULT_SETTINGS.NotionLinkDisplay;
         }
@@ -112,6 +115,7 @@ export default class ObsidianSyncNotionPlugin extends Plugin {
         const needsSave = !loadedData ||
             loadedData.autoSync === undefined ||
             loadedData.autoSyncDelay === undefined ||
+            loadedData.autoSyncSuccessNotice === undefined ||
             loadedData.NotionLinkDisplay === undefined ||
             loadedData.autoCopyNotionLink === undefined ||
             loadedData.autoSyncFrontmatterKey === undefined;
@@ -123,6 +127,7 @@ export default class ObsidianSyncNotionPlugin extends Plugin {
             } else {
                 if (loadedData.autoSync === undefined) migratedFields.push('autoSync');
                 if (loadedData.autoSyncDelay === undefined) migratedFields.push('autoSyncDelay');
+                if (loadedData.autoSyncSuccessNotice === undefined) migratedFields.push('autoSyncSuccessNotice');
                 if (loadedData.NotionLinkDisplay === undefined) migratedFields.push('NotionLinkDisplay');
                 if (loadedData.autoCopyNotionLink === undefined) migratedFields.push('autoCopyNotionLink');
 
@@ -146,6 +151,7 @@ export default class ObsidianSyncNotionPlugin extends Plugin {
         console.log('[Settings] Settings saved successfully', {
             autoSync: this.settings.autoSync,
             autoSyncDelay: this.settings.autoSyncDelay,
+            autoSyncSuccessNotice: this.settings.autoSyncSuccessNotice,
             NotionLinkDisplay: this.settings.NotionLinkDisplay,
             autoSyncFrontmatterKey: this.settings.autoSyncFrontmatterKey,
             databaseCount: Object.keys(this.settings.databaseDetails || {}).length
@@ -161,6 +167,10 @@ export default class ObsidianSyncNotionPlugin extends Plugin {
         if (typeof this.settings.autoSyncDelay !== 'number' || this.settings.autoSyncDelay < 2) {
             console.warn('[Settings] Invalid autoSyncDelay value, resetting to default');
             this.settings.autoSyncDelay = DEFAULT_SETTINGS.autoSyncDelay;
+        }
+        if (typeof this.settings.autoSyncSuccessNotice !== 'boolean') {
+            console.warn('[Settings] Invalid autoSyncSuccessNotice value, resetting to default');
+            this.settings.autoSyncSuccessNotice = DEFAULT_SETTINGS.autoSyncSuccessNotice;
         }
         if (typeof this.settings.NotionLinkDisplay !== 'boolean') {
             console.warn('[Settings] Invalid NotionLinkDisplay value, resetting to default');
@@ -415,11 +425,11 @@ export default class ObsidianSyncNotionPlugin extends Plugin {
                 try {
                     // Trigger appropriate upload command based on database format
                     if (dbDetails.format === 'next') {
-                        await uploadCommandNext(this, this.settings, dbDetails, this.app);
+                        await uploadCommandNext(this, this.settings, dbDetails, this.app, { isAutoSync: true });
                     } else if (dbDetails.format === 'general') {
-                        await uploadCommandGeneral(this, this.settings, dbDetails, this.app);
+                        await uploadCommandGeneral(this, this.settings, dbDetails, this.app, { isAutoSync: true });
                     } else if (dbDetails.format === 'custom') {
-                        await uploadCommandCustom(this, this.settings, dbDetails, this.app);
+                        await uploadCommandCustom(this, this.settings, dbDetails, this.app, { isAutoSync: true });
                     }
                 } catch (error) {
                     console.error(`[AutoSync] Error syncing to ${dbDetails.fullName}:`, error);

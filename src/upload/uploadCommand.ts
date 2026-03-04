@@ -10,11 +10,25 @@ import {getNowFileMarkdownContentCustom} from "./common/getMarkdownCustom";
 
 const SYNC_ERROR_NOTICE_DURATION = 8000;
 
+interface UploadCommandOptions {
+	isAutoSync?: boolean;
+}
+
 function extractErrorMessage(error: unknown): string {
 	if (error instanceof Error && error.message) {
 		return error.message;
 	}
 	return String(error);
+}
+
+function shouldShowAutoSyncSuccessNotice(
+	plugin: ObsidianSyncNotionPlugin,
+	options?: UploadCommandOptions,
+): boolean {
+	if (!options?.isAutoSync) {
+		return true;
+	}
+	return !!plugin.settings.autoSyncSuccessNotice;
 }
 
 function notifySyncError(prefix: string, basename: string, error: unknown): void {
@@ -39,6 +53,7 @@ export async function uploadCommandNext(
 	settings: PluginSettings,
 	dbDetails: DatabaseDetails,
 	app: App,
+	options?: UploadCommandOptions,
 ) {
 
 	const {notionAPI, databaseID} = dbDetails;
@@ -118,7 +133,9 @@ export async function uploadCommandNext(
 
 		const {response} = res;
 		if (response.status === 200) {
-			new Notice(`${i18nConfig["sync-preffix"]} ${basename} ${i18nConfig["sync-success"]}`).noticeEl.style.color = "green";
+			if (shouldShowAutoSyncSuccessNotice(plugin, options)) {
+				new Notice(`${i18nConfig["sync-preffix"]} ${basename} ${i18nConfig["sync-success"]}`).noticeEl.style.color = "green";
+			}
 			
 			logCommandDebug("uploadCommandNext", "Sync succeeded", {
 				filename: basename,
@@ -146,6 +163,7 @@ export async function uploadCommandGeneral(
 	settings: PluginSettings,
 	dbDetails: DatabaseDetails,
 	app: App,
+	options?: UploadCommandOptions,
 ) {
 
 	const {notionAPI, databaseID} = dbDetails;
@@ -160,7 +178,9 @@ export async function uploadCommandGeneral(
 
 	const {markDownData, nowFile, cover, tags} = await getNowFileMarkdownContentGeneral(app, settings)
 
-	new Notice(i18nConfig.StartUpload.replace('{filename}', nowFile.basename));
+	if (!options?.isAutoSync) {
+		new Notice(i18nConfig.StartUpload.replace('{filename}', nowFile.basename));
+	}
 	console.log(`Start upload ${nowFile.basename}`);
 
 	if (markDownData) {
@@ -195,7 +215,9 @@ export async function uploadCommandGeneral(
 
 		const {response} = res;
 		if (response.status === 200) {
-			new Notice(`${i18nConfig["sync-preffix"]} ${basename} ${i18nConfig["sync-success"]}`).noticeEl.style.color = "green";
+			if (shouldShowAutoSyncSuccessNotice(plugin, options)) {
+				new Notice(`${i18nConfig["sync-preffix"]} ${basename} ${i18nConfig["sync-success"]}`).noticeEl.style.color = "green";
+			}
 			
 			logCommandDebug("uploadCommandGeneral", "Sync succeeded", {
 				filename: basename,
@@ -223,6 +245,7 @@ export async function uploadCommandCustom(
 	settings: PluginSettings,
 	dbDetails: DatabaseDetails,
 	app: App,
+	options?: UploadCommandOptions,
 ) {
 
 	const {notionAPI, databaseID} = dbDetails;
@@ -237,7 +260,9 @@ export async function uploadCommandCustom(
 
 	const {markDownData, nowFile, cover, customValues} = await getNowFileMarkdownContentCustom(app, dbDetails)
 
-	new Notice(i18nConfig.StartUpload.replace('{filename}', nowFile.basename));
+	if (!options?.isAutoSync) {
+		new Notice(i18nConfig.StartUpload.replace('{filename}', nowFile.basename));
+	}
 	console.log(`Start upload ${nowFile.basename}`);
 
 	if (markDownData) {
@@ -272,7 +297,9 @@ export async function uploadCommandCustom(
 		const {response} = res;
 
 		if (response.status === 200) {
-			new Notice(`${i18nConfig["sync-preffix"]} ${basename} ${i18nConfig["sync-success"]}`).noticeEl.style.color = "green";
+			if (shouldShowAutoSyncSuccessNotice(plugin, options)) {
+				new Notice(`${i18nConfig["sync-preffix"]} ${basename} ${i18nConfig["sync-success"]}`).noticeEl.style.color = "green";
+			}
 			
 			logCommandDebug("uploadCommandCustom", "Sync succeeded", {
 				filename: basename,
