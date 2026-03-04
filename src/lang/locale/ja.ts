@@ -42,6 +42,8 @@ export const ja = {
 	AutoSyncDelay: "自動同期の遅延（秒）",
 	AutoSyncDelayDesc: "変更が検知されてから同期を開始するまでの遅延時間（秒）。同期の頻発を防ぎます（デフォルト：5秒、最小：2秒）。",
 	AutoSyncDelayText: "遅延秒数を入力",
+	AutoSyncSuccessNotice: "自動同期成功通知",
+	AutoSyncSuccessNoticeDesc: "自動同期が成功したときに通知を表示します（デフォルト：オフ。失敗時は通知されます）。",
 	NotionGeneralSettingHeader: "一般Notionデータベース設定",
 	NotionGeneralButton: "一般データベース同期",
 	NotionGeneralButtonDesc: "有効にすると、コマンドパレットに「一般データベースへ同期」が表示されます（デフォルト：オン）。",

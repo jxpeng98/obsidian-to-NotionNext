@@ -44,6 +44,8 @@ export const en = {
 	AutoSyncDelay: "Auto Sync Delay (seconds)",
 	AutoSyncDelayDesc: "Delay in seconds to wait before syncing after a change. Prevents excessive syncs (default: 5s, min: 2s).",
 	AutoSyncDelayText: "Enter delay in seconds",
+	AutoSyncSuccessNotice: "Auto Sync Success Notice",
+	AutoSyncSuccessNoticeDesc: "Show a notification when auto-sync succeeds (default: off; failures are still notified).",
 	NotionGeneralSettingHeader: "General Notion Database Settings",
 	NotionGeneralButton: "General Database Sync",
 	NotionGeneralButtonDesc: "Enables the 'Sync to General Database' command in the command palette (default: on).",

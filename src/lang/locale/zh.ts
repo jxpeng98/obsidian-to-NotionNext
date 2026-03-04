@@ -44,6 +44,8 @@ export const zh = {
 	AutoSyncDelay: "自动同步延迟（秒）",
 	AutoSyncDelayDesc: "文档修改后，等待指定秒数再触发自动同步，以避免频繁操作（默认 5 秒，最少 2 秒）",
 	AutoSyncDelayText: "输入延迟秒数",
+	AutoSyncSuccessNotice: "自动同步成功通知",
+	AutoSyncSuccessNoticeDesc: "是否在自动同步成功后弹出通知（默认关闭，仅在失败时通知）",
 	NotionGeneralSettingHeader: "通用 Notion 数据库设置",
 	NotionGeneralButton: "通用数据库同步",
 	NotionGeneralButtonDesc: "启用后，命令面板中将显示“同步到通用数据库”命令（默认开启）",
