@@ -4,6 +4,13 @@
 
 ### Added
 
+### Changed
+
+### Fixed
+## v2.8.1 (2026-03-04)
+
+### Added
+
 - **Auto-sync success notice setting**: Toggle whether to show success notifications for auto-sync (defaults to off)
 
 ### Changed
