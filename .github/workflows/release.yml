@@ -48,21 +48,67 @@ jobs:
                     ls
                     echo "tag_name=$(git tag --sort version:refname | tail -n 1)" >> $GITHUB_OUTPUT
 
+            -   name: Generate release notes
+                if: startsWith(github.ref, 'refs/tags/')
+                run: |
+                    node - <<'NODE'
+                    const fs = require('fs');
+
+                    const tag = process.env.GITHUB_REF_NAME;
+                    if (!tag) {
+                      throw new Error('GITHUB_REF_NAME is not set');
+                    }
+
+                    const changelog = fs.readFileSync('CHANGELOG.md', 'utf8');
+                    const lines = changelog.split(/\r?\n/);
+
+                    const escapeRegex = (value) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                    const headerRe = new RegExp(`^##\\s+${escapeRegex(tag)}\\b`);
+
+                    const start = lines.findIndex((line) => headerRe.test(line));
+                    if (start === -1) {
+                      throw new Error(`Could not find changelog section for tag "${tag}"`);
+                    }
+
+                    let end = lines.length;
+                    for (let i = start + 1; i < lines.length; i++) {
+                      if (/^##\s+/.test(lines[i])) {
+                        end = i;
+                        break;
+                      }
+                    }
+
+                    let section = lines.slice(start, end);
+                    while (section.length > 0 && section[section.length - 1].trim() === '') {
+                      section.pop();
+                    }
+                    if (section.length > 0 && section[section.length - 1].trim() === '---') {
+                      section.pop();
+                      while (section.length > 0 && section[section.length - 1].trim() === '') {
+                        section.pop();
+                      }
+                    }
+
+                    fs.writeFileSync('release-notes.md', `${section.join('\n')}\n`);
+                    NODE
+
             -   name: Create Release
                 id: create_release
+                if: startsWith(github.ref, 'refs/tags/')
                 uses: actions/create-release@v1
                 env:
                     GITHUB_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
                     VERSION: ${{ github.ref }}
                 with:
-                    tag_name: ${{ github.ref }}
-                    release_name: ${{ github.ref }}
-                    body_path: ${{ env.CHANGELOG_FILENAME }}
+                    tag_name: ${{ github.ref_name }}
+                    release_name: ${{ github.ref_name }}
+                    body_path: release-notes.md
                     draft: false
                     prerelease: false
 
             -   name: Upload zip file
                 id: upload-zip
+                if: startsWith(github.ref, 'refs/tags/')
                 uses: actions/upload-release-asset@v1
                 env:
                     GITHUB_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
@@ -74,6 +120,7 @@ jobs:
 
             -   name: Upload main.js
                 id: upload-main
+                if: startsWith(github.ref, 'refs/tags/')
                 uses: actions/upload-release-asset@v1
                 env:
                     GITHUB_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
@@ -85,6 +132,7 @@ jobs:
 
             -   name: Upload manifest.json
                 id: upload-manifest
+                if: startsWith(github.ref, 'refs/tags/')
                 uses: actions/upload-release-asset@v1
                 env:
                     GITHUB_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
@@ -96,6 +144,7 @@ jobs:
 
             -   name: Upload markdown template
                 id: upload-md
+                if: startsWith(github.ref, 'refs/tags/')
                 uses: actions/upload-release-asset@v1
                 env:
                     GITHUB_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
