@@ -2,21 +2,6 @@
 
 ## Unreleased
 
-### Added
-
-### Changed
-
-### Fixed
-## v2.8.3 (2026-03-04)
-
-### Added
-
-### Changed
-
-### Fixed
-
-## 2.8.2 (2026-03-04)
-
 ### Fixed
 
 - Fixed version bump with `tag-version-prefix="v"` in `.npmrc` causing incorrect version format in `package.json` (e.g. `v2.8.1` instead of `2.8.1`)

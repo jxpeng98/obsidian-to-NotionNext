@@ -25,7 +25,7 @@ function bumpChangelog(version) {
 	}
 
 	const today = new Date().toISOString().slice(0, 10);
-	const releaseHeader = `## v${version} (${today})`;
+	const releaseHeader = `## ${version} (${today})`;
 	const updated = content.replace(unreleasedHeader, releaseHeader);
 
 	const marker = "# Changelog\n\n";
